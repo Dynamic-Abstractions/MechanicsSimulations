@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tema 6 · Oscilaciones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>:root{
+  --bg:#f5f4ef; --panel:#ffffff; --ink:#1d2329; --muted:#5d6873; --line:#e1dfd7;
+  --F:#e03131; --a:#2f9e44; --v:#1c7ed6; --R:#6741d9; --fr:#f08c00;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column}
+header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 16px 0}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header h1{font-size:17px;margin:0;font-weight:680;letter-spacing:-.01em}
+header .sub{color:var(--muted);font-size:12.5px}
+.themes{display:flex;gap:4px;margin-left:auto;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.themes a,.themes span.cur{display:inline-block;padding:4px 9px;border-radius:7px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:600}
+.themes a:hover{background:#f1f0ea}
+.themes span.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+nav{display:flex;gap:2px;overflow-x:auto;margin-top:8px;scrollbar-width:thin}
+nav button{font:inherit;font-size:13.5px;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);padding:8px 12px 7px;cursor:pointer;white-space:nowrap}
+nav button:hover{color:var(--ink)}
+nav button.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:650}
+.btn{font:inherit;font-size:13.5px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 12px;border-radius:8px;cursor:pointer}
+.btn:hover{background:#f1f0ea}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.primary:hover{background:#363e46}
+#langBtn{font:inherit;font-size:12.5px;padding:4px 9px;border-radius:7px;border:1px solid var(--line);background:#fff;cursor:pointer}
+main{flex:1;min-height:0;position:relative}
+.scene{position:absolute;inset:0;display:none;grid-template-columns:1fr 370px}
+.scene.on{display:grid}
+.stage{display:flex;flex-direction:column;min-width:0;min-height:0;padding:12px;gap:10px}
+.cvwrap{position:relative;flex:1;min-height:240px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.cvwrap.graph{flex:0 0 190px;min-height:150px}
+.cvwrap canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.side{overflow:auto;border-left:1px solid var(--line);background:var(--panel);padding:16px 18px 30px}
+.side h2{font-size:17px;margin:0 0 8px}
+.concept{font-size:14px;line-height:1.5;color:#2a3138}
+.concept p{margin:0 0 8px}
+.eq{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:17px;text-align:center;background:#f6f5f0;border-radius:8px;padding:8px;margin:8px 0;line-height:1.6}
+.eq b{font-weight:700}
+h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 0 8px}
+.ctrls{display:flex;flex-direction:column;gap:8px}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.row{display:grid;grid-template-columns:118px 1fr 70px;align-items:center;gap:8px;font-size:13.5px}
+.row output{font-variant-numeric:tabular-nums;text-align:right;font-size:13px}
+.row input[type=range]{width:100%}
+.chk{display:flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px}
+table.ro{width:100%;border-collapse:collapse;font-size:12.8px;font-variant-numeric:tabular-nums}
+table.ro th,table.ro td{padding:4px 5px;border-bottom:1px solid #eeede7;text-align:right}
+table.ro th:first-child,table.ro td:first-child{text-align:left}
+table.ro th{color:var(--muted);font-weight:600}
+table.ro tr.sum td{font-weight:700}
+.try{font-size:13.5px;line-height:1.5;padding-left:18px;margin:0}
+.try li{margin-bottom:5px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:5px;vertical-align:middle;background:var(--c)}
+.hint{font-size:12.5px;color:var(--muted)}
+@media (max-width:900px){
+  .scene{position:static;grid-template-columns:1fr}
+  .scene.on{display:block}
+  .stage{height:72vh}
+  .side{border-left:0;border-top:1px solid var(--line)}
+  main{overflow:auto}
+}
+.prob{margin:14px 0 4px;padding:12px 14px;border-radius:10px;background:#fff9db;border:1px solid #ffe066;border-left:5px solid #f08c00;font-size:14px;line-height:1.5}
+.prob .tag{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#e8590c}
+.prob h4{margin:2px 0 6px;font-size:15px}
+.prob p{margin:0 0 8px}
+.prob .q{font-weight:600}
+.prob .btns{margin-top:6px}
+.prob .sol{margin-top:10px;padding-top:8px;border-top:1px dashed #fcc419}
+.prob .sol ol{margin:0;padding-left:20px}
+.prob .sol li{margin-bottom:4px}
+.prob .ans{margin-top:6px;font-weight:700;color:#2b8a3e}
+/* ===== dark studio theme ===== */
+body{background:#0b0b0d;color:#e9ecef;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:#111214;border-bottom:1px solid #26282c}
+header .sub,.hint,.legend{color:#9aa1a9}
+.themes{color:#9aa1a9}.themes a,.themes span.cur{border-color:#2f3237;color:#e9ecef}.themes a:hover{background:#1c1e22}.themes span.cur{background:#1c7ed6;border-color:#1c7ed6}
+#langBtn{background:#1c1e22;color:#e9ecef;border-color:#2f3237}
+nav button{color:#9aa1a9}nav button:hover{color:#fff}nav button.on{color:#fff;border-bottom-color:#4dabf7}
+.side{background:#111214;border-left:1px solid #26282c}
+.concept{color:#ced4da}.eq{background:#1a1c20;color:#f1f3f5}
+h3{color:#868e96}
+.btn{background:#1c1e22;color:#e9ecef;border-color:#2f3237}.btn:hover{background:#262a30}
+.btn.primary{background:#1c7ed6;border-color:#1c7ed6;color:#fff}.btn.primary:hover{background:#228be6}
+table.ro th,table.ro td{border-bottom-color:#26282c}table.ro th{color:#868e96}
+input[type=range]{accent-color:#4dabf7}
+.cvwrap{border-color:#26282c}
+.scene.dark .cvwrap{background:#0e0f11}
+.gl3{position:absolute;inset:0;display:block;z-index:0}
+.cvwrap canvas:not(.gl3){z-index:1}
+.prob{background:#1d1a12;border-color:#5c4a12;border-left-color:#f08c00;color:#e9ecef}
+.prob .sol{border-top-color:#5c4a12}.prob .ans{color:#69db7c}
+.try{color:#ced4da}
+.reto{margin:12px 0 6px;padding:14px;border-radius:12px;background:linear-gradient(160deg,#1b1530,#141225);border:1px solid #4c3a8f;border-left:5px solid #9775fa;font-size:14px;line-height:1.5;color:#e9ecef}
+.reto .tag{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#b197fc}
+.reto h4{margin:2px 0 6px;font-size:15.5px}.reto p{margin:0 0 8px}.reto .q{font-weight:600;color:#fff}
+.reto .ans-row{display:flex;gap:8px;align-items:center;margin:8px 0}
+.reto input[type=number]{width:110px;font:inherit;font-size:15px;padding:7px 9px;border-radius:8px;border:1px solid #4c3a8f;background:#0e0c1a;color:#fff}
+.reto .fb{font-weight:650;margin-top:4px}.reto .fb.ok{color:#69db7c}.reto .fb.no{color:#ffa8a8}
+.reto .sol{margin-top:10px;padding-top:8px;border-top:1px dashed #4c3a8f}.reto .sol ol{margin:0;padding-left:20px}.reto .sol li{margin-bottom:4px}
+.reto .meas{color:#b197fc;font-weight:600;margin-top:6px}
+.scene.quiz table.ro{filter:blur(7px);pointer-events:none}
+nav button.has-reto::after{content:" ★";color:#b197fc}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div>
+      <h1 data-es="Tema 6 · Oscilaciones" data-en="Theme 6 · Oscillations"></h1>
+      <div class="sub" data-es="Mecánica para Ingeniería — simulaciones interactivas" data-en="Mechanics for Engineering — interactive simulations"></div>
+    </div>
+    <div class="themes"><span data-es="Temas:" data-en="Themes:"></span><a href="t1.html" target="_top" data-es="1 · Dinámica" data-en="1 · Dynamics"></a><a href="t2.html" target="_top" data-es="2 · Trabajo y energía" data-en="2 · Work & energy"></a><a href="t3.html" target="_top" data-es="3 · Colisiones" data-en="3 · Collisions"></a><a href="t4.html" target="_top" data-es="4 · Cinemática rot." data-en="4 · Rot. kinematics"></a><a href="t5.html" target="_top" data-es="5 · Dinámica rot." data-en="5 · Rot. dynamics"></a><span class="cur" data-es="6 · Oscilaciones" data-en="6 · Oscillations"></span></div>
+    <button id="langBtn"></button>
+  </div>
+  <nav id="tabs">
+    <button data-s="o1" class="on" data-es="6.1 Sistemas oscilatorios" data-en="6.1 Oscillating systems"></button>
+    <button data-s="o2" data-es="6.2 Oscilador armónico simple" data-en="6.2 Simple harmonic oscillator"></button>
+    <button data-s="o3" data-es="6.3 Movimiento armónico simple" data-en="6.3 Simple harmonic motion"></button>
+    <button data-s="o4" data-es="6.4 Aplicaciones: el péndulo" data-en="6.4 Applications: the pendulum"></button>
+  </nav>
+</header>
+<main>
+
+<!-- ============ O1: gallery ============ -->
+<section class="scene on" id="o1">
+  <div class="stage"><div class="cvwrap"><canvas id="co1"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="¿Qué tienen en común los sistemas que oscilan?" data-en="What do oscillating systems have in common?"></h2>
+    <div class="concept">
+      <p data-es="Todos tienen una posición de <b>equilibrio</b> y una «fuerza» <b>restauradora</b> que crece con el desplazamiento y apunta de regreso al equilibrio. Además tienen <b>inercia</b>, que los hace pasarse de largo." data-en="They all have an <b>equilibrium</b> position and a <b>restoring</b> «force» that grows with displacement and points back toward equilibrium. They also have <b>inertia</b>, which makes them overshoot."></p>
+      <div class="eq">d²x/dt² = −ω² x</div>
+      <p data-es="La misma ecuación describe un resorte, un péndulo (ángulos pequeños) y un circuito LC — muy útil en electrónica:" data-en="The same equation describes a spring, a pendulum (small angles) and an LC circuit — very useful in electronics:"></p>
+      <div class="eq">x ↔ θ ↔ q &nbsp;&nbsp; m ↔ L/g ↔ L<br>ω = √(k/m) ↔ √(g/ℓ) ↔ 1/√(LC)</div>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="row"><span data-es="Amortiguamiento" data-en="Damping"></span><input type="range" id="ro1d" min="0" max="0.6" step="0.02" value="0"><output id="oo1d"></output></div>
+      <div class="hint" data-es="Fricción (resorte), aire (péndulo) o resistencia R (circuito)." data-en="Friction (spring), air (pendulum) or resistance R (circuit)."></div>
+      <div class="btns"><button class="btn primary" id="bo1kick" data-es="Perturbar todos" data-en="Disturb all"></button></div>
+    </div>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Observa el circuito: la carga del capacitor hace el papel de x y la corriente el de v. La energía pasa del campo eléctrico (C) al magnético (L)." data-en="Watch the circuit: capacitor charge plays the role of x and current that of v. Energy moves from the electric field (C) to the magnetic field (L)."></li>
+      <li data-es="Sube el amortiguamiento: las tres trazas decaen de la misma forma (exponencial)." data-en="Raise the damping: all three traces decay the same way (exponentially)."></li>
+      <li data-es="Pregunta: ¿qué otros sistemas oscilan? (cuerdas de guitarra, edificios, suspensión de un auto, cristal de cuarzo de un reloj)." data-en="Question: what else oscillates? (guitar strings, buildings, car suspension, a watch's quartz crystal)."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ O2: SHO ============ -->
+<section class="scene" id="o2">
+  <div class="stage">
+    <div class="cvwrap"><canvas id="co2"></canvas></div>
+    <div class="cvwrap graph"><canvas id="go2"></canvas></div>
+  </div>
+  <aside class="side">
+    <h2 data-es="Oscilador armónico simple: masa y resorte" data-en="Simple harmonic oscillator: mass and spring"></h2>
+    <div class="concept">
+      <p data-es="Con la ley de Hooke, la segunda ley da una ecuación cuya solución es un coseno:" data-en="With Hooke's law, the second law gives an equation whose solution is a cosine:"></p>
+      <div class="eq">m a = −k x &nbsp; ⇒ &nbsp; x(t) = A cos(ω t + φ)<br>ω = √(k/m) &nbsp;&nbsp; T = 2π √(m/k)</div>
+      <p data-es="El periodo <b>no depende de la amplitud</b>. La energía se intercambia entre cinética y potencial elástica:" data-en="The period <b>doesn't depend on the amplitude</b>. Energy trades between kinetic and elastic potential:"></p>
+      <div class="eq">E = ½ m v² + ½ k x² = ½ k A²</div>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="hint" data-es="Arrastra el bloque para estirar o comprimir el resorte y suéltalo." data-en="Drag the block to stretch or compress the spring, then let go."></div>
+      <div class="row"><span data-es="Constante k" data-en="Constant k"></span><input type="range" id="ro2k" min="5" max="100" step="5" value="20"><output id="oo2k"></output></div>
+      <div class="row"><span data-es="Masa m" data-en="Mass m"></span><input type="range" id="ro2m" min="0.5" max="5" step="0.5" value="1"><output id="oo2m"></output></div>
+      <div class="row"><span data-es="Amortiguamiento b" data-en="Damping b"></span><input type="range" id="ro2b" min="0" max="3" step="0.1" value="0"><output id="oo2b"></output></div>
+      <div class="btns"><button class="btn primary" id="bo2run"></button><button class="btn" id="bo2reset" data-es="Reiniciar (A = 0.5 m)" data-en="Reset (A = 0.5 m)"></button></div>
+      <div class="legend"><span style="--c:#e03131">F = −kx</span><span style="--c:#1c7ed6">v</span><span style="--c:#2f9e44">a</span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="to2"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Suelta el bloque con 0.2 m y luego con 0.8 m: el periodo es el mismo (isocronismo)." data-en="Release the block from 0.2 m, then from 0.8 m: the period is the same (isochronism)."></li>
+      <li data-es="Cuadruplica k: el periodo se reduce a la mitad. Cuadruplica m: se duplica." data-en="Quadruple k: the period halves. Quadruple m: it doubles."></li>
+      <li data-es="En la gráfica: v está desfasada 90° de x, y a está en contrafase con x (a = −ω² x)." data-en="On the graph: v is 90° out of phase with x, and a is opposite to x (a = −ω² x)."></li>
+      <li data-es="Donde x es máxima, v = 0 y la energía es toda potencial; en x = 0, toda cinética." data-en="Where x is maximum, v = 0 and energy is all potential; at x = 0, all kinetic."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ O3: reference circle ============ -->
+<section class="scene" id="o3">
+  <div class="stage"><div class="cvwrap"><canvas id="co3"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="MAS como proyección de un movimiento circular" data-en="SHM as the projection of circular motion"></h2>
+    <div class="concept">
+      <p data-es="Un punto que gira con rapidez angular constante ω en un círculo de radio A, visto «de canto», hace un movimiento armónico simple. Por eso ω se llama <b>frecuencia angular</b> y ωt + φ es la <b>fase</b>:" data-en="A point moving around a circle of radius A at constant angular speed ω, seen «edge-on», performs simple harmonic motion. That's why ω is called the <b>angular frequency</b> and ωt + φ is the <b>phase</b>:"></p>
+      <div class="eq">x = A cos(ωt + φ)<br>v = −A ω sin(ωt + φ)<br>a = −A ω² cos(ωt + φ) = −ω² x</div>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="row"><span data-es="Amplitud A" data-en="Amplitude A"></span><input type="range" id="ro3A" min="0.3" max="1" step="0.05" value="0.8"><output id="oo3A"></output></div>
+      <div class="row"><span data-es="Frec. angular ω" data-en="Angular freq. ω"></span><input type="range" id="ro3w" min="0.5" max="4" step="0.1" value="1.5"><output id="oo3w"></output></div>
+      <div class="row"><span data-es="Fase inicial φ" data-en="Initial phase φ"></span><input type="range" id="ro3p" min="-180" max="180" step="15" value="0"><output id="oo3p"></output></div>
+      <label class="chk"><input type="checkbox" id="ko3va"><span data-es="Mostrar v(t) y a(t)" data-en="Show v(t) and a(t)"></span></label>
+      <div class="btns"><button class="btn primary" id="bo3run"></button><button class="btn" id="bo3reset" data-es="t = 0" data-en="t = 0"></button></div>
+      <div class="legend"><span style="--c:#6741d9">x</span><span style="--c:#1c7ed6">v</span><span style="--c:#2f9e44">a</span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="to3"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="La altura del punto en el círculo coincide siempre con la de la masa en el resorte." data-en="The height of the point on the circle always matches the mass on the spring."></li>
+      <li data-es="Cambia φ: la curva se desplaza en el tiempo, pero su forma no cambia." data-en="Change φ: the curve shifts in time but keeps its shape."></li>
+      <li data-es="Activa v y a: v adelanta 90° a x; a está a 180° (siempre apunta al centro del círculo)." data-en="Turn on v and a: v leads x by 90°; a is at 180° (it always points to the circle's center)."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ O4: pendulum ============ -->
+<section class="scene" id="o4">
+  <div class="stage">
+    <div class="cvwrap"><canvas id="co4"></canvas></div>
+    <div class="cvwrap graph"><canvas id="go4"></canvas></div>
+  </div>
+  <aside class="side">
+    <h2 data-es="El péndulo simple" data-en="The simple pendulum"></h2>
+    <div class="concept">
+      <p data-es="La fuerza restauradora es la componente del peso tangente a la trayectoria, −m g sin θ. Para ángulos pequeños, sin θ ≈ θ y el péndulo es un oscilador armónico:" data-en="The restoring force is the component of weight tangent to the path, −m g sin θ. For small angles, sin θ ≈ θ and the pendulum is a harmonic oscillator:"></p>
+      <div class="eq">d²θ/dt² = −(g/ℓ) sin θ ≈ −(g/ℓ) θ<br>T ≈ 2π √(ℓ / g)</div>
+      <p data-es="El periodo no depende de la masa. Aplicación clásica: medir g midiendo ℓ y T. Para ángulos grandes el periodo real es mayor." data-en="The period doesn't depend on mass. Classic application: measure g from ℓ and T. For large angles the real period is longer."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="radios">
+        <label class="chk"><input type="radio" name="g4" value="9.81" checked><span data-es="Tierra" data-en="Earth"></span></label>
+        <label class="chk"><input type="radio" name="g4" value="1.62"><span data-es="Luna" data-en="Moon"></span></label>
+        <label class="chk"><input type="radio" name="g4" value="3.71"><span data-es="Marte" data-en="Mars"></span></label>
+        <label class="chk"><input type="radio" name="g4" value="24.8"><span data-es="Júpiter" data-en="Jupiter"></span></label>
+      </div>
+      <div class="row"><span data-es="Longitud ℓ" data-en="Length ℓ"></span><input type="range" id="ro4L" min="0.25" max="2" step="0.05" value="1"><output id="oo4L"></output></div>
+      <div class="row"><span data-es="Ángulo inicial θ₀" data-en="Initial angle θ₀"></span><input type="range" id="ro4t" min="5" max="90" step="5" value="20"><output id="oo4t"></output></div>
+      <label class="chk"><input type="checkbox" id="ko4g" checked><span data-es="Mostrar péndulo «ideal» (aprox. ángulo pequeño)" data-en="Show «ideal» pendulum (small-angle approx.)"></span></label>
+      <div class="btns"><button class="btn primary" id="bo4run"></button><button class="btn" id="bo4reset" data-es="Reiniciar" data-en="Reset"></button></div>
+      <div class="legend"><span style="--c:#e8590c" data-es="real (sin θ)" data-en="real (sin θ)"></span><span style="--c:#adb5bd" data-es="aprox. (θ)" data-en="approx. (θ)"></span><span style="--c:#e03131" data-es="m g sin θ" data-en="m g sin θ"></span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="to4"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Con θ₀ = 10° los dos péndulos van juntos. Con θ₀ = 80° el real se atrasa visiblemente." data-en="With θ₀ = 10° both pendulums stay together. With θ₀ = 80° the real one visibly lags."></li>
+      <li data-es="Cuadruplica ℓ: el periodo se duplica." data-en="Quadruple ℓ: the period doubles."></li>
+      <li data-es="Llévalo a la Luna: mismo ℓ, periodo ≈ 2.5 veces mayor." data-en="Take it to the Moon: same ℓ, period ≈ 2.5 times longer."></li>
+      <li data-es="Práctica: con el periodo medido y ℓ, calcula g = 4π² ℓ / T²." data-en="Lab: with the measured period and ℓ, compute g = 4π² ℓ / T²."></li>
+    </ul>
+  </aside>
+</section>
+
+</main>
+<script src="lib/three.min.js"></script><script src="lib/three-extras.js"></script><script>
+"use strict";
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+let LANG = 'es';
+const L = (es, en) => LANG === 'es' ? es : en;
+const add = (a, b) => ({x: a.x + b.x, y: a.y + b.y});
+const sub = (a, b) => ({x: a.x - b.x, y: a.y - b.y});
+const mul = (a, s) => ({x: a.x * s, y: a.y * s});
+const len = a => Math.hypot(a.x, a.y);
+const dot = (a, b) => a.x * b.x + a.y * b.y;
+const angDeg = a => Math.atan2(a.y, a.x) * 180 / Math.PI;
+const fx = (x, d = 2) => { const v = Math.abs(x) < 0.5 * Math.pow(10, -d) ? 0 : x; return v.toFixed(d); };
+const snapv = (v, s) => Math.round(v / s) * s;
+const C = {F: '#e03131', a: '#2f9e44', v: '#1c7ed6', R: '#6741d9', fr: '#f08c00', ink: '#1d2329', muted: '#8a949d', grid: '#eceae3', axis: '#c4c1b6', teal: '#0c8599'};
+const PAL_L = {...C}, PAL_D = {F: '#ff6b6b', a: '#69db7c', v: '#4dabf7', R: '#b197fc', fr: '#ffa94d', ink: '#f1f3f5', muted: '#a5adb5', grid: 'rgba(255,255,255,.08)', axis: 'rgba(255,255,255,.3)', teal: '#3bc9db'};
+let DARK = false;
+function setDark(on) { if (on === DARK) return; DARK = on; Object.assign(C, on ? PAL_D : PAL_L); }
+
+function setupCanvas(cv) {
+  const o = {cv, ctx: cv.getContext('2d'), w: 1, h: 1};
+  const ro = new ResizeObserver(() => {
+    const r = cv.parentElement.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    o.w = Math.max(1, r.width); o.h = Math.max(1, r.height);
+    cv.width = Math.round(o.w * d); cv.height = Math.round(o.h * d);
+    o.ctx.setTransform(d, 0, 0, d, 0, 0);
+  });
+  ro.observe(cv.parentElement);
+  return o;
+}
+function ptr(e, cv) { const r = cv.getBoundingClientRect(); return {x: e.clientX - r.left, y: e.clientY - r.top}; }
+
+function arrow(ctx, x0, y0, x1, y1, col, w = 3, dash = null, alpha = 1) {
+  const dx = x1 - x0, dy = y1 - y0, Ln = Math.hypot(dx, dy);
+  if (Ln < 1.5) return;
+  const ux = dx / Ln, uy = dy / Ln, hl = Math.min(10 + w * 2.2, Ln * 0.55), hw = hl * 0.48;
+  ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - ux * hl * 0.85, y1 - uy * hl * 0.85); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x1, y1);
+  ctx.lineTo(x1 - ux * hl - uy * hw, y1 - uy * hl + ux * hw);
+  ctx.lineTo(x1 - ux * hl + uy * hw, y1 - uy * hl - ux * hw);
+  ctx.closePath(); ctx.fill(); ctx.restore();
+}
+function text(ctx, s, x, y, col = C.ink, size = 14, align = 'left', weight = 650) {
+  ctx.save(); ctx.font = `${weight} ${size}px system-ui,-apple-system,Segoe UI,sans-serif`;
+  ctx.textAlign = align; ctx.textBaseline = 'middle';
+  ctx.lineWidth = 4; ctx.strokeStyle = DARK ? 'rgba(0,0,0,.7)' : 'rgba(255,255,255,.92)'; ctx.lineJoin = 'round';
+  ctx.strokeText(s, x, y); ctx.fillStyle = col; ctx.fillText(s, x, y); ctx.restore();
+}
+// label placed just beyond an arrow tip
+function tipLabel(ctx, s, x0, y0, x1, y1, col) {
+  const dx = x1 - x0, dy = y1 - y0, Ln = Math.hypot(dx, dy) || 1;
+  text(ctx, s, x1 + dx / Ln * 16, y1 + dy / Ln * 16, col, 15, 'center', 700);
+}
+function badge(ctx, s, x, y, ok) {
+  ctx.save(); ctx.font = '650 14px system-ui,sans-serif'; ctx.textAlign = 'left';
+  const w = ctx.measureText(s).width + 22;
+  ctx.fillStyle = DARK ? 'rgba(20,21,24,.78)' : (ok ? '#ebfbee' : '#fff5f5'); ctx.strokeStyle = ok ? (DARK ? '#40c057' : '#2f9e44') : (DARK ? '#fa5252' : '#e03131'); ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.roundRect(x, y, w, 30, 8); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = DARK ? (ok ? '#8ce99a' : '#ffa8a8') : (ok ? '#2b8a3e' : '#c92a2a'); ctx.textBaseline = 'middle'; ctx.fillText(s, x + 11, y + 15); ctx.restore();
+}
+function grid(ctx, w, h, cx, cy, s, axes = true) {
+  ctx.save(); ctx.lineWidth = 1; ctx.strokeStyle = C.grid; ctx.beginPath();
+  for (let x = cx % s; x < w; x += s) { ctx.moveTo(Math.round(x) + .5, 0); ctx.lineTo(Math.round(x) + .5, h); }
+  for (let y = cy % s; y < h; y += s) { ctx.moveTo(0, Math.round(y) + .5); ctx.lineTo(w, Math.round(y) + .5); }
+  ctx.stroke();
+  if (axes) { ctx.strokeStyle = C.axis; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke(); }
+  ctx.restore();
+}
+function puck(ctx, x, y, r, m) {
+  ctx.save();
+  const g = ctx.createRadialGradient(x - r * .35, y - r * .35, r * .2, x, y, r);
+  g.addColorStop(0, '#5c6670'); g.addColorStop(1, '#22282e');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = '600 11px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(m, x, y); ctx.restore();
+}
+function handle(ctx, x, y, col) {
+  ctx.save(); ctx.fillStyle = '#fff'; ctx.strokeStyle = col; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore();
+}
+// generic time plot
+function plot(g, series, o) {
+  const {ctx, w, h} = g; ctx.clearRect(0, 0, w, h);
+  const pl = 54, pr = 14, pt = 26, pb = 28, W = w - pl - pr, H = h - pt - pb;
+  let ymin = 0, ymax = 0;
+  series.forEach(s => s.pts.forEach(p => { if (p[0] >= o.xmin && p[0] <= o.xmax) { ymin = Math.min(ymin, p[1]); ymax = Math.max(ymax, p[1]); } }));
+  if (ymax - ymin < (o.minSpan || 1)) { const c = (ymax + ymin) / 2, sp = (o.minSpan || 1) / 2; ymin = Math.min(ymin, c - sp); ymax = Math.max(ymax, c + sp); }
+  const pad = (ymax - ymin) * 0.1; ymin -= pad; ymax += pad;
+  const X = t => pl + (t - o.xmin) / (o.xmax - o.xmin) * W, Y = v => pt + (ymax - v) / (ymax - ymin) * H;
+  // grid & ticks
+  ctx.save(); ctx.font = '11px system-ui,sans-serif'; ctx.fillStyle = C.muted; ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
+  const step = niceStep((ymax - ymin) / 4);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let v = Math.ceil(ymin / step) * step; v <= ymax; v += step) { const y = Y(v); ctx.beginPath(); ctx.moveTo(pl, y); ctx.lineTo(pl + W, y); ctx.stroke(); ctx.fillText(+v.toFixed(3), pl - 6, y); }
+  const xs = niceStep((o.xmax - o.xmin) / 6); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let t = Math.ceil(o.xmin / xs) * xs; t <= o.xmax; t += xs) { const x = X(t); ctx.beginPath(); ctx.moveTo(x, pt); ctx.lineTo(x, pt + H); ctx.stroke(); ctx.fillText(+t.toFixed(3), x, pt + H + 5); }
+  ctx.strokeStyle = C.axis; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(pl, Y(0)); ctx.lineTo(pl + W, Y(0)); ctx.stroke();
+  ctx.fillStyle = C.ink; ctx.font = '600 12px system-ui,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText(o.title, pl, 13);
+  ctx.textAlign = 'right'; ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif'; ctx.fillText(o.xlab, pl + W, 13);
+  // clip & draw
+  ctx.beginPath(); ctx.rect(pl, pt, W, H); ctx.clip();
+  series.forEach(s => {
+    if (!s.pts.length) return;
+    if (s.fill) {
+      ctx.beginPath(); ctx.moveTo(X(s.pts[0][0]), Y(0));
+      s.pts.forEach(p => ctx.lineTo(X(p[0]), Y(p[1]))); ctx.lineTo(X(s.pts[s.pts.length - 1][0]), Y(0)); ctx.closePath();
+      ctx.globalAlpha = 0.15; ctx.fillStyle = s.col; ctx.fill(); ctx.globalAlpha = 1;
+    }
+    ctx.beginPath(); ctx.strokeStyle = s.col; ctx.lineWidth = 2.5; ctx.setLineDash(s.dash || []);
+    s.pts.forEach((p, i) => i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))); ctx.stroke(); ctx.setLineDash([]);
+  });
+  ctx.restore();
+  // legend
+  let lx = pl + 160; ctx.save(); ctx.font = '600 12px system-ui,sans-serif'; ctx.textBaseline = 'middle';
+  series.forEach(s => { ctx.strokeStyle = s.col; ctx.lineWidth = 3; ctx.setLineDash(s.dash || []); ctx.beginPath(); ctx.moveTo(lx, 13); ctx.lineTo(lx + 18, 13); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = s.col; ctx.fillText(s.label, lx + 23, 13); lx += ctx.measureText(s.label).width + 46; });
+  ctx.restore();
+}
+function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw || 1))); const n = raw / p; return (n < 1.5 ? 1 : n < 3.5 ? 2 : n < 7.5 ? 5 : 10) * p; }
+function setTxt(el, es, en) { el.dataset.es = es; el.dataset.en = en; el.innerHTML = L(es, en); }
+function bindRange(id, outId, fmt, cb) {
+  const r = $(id), o = $(outId);
+  const f = () => { o.textContent = fmt(+r.value); cb(+r.value); };
+  r.addEventListener('input', f); f();
+}
+
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const rot = (v, a) => ({x: v.x * Math.cos(a) - v.y * Math.sin(a), y: v.x * Math.sin(a) + v.y * Math.cos(a)});
+function spring(ctx, x0, y0, x1, y1, coils = 10, amp = 8, col = '#495057', w = 2) {
+  const dx = x1 - x0, dy = y1 - y0, Ln = Math.hypot(dx, dy) || 1, ux = dx / Ln, uy = dy / Ln;
+  ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(x0, y0);
+  const lead = Math.min(8, Ln * 0.1), n = coils * 2;
+  ctx.lineTo(x0 + ux * lead, y0 + uy * lead);
+  for (let i = 1; i < n; i++) { const t = lead + (Ln - 2 * lead) * i / n, s = i % 2 ? amp : -amp; ctx.lineTo(x0 + ux * t - uy * s, y0 + uy * t + ux * s); }
+  ctx.lineTo(x1 - ux * lead, y1 - uy * lead); ctx.lineTo(x1, y1); ctx.stroke(); ctx.restore();
+}
+// vertical bar chart: items [{label, value, col}] ; zero line in middle if negatives
+function bars(ctx, x, y, w, h, items, o = {}) {
+  ctx.save();
+  ctx.fillStyle = DARK ? 'rgba(20,21,24,.72)' : '#fafaf7'; ctx.strokeStyle = DARK ? 'rgba(255,255,255,.12)' : '#e6e4dc'; ctx.beginPath(); ctx.roundRect(x, y, w, h, 10); ctx.fill(); ctx.stroke();
+  const pt = 30, pb = 34, H = h - pt - pb, n = items.length, bw = Math.min(46, (w - 20) / n * 0.62), gap = (w - 20) / n;
+  let vmax = o.max || Math.max(1e-9, ...items.map(i => Math.abs(i.value)));
+  const neg = items.some(i => i.value < -1e-9) || o.neg;
+  const y0 = neg ? y + pt + H / 2 : y + pt + H, sc = (neg ? H / 2 : H) / vmax;
+  if (o.title) { ctx.fillStyle = C.ink; ctx.font = '650 12.5px system-ui,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(o.title, x + 10, y + 15); }
+  ctx.strokeStyle = C.axis; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x + 8, y0); ctx.lineTo(x + w - 8, y0); ctx.stroke();
+  items.forEach((it, i) => {
+    const cx = x + 10 + gap * (i + .5), v = clamp(it.value, -vmax * 1.05, vmax * 1.05), bh = v * sc;
+    ctx.fillStyle = it.col; ctx.globalAlpha = it.alpha || 1;
+    ctx.fillRect(cx - bw / 2, bh >= 0 ? y0 - bh : y0, bw, Math.abs(bh)); ctx.globalAlpha = 1;
+    ctx.fillStyle = C.ink; ctx.font = '600 11.5px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(it.label, cx, y + h - 22);
+    ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif';
+    ctx.fillText(it.txt !== undefined ? it.txt : fx(it.value, 1), cx, y + h - 9);
+  });
+  ctx.restore();
+}
+function startApp(scenes) {
+  let active = Object.keys(scenes)[0];
+  Object.values(scenes).forEach(s => s.init && s.init());
+  const tabs = document.querySelectorAll('#tabs button[data-s]');
+  const show = id => {
+    if (!scenes[id]) return; active = id;
+    tabs.forEach(x => x.classList.toggle('on', x.dataset.s === id));
+    document.querySelectorAll('.scene').forEach(sc => sc.classList.toggle('on', sc.id === id));
+    if (scenes[id].onShow) scenes[id].onShow();
+  };
+  tabs.forEach(b => b.onclick = () => { show(b.dataset.s); try { history.replaceState(null, '', '#' + b.dataset.s); } catch (e) {} });
+  const h = location.hash.slice(1); if (scenes[h]) show(h);
+  const h1 = document.querySelector('header h1');
+  window.applyLang = () => {
+    document.documentElement.lang = LANG;
+    document.querySelectorAll('[data-es]').forEach(e => { e.innerHTML = e.dataset[LANG]; });
+    $('langBtn').textContent = LANG === 'es' ? 'English' : 'Español';
+    document.title = h1.textContent;
+  };
+  $('langBtn').onclick = () => { LANG = LANG === 'es' ? 'en' : 'es'; applyLang(); };
+  applyLang();
+  let last = performance.now(), tabT = 0;
+  function loop(now) {
+    const dt = Math.min(0.04, (now - last) / 1000); last = now;
+    const S = scenes[active];
+    try {
+      S.step && S.step(dt);
+      S.r3 = !!(typeof G3 !== 'undefined' && G3.ok && VIEWS[active] && S.skin);
+      if (S.r3 && !G3.render(active, S)) S.r3 = false;
+      if (!S.r3 && typeof G3 !== 'undefined' && G3.ok) G3.hide();
+      setDark(S.r3); document.getElementById(active).classList.toggle('dark', S.r3);
+      S.draw && S.draw(); tabT += dt; if (tabT > 0.1) { tabT = 0; S.table && S.table(); } }
+    catch (e) { console.error(e); }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+/* ---------- real-life problem cards ---------- */
+function setR(id, v) { const r = $(id); if (!r) return; r.value = v; r.dispatchEvent(new Event('input')); }
+function setRad(name, v) { const r = document.querySelector(`input[name=${name}][value="${v}"]`); if (r) { r.checked = true; r.dispatchEvent(new Event('change')); } }
+function setChk(id, v) { const c = $(id); if (c) { c.checked = v; c.dispatchEvent(new Event('change')); } }
+function addProblems(P, S = {}) {
+  const bi = (a, tag = 'span', cls = '') => `<${tag}${cls ? ` class="${cls}"` : ''} data-es="${a[0].replace(/"/g, '&quot;')}" data-en="${a[1].replace(/"/g, '&quot;')}"></${tag}>`;
+  Object.entries(P).forEach(([id, p]) => {
+    const aside = document.querySelector(`#${id} .side`), concept = aside && aside.querySelector('.concept');
+    if (!concept) return;
+    const box = document.createElement('div'); box.className = 'prob';
+    box.innerHTML = bi(['Problema de la vida real', 'Real-life problem'], 'div', 'tag') + bi(p.title, 'h4') + bi(p.text, 'p') + bi(p.q, 'p', 'q')
+      + `<div class="btns"><button class="btn primary" data-load data-es="Cargar en la simulación" data-en="Load into the simulation"></button><button class="btn" data-sol data-es="Ver solución" data-en="Show solution"></button><button class="btn" data-skin hidden data-es="Ver como diagrama" data-en="Show as diagram"></button></div>`
+      + `<div class="sol" hidden><ol>${p.steps.map(s => bi(s, 'li')).join('')}</ol>${bi(p.ans, 'div', 'ans')}</div>`;
+    concept.after(box);
+    const sk = box.querySelector('[data-skin]'), scn = S[id];
+    const setSkin = on => { if (!scn) return; scn.skin = on; sk.hidden = false; sk.dataset.es = on ? 'Ver como diagrama' : 'Ver escena real'; sk.dataset.en = on ? 'Show as diagram' : 'Show real scene'; sk.innerHTML = sk.dataset[LANG]; };
+    box.querySelector('[data-load]').onclick = () => { try { setSkin(true); p.load(); } catch (e) { console.error(e); } };
+    sk.onclick = () => setSkin(!scn.skin);
+    if (!p.noDefault) setSkin(true);
+    const sb = box.querySelector('[data-sol]'), sol = box.querySelector('.sol');
+    sb.onclick = () => { sol.hidden = !sol.hidden; sb.dataset.es = sol.hidden ? 'Ver solución' : 'Ocultar solución'; sb.dataset.en = sol.hidden ? 'Show solution' : 'Hide solution'; sb.innerHTML = sb.dataset[LANG]; };
+  });
+}
+/* ---------- sprites for real-life scenes ---------- */
+function person(ctx, x, y, H, o = {}) {
+  // feet at (x, y); returns world position of the front hand
+  const f = o.facing || 1, lean = o.lean || 0, s = H / 100, a = o.arm !== undefined ? o.arm : 0.4, a2 = o.arm2 !== undefined ? o.arm2 : a, st = o.stride || 6;
+  if (o.dry) { const ty0 = o.pose === 'sit' ? 6 : 0, hx = 4 + (o.armLen || 28) * Math.cos(a), hy = -76 + ty0 + (o.armLen || 28) * Math.sin(a), c = Math.cos(lean), sn = Math.sin(lean); return {x: x + f * s * (hx * c - hy * sn), y: y + s * (hx * sn + hy * c)}; }
+  if (!o.noShadow) shadow(ctx, x, y + 2, H * 0.42);
+  ctx.save(); ctx.translate(x, y); ctx.scale(f * s, s); ctx.rotate(lean); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const pants = o.pants || '#364fc7', shirt = o.col || '#e8590c', skin = o.skin || '#f1c27d';
+  ctx.strokeStyle = pants; ctx.lineWidth = 11;
+  if (o.pose === 'sit') { ctx.beginPath(); ctx.moveTo(-4, -40); ctx.lineTo(20, -40); ctx.lineTo(22, -14); ctx.stroke(); }
+  else { ctx.beginPath(); ctx.moveTo(-2, -48); ctx.lineTo(-st, 0); ctx.stroke(); ctx.globalAlpha = 1; ctx.beginPath(); ctx.moveTo(2, -48); ctx.lineTo(st, 0); ctx.stroke();
+    if (!o.skates) { ctx.fillStyle = o.shoe || '#212529'; ctx.beginPath(); ctx.ellipse(-st + 4, -1, 9, 4.5, 0, 0, 7); ctx.ellipse(st + 4, -1, 9, 4.5, 0, 0, 7); ctx.fill(); } }
+  const ty = o.pose === 'sit' ? 6 : 0;
+  ctx.strokeStyle = skin; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(-2, -76 + ty); ctx.lineTo(-2 + (o.armLen || 26) * Math.cos(a2), -76 + ty + (o.armLen || 26) * Math.sin(a2)); ctx.stroke();
+  ctx.fillStyle = shirt; ctx.beginPath(); ctx.roundRect(-11, -84 + ty, 22, 40, 7); ctx.fill();
+  ctx.strokeStyle = skin; ctx.beginPath(); ctx.moveTo(4, -76 + ty); ctx.lineTo(4 + (o.armLen || 28) * Math.cos(a), -76 + ty + (o.armLen || 28) * Math.sin(a)); ctx.stroke();
+  ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(1, -95 + ty, 10.5, 0, 7); ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(-11, -84 + ty, 6, 40);
+  ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.arc(7, -96 + ty, 1.6, 0, 7); ctx.fill();
+  ctx.fillStyle = o.hair || '#5c3d2e'; ctx.beginPath(); ctx.arc(0, -97 + ty, 11, Math.PI * 1.05, Math.PI * 2.02); ctx.fill();
+  if (o.long) { ctx.fillRect(-11, -98 + ty, 6, 18); }
+  if (o.skates) { ctx.fillStyle = '#f8f9fa'; ctx.beginPath(); ctx.roundRect(-st - 6, -8, 16, 8, 3); ctx.roundRect(st - 6, -8, 16, 8, 3); ctx.fill(); ctx.strokeStyle = '#868e96'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(-st - 9, 3); ctx.lineTo(-st + 12, 3); ctx.moveTo(st - 9, 3); ctx.lineTo(st + 12, 3); ctx.stroke(); }
+  ctx.restore();
+  const hx = 4 + (o.armLen || 28) * Math.cos(a), hy = -76 + ty + (o.armLen || 28) * Math.sin(a), c = Math.cos(lean), sn = Math.sin(lean);
+  return {x: x + f * s * (hx * c - hy * sn), y: y + s * (hx * sn + hy * c)};
+}
+function carSprite(ctx, x, y, Lp, col = '#e03131', f = 1, spin = 0) {
+  const H = Lp * 0.28, x0 = x - Lp / 2, y0 = y - H - Lp * 0.08;
+  ctx.save(); ctx.translate(x, 0); ctx.scale(f, 1); ctx.translate(-x, 0);
+  ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(x0, y0, Lp, H, Lp * 0.06); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(x0 + Lp * .22, y0 + 1); ctx.lineTo(x0 + Lp * .34, y0 - H * .75); ctx.lineTo(x0 + Lp * .68, y0 - H * .75); ctx.lineTo(x0 + Lp * .82, y0 + 1); ctx.fill();
+  ctx.fillStyle = '#d0ebff'; ctx.fillRect(x0 + Lp * .37, y0 - H * .6, Lp * .14, H * .5); ctx.fillRect(x0 + Lp * .54, y0 - H * .6, Lp * .12, H * .5);
+  ctx.fillStyle = '#fff3bf'; ctx.fillRect(x0 + Lp - 5, y0 + H * .25, 5, H * .25);
+  const r = Lp * 0.09;
+  [x0 + Lp * .2, x0 + Lp * .8].forEach(wx => { ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.arc(wx, y - r, r, 0, 7); ctx.fill(); ctx.fillStyle = '#adb5bd'; ctx.beginPath(); ctx.arc(wx, y - r, r * .45, 0, 7); ctx.fill(); ctx.strokeStyle = '#495057'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(wx, y - r); ctx.lineTo(wx + Math.cos(spin) * r * .45, y - r + Math.sin(spin) * r * .45); ctx.stroke(); });
+  ctx.restore();
+}
+function boxSprite(ctx, cx, cy, w, h, rot = 0, col = '#c8a165') {
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  ctx.fillStyle = col; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.5; ctx.strokeRect(-w / 2, -h / 2, w, h);
+  ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(-w * .08, -h / 2, w * .16, h);
+  ctx.restore();
+}
+function ballSprite(ctx, x, y, r, c1, c2) {
+  const g = ctx.createRadialGradient(x - r * .35, y - r * .4, r * .1, x, y, r); g.addColorStop(0, c1); g.addColorStop(1, c2);
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+}
+function basketball(ctx, x, y, r, rot = 0) {
+  ballSprite(ctx, x, y, r, '#ffa94d', '#d9480f');
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.strokeStyle = '#5f3dc4'; ctx.strokeStyle = '#3b2314'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(-r, 0); ctx.lineTo(r, 0); ctx.moveTo(0, -r); ctx.lineTo(0, r); ctx.stroke();
+  ctx.beginPath(); ctx.arc(-r * 1.3, 0, r * .95, -0.75, 0.75); ctx.stroke(); ctx.beginPath(); ctx.arc(r * 1.3, 0, r * .95, Math.PI - 0.75, Math.PI + 0.75); ctx.stroke();
+  ctx.restore();
+}
+function billiard(ctx, x, y, r, col, num) {
+  ballSprite(ctx, x, y, r, col === '#fff' ? '#ffffff' : '#495057', col === '#fff' ? '#ced4da' : '#000');
+  if (num) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x, y, r * .45, 0, 7); ctx.fill(); ctx.fillStyle = '#000'; ctx.font = `700 ${Math.round(r * .6)}px system-ui,sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(num, x, y + 1); }
+}
+function phoneSprite(ctx, cx, cy, w, h, rot = 0) {
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.roundRect(-w / 2, -h / 2, w, h, w * .18); ctx.fill();
+  const g = ctx.createLinearGradient(-w / 2, -h / 2, w / 2, h / 2); g.addColorStop(0, '#4dabf7'); g.addColorStop(1, '#9775fa');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(-w / 2 + 3, -h / 2 + 6, w - 6, h - 12, 3); ctx.fill();
+  ctx.restore();
+}
+function droneSprite(ctx, x, y, s, t = 0) {
+  ctx.save(); ctx.translate(x, y);
+  ctx.strokeStyle = '#343a40'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-s, -s * .25); ctx.lineTo(s, -s * .25); ctx.stroke();
+  ctx.fillStyle = '#495057'; ctx.beginPath(); ctx.roundRect(-s * .4, -s * .35, s * .8, s * .4, 5); ctx.fill();
+  ctx.fillStyle = '#c8a165'; ctx.fillRect(-s * .28, s * .08, s * .56, s * .38); ctx.strokeStyle = '#8d6e3f'; ctx.lineWidth = 1; ctx.strokeRect(-s * .28, s * .08, s * .56, s * .38);
+  [-1, 1].forEach(k => { ctx.fillStyle = 'rgba(134,142,150,.55)'; ctx.beginPath(); ctx.ellipse(k * s, -s * .32, s * .38 * Math.abs(Math.cos(t * 20 + k)), s * .07, 0, 0, 7); ctx.fill(); ctx.fillStyle = '#212529'; ctx.fillRect(k * s - 2, -s * .36, 4, 6); });
+  ctx.restore();
+}
+function treeOrWindowRow() {}
+/* ---------- scenery painters ---------- */
+function shadow(ctx, x, y, w, a = 0.18) { ctx.save(); ctx.fillStyle = `rgba(0,0,0,${a})`; ctx.beginPath(); ctx.ellipse(x, y, w / 2, Math.max(2, w * 0.09), 0, 0, 7); ctx.fill(); ctx.restore(); }
+function scenery(ctx, w, h, gy, type, shift = 0) {
+  // gy: ground line in px; shift: horizontal scroll in px (for parallax)
+  ctx.save();
+  const sky = (c1, c2) => { const g = ctx.createLinearGradient(0, 0, 0, gy); g.addColorStop(0, c1); g.addColorStop(1, c2); ctx.fillStyle = g; ctx.fillRect(0, 0, w, gy); };
+  const clouds = (n = 4, s = 0.25) => { ctx.fillStyle = 'rgba(255,255,255,.9)'; for (let i = 0; i < n; i++) { const x = ((i * 0.29 + 0.07) * w * 1.3 - shift * s) % (w * 1.3), xx = x < -120 ? x + w * 1.3 : x, y = gy * (0.12 + 0.18 * ((i * 7) % 3) / 2); [[0, 0, 22], [24, -10, 26], [52, 0, 20], [26, 6, 22]].forEach(([dx, dy, r]) => { ctx.beginPath(); ctx.arc(xx + dx, y + dy, r, 0, 7); ctx.fill(); }); } };
+  const hills = (col, amp, base, s, k) => { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(0, gy); for (let x = 0; x <= w; x += 8) ctx.lineTo(x, base - amp * (0.5 + 0.5 * Math.sin((x + shift * s) * k) * Math.cos((x + shift * s) * k * 0.37))); ctx.lineTo(w, gy); ctx.closePath(); ctx.fill(); };
+  if (type === 'park') {
+    sky('#74c0fc', '#d0ebff'); clouds(); hills('#b2f2bb', 26, gy - 18, 0.15, 0.011); hills('#8ce99a', 16, gy - 4, 0.3, 0.02);
+    const g = ctx.createLinearGradient(0, gy, 0, h); g.addColorStop(0, '#69db7c'); g.addColorStop(1, '#40c057'); ctx.fillStyle = g; ctx.fillRect(0, gy, w, h - gy);
+    ctx.fillStyle = 'rgba(255,255,255,.18)'; for (let x = (-shift % 40 + 40) % 40 - 40; x < w; x += 40) ctx.fillRect(x, gy + 4, 20, 3);
+  } else if (type === 'ice') {
+    const g0 = ctx.createLinearGradient(0, 0, 0, gy); g0.addColorStop(0, '#343a40'); g0.addColorStop(1, '#495057'); ctx.fillStyle = g0; ctx.fillRect(0, 0, w, gy);
+    for (let i = 0; i < 40; i++) { ctx.fillStyle = ['#ffd43b', '#ff8787', '#74c0fc', '#f8f9fa'][i % 4]; ctx.globalAlpha = .35; ctx.beginPath(); ctx.arc((i * 97) % w, 20 + (i * 53) % (gy * 0.55), 3, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1; const bh = 34; ctx.fillStyle = '#f8f9fa'; ctx.fillRect(0, gy - bh, w, bh);
+    ['#1c7ed6', '#e03131', '#2f9e44', '#f59f00'].forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(((i * 0.27 + 0.05) * w - shift) % w, gy - bh + 7, w * 0.16, bh - 14); });
+    ctx.fillStyle = '#ffc9c9'; ctx.fillRect(0, gy - 4, w, 4);
+    const g = ctx.createLinearGradient(0, gy, 0, h); g.addColorStop(0, '#e7f5ff'); g.addColorStop(1, '#c5e4fb'); ctx.fillStyle = g; ctx.fillRect(0, gy, w, h - gy);
+    ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 1; for (let i = 0; i < 12; i++) { const y = gy + 8 + ((i * 37) % (h - gy - 10)); ctx.beginPath(); ctx.moveTo(((i * 131) % w), y); ctx.lineTo(((i * 131) % w) + 60, y + 3); ctx.stroke(); }
+  } else if (type === 'indoor') {
+    const g0 = ctx.createLinearGradient(0, 0, 0, gy); g0.addColorStop(0, '#f8f0e3'); g0.addColorStop(1, '#efe3cf'); ctx.fillStyle = g0; ctx.fillRect(0, 0, w, gy);
+    ctx.fillStyle = 'rgba(0,0,0,.035)'; for (let x = 0; x < w; x += 46) ctx.fillRect(x, 0, 23, gy);
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, gy - 14, w, 14);
+    const g = ctx.createLinearGradient(0, gy, 0, h); g.addColorStop(0, '#c08552'); g.addColorStop(1, '#a0673a'); ctx.fillStyle = g; ctx.fillRect(0, gy, w, h - gy);
+    ctx.strokeStyle = 'rgba(70,40,15,.25)'; ctx.lineWidth = 1; for (let y = gy + 14; y < h; y += 14) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+    for (let r = 0, y = gy; y < h; y += 14, r++) for (let x = ((r % 2) * 60 - shift) % 120 - 120; x < w; x += 120) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + 14); ctx.stroke(); }
+  } else if (type === 'road') {
+    sky('#91a7ff', '#dbe4ff'); clouds(3, 0.1);
+    for (let i = 0; i < 18; i++) { const bw = 40 + (i * 23) % 50, bh = 50 + (i * 47) % 90, x = ((i * 71 - shift * 0.3) % (w + 200) + w + 200) % (w + 200) - 100; ctx.fillStyle = ['#adb5bd', '#ced4da', '#868e96'][i % 3]; ctx.fillRect(x, gy - 10 - bh, bw, bh); ctx.fillStyle = 'rgba(255,255,255,.5)'; for (let wy = gy - bh; wy < gy - 20; wy += 14) for (let wx = x + 6; wx < x + bw - 8; wx += 12) ctx.fillRect(wx, wy, 6, 7); }
+    ctx.fillStyle = '#ced4da'; ctx.fillRect(0, gy - 10, w, 10);
+    ctx.fillStyle = '#495057'; ctx.fillRect(0, gy, w, h - gy); ctx.fillStyle = '#f8f9fa'; for (let x = (-shift % 80 + 80) % 80 - 80; x < w; x += 80) ctx.fillRect(x, gy + (h - gy) * 0.45, 40, 4);
+  } else if (type === 'night') {
+    const g = ctx.createLinearGradient(0, 0, 0, gy); g.addColorStop(0, '#0b1026'); g.addColorStop(1, '#2b3a67'); ctx.fillStyle = g; ctx.fillRect(0, 0, w, gy);
+    ctx.fillStyle = '#fff'; for (let i = 0; i < 90; i++) { ctx.globalAlpha = 0.3 + ((i * 13) % 7) / 10; ctx.fillRect((i * 151) % w, (i * 89) % (gy * 0.9), 1.6, 1.6); } ctx.globalAlpha = 1;
+    ctx.fillStyle = '#1b1f3b'; ctx.beginPath(); ctx.moveTo(0, gy); for (let x = 0; x <= w; x += 30) ctx.lineTo(x, gy - 20 - 18 * Math.abs(Math.sin(x * 0.013))); ctx.lineTo(w, gy); ctx.fill();
+    ctx.fillStyle = '#212544'; ctx.fillRect(0, gy, w, h - gy);
+  } else if (type === 'sea') {
+    sky('#a5d8ff', '#e7f5ff'); clouds(3, 0.05); ctx.fillStyle = '#1971c2'; ctx.fillRect(0, gy, w, h - gy);
+  } else if (type === 'felt') {
+    ctx.fillStyle = '#5c3a1e'; ctx.fillRect(0, 0, w, h); const g = ctx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, Math.max(w, h) * 0.7); g.addColorStop(0, '#2b9348'); g.addColorStop(1, '#1b6b33'); ctx.fillStyle = g; ctx.fillRect(18, 18, w - 36, h - 36);
+    ctx.fillStyle = '#111'; [[18, 18], [w / 2, 14], [w - 18, 18], [18, h - 18], [w / 2, h - 14], [w - 18, h - 18]].forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 14, 0, 7); ctx.fill(); });
+  } else if (type === 'warehouse') {
+    const g0 = ctx.createLinearGradient(0, 0, 0, gy); g0.addColorStop(0, '#dee2e6'); g0.addColorStop(1, '#ced4da'); ctx.fillStyle = g0; ctx.fillRect(0, 0, w, gy);
+    ctx.strokeStyle = 'rgba(0,0,0,.08)'; ctx.lineWidth = 2; for (let x = 0; x < w; x += 18) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, gy); ctx.stroke(); }
+    ctx.fillStyle = '#adb5bd'; ctx.fillRect(0, gy, w, h - gy); ctx.fillStyle = '#fcc419'; for (let x = 0; x < w; x += 60) ctx.fillRect(x, gy + 10, 30, 5);
+  }
+  ctx.restore();
+}
+/* ---------- challenge problems (Retos) ---------- */
+function addRetos(R) {
+  const bi = (a, tag = 'span', cls = '') => `<${tag}${cls ? ` class="${cls}"` : ''} data-es="${a[0].replace(/"/g, '&quot;')}" data-en="${a[1].replace(/"/g, '&quot;')}"></${tag}>`;
+  R.forEach((r, n) => {
+    const sec = document.getElementById(r.tab), aside = sec && sec.querySelector('.side'); if (!aside) return;
+    const nb = document.querySelector(`#tabs button[data-s=${r.tab}]`); if (nb) nb.classList.add('has-reto');
+    const box = document.createElement('div'); box.className = 'reto';
+    box.innerHTML = bi(['Reto · problema desafiante', 'Challenge problem'], 'div', 'tag') + bi(r.title, 'h4') + bi(r.text, 'p') + bi(r.q, 'p', 'q')
+      + `<div class="btns"><button class="btn primary" data-a="see" data-es="1 · Ver la situación" data-en="1 · Watch the setup"></button></div>`
+      + `<div class="ans-row"><input type="number" step="any" data-a="in"><span>${r.unit}</span><button class="btn" data-a="chk" data-es="2 · Comprobar" data-en="2 · Check"></button></div>`
+      + `<div class="fb"></div><div class="btns"><button class="btn" data-a="rev" data-es="3 · Revelar con la simulación" data-en="3 · Reveal with the simulation"></button></div>`
+      + `<div class="sol" hidden><ol>${r.steps.map(s => bi(s, 'li')).join('')}</ol>${bi(r.ans, 'div', 'fb ok')}<div class="meas"></div></div>`;
+    const h2 = aside.querySelector('h2'); h2.after(box);
+    const fb = box.querySelector('.fb'), sol = box.querySelector('.sol'), meas = box.querySelector('.meas'); let timer = null;
+    const watch = (cond, then, maxMs = 30000) => { clearInterval(timer); const t0 = performance.now(); timer = setInterval(() => { if (cond() || performance.now() - t0 > maxMs) { clearInterval(timer); then(); } }, 30); };
+    box.querySelector('[data-a=see]').onclick = () => {
+      sec.classList.add('quiz'); sol.hidden = true; fb.textContent = ''; r.setup();
+      const t0 = performance.now(); watch(() => performance.now() - t0 > (r.preview || 1500), () => { r.pause(); fb.className = 'fb'; fb.textContent = L('Pausado en el momento clave. Resuelve en tu cuaderno y escribe tu respuesta.', 'Paused at the key moment. Solve it on paper and enter your answer.'); });
+    };
+    box.querySelector('[data-a=chk]').onclick = () => {
+      const v = parseFloat(box.querySelector('[data-a=in]').value); if (!isFinite(v)) { fb.className = 'fb no'; fb.textContent = L('Escribe un número.', 'Enter a number.'); return; }
+      const ok = Math.abs(v - r.answer) <= Math.max(r.tol * Math.abs(r.answer), r.abs || 0);
+      fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.textContent = ok ? L('¡Correcto! Compruébalo con la simulación (paso 3).', 'Correct! Check it with the simulation (step 3).') : L('Todavía no. Pista: ', 'Not yet. Hint: ') + (ok ? '' : L(r.hint[0], r.hint[1]));
+    };
+    box.querySelector('[data-a=rev]').onclick = () => {
+      sec.classList.remove('quiz'); sol.hidden = false; meas.textContent = L('Simulando…', 'Simulating…'); r.reveal();
+      watch(r.done, () => { r.pause && r.stopAtEnd !== false && r.pause(); meas.textContent = L('La simulación mide: ', 'The simulation measures: ') + r.measured(); }, 40000);
+    };
+  });
+}
+
+/* ================= 3D studio (Three.js, rendering only) =================
+   World units = screen px / 100 on the plane z = 0, so 3D objects line up
+   exactly with the 2D overlay (arrows, labels, drag handles). */
+const G3 = (() => {
+  let ok = false;
+  try { ok = !!window.THREE && !!document.createElement('canvas').getContext('webgl2'); } catch (e) { ok = false; }
+  if (!ok) return {ok: false};
+  const canvas = document.createElement('canvas'); canvas.className = 'gl3';
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({canvas, antialias: true}); } catch (e) { return {ok: false}; }
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.82;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const pm = new THREE.PMREMGenerator(renderer);
+  const env = pm.fromScene(new THREE.RoomEnvironment(), 0.04).texture;
+  const FOV = 28, views = {};
+
+  /* ---------- textures & materials ---------- */
+  const texCache = {};
+  function tex(key, w, h, paint, rep = [1, 1]) {
+    if (!texCache[key]) { const c = document.createElement('canvas'); c.width = w; c.height = h; paint(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8; texCache[key] = t; }
+    const t = texCache[key].clone(); t.needsUpdate = true; t.repeat.set(rep[0], rep[1]); return t;
+  }
+  const noise = (c, w, h, n, col, a, sz = 2) => { c.fillStyle = col; for (let i = 0; i < n; i++) { c.globalAlpha = Math.random() * a; c.fillRect(Math.random() * w, Math.random() * h, sz, sz); } c.globalAlpha = 1; };
+  const M = {
+    chrome: () => new THREE.MeshStandardMaterial({color: 0xd7d9de, roughness: 0.18, metalness: 1}),
+    metal: (c = 0x3a3b3f, r = 0.45) => new THREE.MeshStandardMaterial({color: c, roughness: r, metalness: 0.85}),
+    plastic: (c, r = 0.32) => new THREE.MeshPhysicalMaterial({color: c, roughness: r, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.15}),
+    matte: (c, r = 0.8) => new THREE.MeshStandardMaterial({color: c, roughness: r, metalness: 0}),
+    rubber: () => new THREE.MeshStandardMaterial({color: 0x1a1a1c, roughness: 0.85}),
+    glass: (c = 0x223344) => new THREE.MeshPhysicalMaterial({color: c, roughness: 0.05, metalness: 0.2, transmission: 0, clearcoat: 1, opacity: 0.85, transparent: true}),
+    glow: (c, i = 2) => new THREE.MeshStandardMaterial({color: c, emissive: c, emissiveIntensity: i}),
+    wood: (c = '#8b5a2b') => new THREE.MeshStandardMaterial({map: tex('wood' + c, 256, 256, (g, w, h) => { g.fillStyle = c; g.fillRect(0, 0, w, h); for (let y = 0; y < h; y += 3) { g.fillStyle = `rgba(0,0,0,${0.04 + Math.random() * 0.08})`; g.fillRect(0, y, w, 1 + Math.random() * 2); } }), roughness: 0.6}),
+    cardboard: () => new THREE.MeshStandardMaterial({map: tex('card', 256, 256, (g, w, h) => { g.fillStyle = '#c8a165'; g.fillRect(0, 0, w, h); noise(g, w, h, 3000, '#7f5539', 0.25); g.fillStyle = 'rgba(230,220,190,.85)'; g.fillRect(w * 0.42, 0, w * 0.16, h); }), roughness: 0.85})
+  };
+
+  /* ---------- geometry helpers ---------- */
+  const rbox = (w, h, d, r = 0.04) => new THREE.RoundedBoxGeometry(w, h, d, 4, Math.min(r, w / 2.2, h / 2.2, d / 2.2));
+  const mesh = (geo, mat, cast = true) => { const m = new THREE.Mesh(geo, mat); m.castShadow = cast; m.receiveShadow = true; return m; };
+  const cyl = (r1, r2, h, mat, seg = 32) => mesh(new THREE.CylinderGeometry(r1, r2, h, seg), mat);
+  const sph = (r, mat, seg = 32) => mesh(new THREE.SphereGeometry(r, seg, seg / 2), mat);
+  function tube(points, r, mat, seg) { const c = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.2); return mesh(new THREE.TubeGeometry(c, seg || points.length * 4, r, 10, false), mat); }
+  function setTube(m, points, r, seg) { const c = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.2); m.geometry.dispose(); m.geometry = new THREE.TubeGeometry(c, seg || points.length * 4, r, 10, false); }
+  function helix(a, b, R, coils, n = 20) {   // points of a coil spring between Vector3 a and b
+    const d = new THREE.Vector3().subVectors(b, a), L = d.length(), u = d.clone().normalize();
+    const v = Math.abs(u.y) < 0.9 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0), p = new THREE.Vector3().crossVectors(u, v).normalize(), q = new THREE.Vector3().crossVectors(u, p);
+    const pts = [a.clone()], lead = Math.min(0.25 * L, 0.18);
+    pts.push(a.clone().addScaledVector(u, lead * 0.6));
+    const N = coils * n;
+    for (let i = 0; i <= N; i++) { const t = i / N, ang = t * coils * 2 * Math.PI, rr = R * Math.min(1, Math.min(t, 1 - t) * 25); pts.push(a.clone().addScaledVector(u, lead + (L - 2 * lead) * t).addScaledVector(p, rr * Math.sin(ang)).addScaledVector(q, rr * Math.cos(ang))); }
+    pts.push(b.clone().addScaledVector(u, -lead * 0.6), b.clone());
+    return pts;
+  }
+
+  /* ---------- people & vehicles ---------- */
+  function mannequin(o = {}) {
+    const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+    const skin = M.matte(o.skin || 0xf1c27d, 0.6), shirt = M.matte(o.shirt || 0xe8590c, 0.7), pants = M.matte(o.pants || 0x364fc7, 0.75), hair = M.matte(o.hair || 0x5c3d2e, 0.9), shoe = M.matte(0x212529, 0.5);
+    const torso = mesh(new THREE.CapsuleGeometry(0.115, 0.22, 6, 16), shirt); torso.position.y = 0.66; body.add(torso);
+    const neck = cyl(0.04, 0.04, 0.06, skin); neck.position.y = 0.83; body.add(neck);
+    const head = sph(0.088, skin); head.position.y = 0.92; body.add(head);
+    const hr = sph(0.093, hair); hr.scale.set(1, 0.75, 1); hr.position.set(-0.012, 0.955, 0); body.add(hr);
+    if (o.long) { const pony = mesh(new THREE.CapsuleGeometry(0.035, 0.14, 4, 8), hair); pony.position.set(-0.1, 0.86, 0); body.add(pony); }
+    const limb = (len, r, mat) => { const p = new THREE.Group(), m = mesh(new THREE.CapsuleGeometry(r, len, 4, 12), mat); m.position.y = -len / 2 - r * 0.3; p.add(m); return p; };
+    const armL = limb(0.3, 0.036, shirt), armR = limb(0.3, 0.036, shirt);
+    [armL, armR].forEach((a, i) => { a.position.set(0, 0.79, i ? -0.15 : 0.15); const hand = sph(0.04, skin); hand.position.y = -0.37; a.add(hand); body.add(a); });
+    const legL = limb(0.36, 0.05, pants), legR = limb(0.36, 0.05, pants);
+    [legL, legR].forEach((l, i) => { l.position.set(0, 0.47, i ? -0.065 : 0.065); const sh = mesh(rbox(0.13, 0.05, 0.07, 0.02), shoe); sh.position.set(0.03, -0.44, 0); l.add(sh);
+      if (o.skates) { const bl = mesh(new THREE.BoxGeometry(0.17, 0.012, 0.012), M.chrome()); bl.position.set(0.03, -0.475, 0); l.add(bl); }
+      body.add(l); });
+    const api = {group: g, body, armL, armR, legL, legR,
+      pose(p = {}) {
+        body.rotation.z = -(p.lean || 0);
+        armL.rotation.z = p.armL !== undefined ? p.armL : 0.15; armR.rotation.z = p.armR !== undefined ? p.armR : (p.armL !== undefined ? p.armL : 0.15);
+        const sp = p.stride || 0.12; legL.rotation.z = sp; legR.rotation.z = -sp;
+        if (p.sit) { legL.rotation.z = legR.rotation.z = Math.PI / 2; body.position.y = -0.38; } else body.position.y = 0;
+        return api;
+      }};
+    return api.pose();
+  }
+  function carModel(color = 0xe03131) {
+    const g = new THREE.Group(), paint = M.plastic(color, 0.25);
+    const bodyM = mesh(rbox(1, 0.24, 0.44, 0.08), paint); bodyM.position.y = 0.22; g.add(bodyM);
+    const cab = mesh(rbox(0.56, 0.2, 0.4, 0.08), paint); cab.position.set(-0.04, 0.41, 0); g.add(cab);
+    const win = mesh(rbox(0.5, 0.15, 0.405, 0.05), M.glass(0x1b2a3a)); win.position.set(-0.04, 0.42, 0); g.add(win);
+    const hl = mesh(new THREE.BoxGeometry(0.02, 0.05, 0.1), M.glow(0xfff3bf, 1.5)); hl.position.set(0.5, 0.25, 0.13); g.add(hl); const hl2 = hl.clone(); hl2.position.z = -0.13; g.add(hl2);
+    const tl = mesh(new THREE.BoxGeometry(0.02, 0.05, 0.1), M.glow(0xff3333, 1)); tl.position.set(-0.5, 0.25, 0.13); g.add(tl); const tl2 = tl.clone(); tl2.position.z = -0.13; g.add(tl2);
+    const wheels = [];
+    [[0.32, 0.2], [0.32, -0.2], [-0.32, 0.2], [-0.32, -0.2]].forEach(([x, z]) => { const w = new THREE.Group(); const t = cyl(0.1, 0.1, 0.07, M.rubber(), 28); t.rotation.x = Math.PI / 2; w.add(t); const rim = cyl(0.055, 0.055, 0.075, M.chrome(), 16); rim.rotation.x = Math.PI / 2; w.add(rim); const sp = mesh(new THREE.BoxGeometry(0.1, 0.015, 0.08), M.metal(0x495057)); w.add(sp); w.position.set(x, 0.1, z); g.add(w); wheels.push(w); });
+    g.userData.wheels = wheels; return g;
+  }
+
+  /* ---------- environments ---------- */
+  function paintSky(g, w, h, top, bot, clouds) { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, top); gr.addColorStop(1, bot); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    if (clouds) for (let i = 0; i < 9; i++) { const x = Math.random() * w, y = h * (0.1 + Math.random() * 0.45), s = 30 + Math.random() * 50; g.fillStyle = 'rgba(255,255,255,.85)'; [[0, 0, 1], [0.9, -0.3, 1.2], [1.9, 0, 0.9], [1, 0.25, 1]].forEach(([dx, dy, r]) => { g.beginPath(); g.arc(x + dx * s, y + dy * s, r * s, 0, 7); g.fill(); }); } }
+  const BACKS = {
+    studio: (g, w, h) => { g.fillStyle = '#0c0c0e'; g.fillRect(0, 0, w, h); const gr = g.createRadialGradient(w * 0.78, h * 0.05, 10, w * 0.78, h * 0.05, w * 0.6); gr.addColorStop(0, 'rgba(120,120,128,.55)'); gr.addColorStop(0.5, 'rgba(50,50,56,.25)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); },
+    sky: (g, w, h) => paintSky(g, w, h, '#4a90d9', '#cfe6fb', true),
+    night: (g, w, h) => { paintSky(g, w, h, '#05081a', '#253563', false); for (let i = 0; i < 400; i++) { g.fillStyle = `rgba(255,255,255,${Math.random()})`; g.fillRect(Math.random() * w, Math.random() * h * 0.85, 1.5, 1.5); } },
+    space: (g, w, h) => { g.fillStyle = '#05060c'; g.fillRect(0, 0, w, h); for (let i = 0; i < 600; i++) { g.fillStyle = `rgba(200,220,255,${Math.random() * 0.8})`; g.fillRect(Math.random() * w, Math.random() * h, 1.4, 1.4); } const gr = g.createRadialGradient(w * .3, h * .3, 0, w * .3, h * .3, w * .5); gr.addColorStop(0, 'rgba(90,60,160,.25)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); },
+    city: (g, w, h) => { paintSky(g, w, h, '#5d8fd6', '#dbe7f7', true); for (let i = 0; i < 40; i++) { const bw = 40 + Math.random() * 70, bh = h * (0.12 + Math.random() * 0.3), x = Math.random() * w; g.fillStyle = ['#7f8a96', '#99a3ad', '#6c7680'][i % 3]; g.fillRect(x, h - bh, bw, bh); g.fillStyle = 'rgba(255,240,200,.55)'; for (let y = h - bh + 8; y < h - 10; y += 14) for (let xx = x + 6; xx < x + bw - 8; xx += 12) if (Math.random() > 0.3) g.fillRect(xx, y, 6, 7); } }
+  };
+  const FLOORS = {
+    grass: g => { g.fillStyle = '#4c9a3e'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 9000, '#2f6b27', 0.5, 3); noise(g, 512, 512, 5000, '#8fd37a', 0.35, 2); },
+    asphalt: g => { g.fillStyle = '#3d4045'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 12000, '#000', 0.35, 2); noise(g, 512, 512, 6000, '#888', 0.3, 2); },
+    wood: g => { for (let y = 0; y < 512; y += 64) { g.fillStyle = ['#b07a4a', '#a56f40', '#bb8656', '#9e6a3c'][(y / 64) % 4]; g.fillRect(0, y, 512, 64); for (let k = 0; k < 40; k++) { g.fillStyle = 'rgba(60,30,10,.07)'; g.fillRect(0, y + Math.random() * 64, 512, 1); } g.fillStyle = 'rgba(40,20,5,.35)'; g.fillRect(0, y, 512, 2); g.fillRect(((y / 64) % 2) * 256 + 120, y, 2, 64); } },
+    tile: g => { g.fillStyle = '#d5d8dc'; g.fillRect(0, 0, 512, 512); g.strokeStyle = '#a9adb3'; g.lineWidth = 3; for (let i = 0; i <= 512; i += 128) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 512); g.moveTo(0, i); g.lineTo(512, i); g.stroke(); } },
+    concrete: g => { g.fillStyle = '#9ea3a8'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 15000, '#555', 0.25, 2); g.fillStyle = '#f1c40f'; g.fillRect(0, 230, 512, 14); },
+    felt: g => { g.fillStyle = '#1f7a3a'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 20000, '#0d4a20', 0.3, 2); },
+    water: g => { g.fillStyle = '#1c6ea4'; g.fillRect(0, 0, 512, 512); g.strokeStyle = 'rgba(255,255,255,.25)'; g.lineWidth = 2; for (let i = 0; i < 70; i++) { const x = Math.random() * 512, y = Math.random() * 512; g.beginPath(); g.arc(x, y, 14, Math.PI * 1.1, Math.PI * 1.9); g.stroke(); } },
+    carpet: g => { g.fillStyle = '#4c3a8f'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 30000, '#000', 0.25, 2); noise(g, 512, 512, 10000, '#9f8cf0', 0.25, 2); },
+    dashes: g => { g.clearRect(0, 0, 512, 512); g.fillStyle = '#f1f3f5'; g.fillRect(0, 240, 300, 32); },
+    shelves: g => { g.fillStyle = '#e9ecef'; g.fillRect(0, 0, 512, 512); for (let r = 0; r < 4; r++) { g.fillStyle = '#868e96'; g.fillRect(0, r * 128 + 116, 512, 12); for (let x = 4; x < 508; x += 26 + Math.random() * 20) { g.fillStyle = ['#e03131', '#1c7ed6', '#f59f00', '#2f9e44', '#ae3ec9', '#f8f9fa'][Math.floor(Math.random() * 6)]; const hh = 50 + Math.random() * 55; g.fillRect(x, r * 128 + 116 - hh, 22, hh); } } },
+    ice: g => { g.fillStyle = '#eaf6ff'; g.fillRect(0, 0, 512, 512); g.strokeStyle = 'rgba(160,200,230,.5)'; for (let i = 0; i < 60; i++) { g.beginPath(); const x = Math.random() * 512, y = Math.random() * 512; g.moveTo(x, y); g.lineTo(x + 40 + Math.random() * 80, y + Math.random() * 10 - 5); g.stroke(); } }
+  };
+
+  /* ---------- view object ---------- */
+  function View(def) {
+    this.def = def; this.scene = new THREE.Scene(); this.cam = new THREE.PerspectiveCamera(FOV, 1, 0.05, 500); this.W = 0; this.H = 0; this.o = {};
+    this.scene.environment = env; this.scene.environmentIntensity = def.env !== undefined ? def.env : 0.4; this.scene.background = new THREE.Color(0x0b0b0d);
+  }
+  View.prototype = {
+    P(px, py, z = 0) { return new THREE.Vector3(px / 100, -py / 100, z); },
+    u(px) { return px / 100; },
+    add(...m) { m.forEach(x => this.scene.add(x)); return m[0]; },
+    lights(o = {}) {
+      const W = this.W / 100, H = this.H / 100, D = this.D;
+      this.add(new THREE.AmbientLight(0xffffff, o.amb !== undefined ? o.amb : 0.15));
+      if (o.hemi) this.add(new THREE.HemisphereLight(0xcfe6ff, 0x3a5a2a, o.hemi));
+      const key = new THREE.SpotLight(0xffffff, (o.key || 600) * 0.55, 0, 0.6, 0.6, 1.4);
+      const kp = o.kpos || [W * 0.85, 4, D * 0.55]; key.position.set(kp[0], kp[1], kp[2]); key.target.position.set(W / 2, -H * 0.6, 0);
+      key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.camera.near = 1; key.shadow.camera.far = 80;
+      this.add(key, key.target); this.key = key;
+      const rim = new THREE.DirectionalLight(0x9fb8ff, o.rim !== undefined ? o.rim : 0.5); rim.position.set(-6, 4, -6); this.add(rim);
+      const fill = new THREE.DirectionalLight(0xffffff, o.fill !== undefined ? o.fill : 0.35); fill.position.set(W * 0.2, 2, D); this.add(fill);
+    },
+    back(type, dist = 30) {   // far backdrop covering the frustum
+      const d = this.D + dist, hh = 2 * d * Math.tan(FOV * Math.PI / 360) * 1.25, ww = hh * (this.W / this.H) * 1.25;
+      const key = 'back_' + type, t = tex(key, 1024, 512, BACKS[type] || BACKS.studio);
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(ww, hh), new THREE.MeshBasicMaterial({map: t, toneMapped: false}));
+      m.position.set(this.W / 200, -this.H / 200, -dist); this.add(m); return m;
+    },
+    wall(color, z = -2.5, opts = {}) {   // near wall (indoor scenes)
+      const m = mesh(new THREE.PlaneGeometry(80, 40), opts.map ? new THREE.MeshStandardMaterial({map: opts.map, roughness: 0.9}) : M.matte(color, 0.95), false);
+      m.position.set(this.W / 200, -this.H / 200 + 10, z); this.add(m); return m;
+    },
+    floor(type, gy, opts = {}) {   // horizontal floor at screen px line gy
+      const y = -gy / 100, L = 120, Z = 60;
+      if (type === 'mirror' || type === 'ice' || opts.reflect) {
+        const mir = new THREE.Reflector(new THREE.PlaneGeometry(L, Z), {clipBias: 0.003, textureWidth: 1024, textureHeight: 1024, color: type === 'ice' ? 0x99aabb : 0x777777});
+        mir.rotation.x = -Math.PI / 2; mir.position.set(this.W / 200, y - 0.003, 0); this.add(mir);
+      }
+      let mat;
+      if (type === 'mirror') mat = new THREE.MeshStandardMaterial({color: 0x141416, roughness: 0.55, metalness: 0.4, transparent: true, opacity: 0.86});
+      else if (type === 'ice') mat = new THREE.MeshStandardMaterial({map: tex('f_ice', 512, 512, FLOORS.ice, [L / 6, Z / 6]), roughness: 0.15, metalness: 0, transparent: true, opacity: 0.72});
+      else { const r = opts.rep || 2.5; mat = new THREE.MeshStandardMaterial({map: tex('f_' + type, 512, 512, FLOORS[type], [L / r, Z / r]), roughness: opts.rough !== undefined ? opts.rough : 0.85, metalness: 0, transparent: !!opts.reflect, opacity: opts.reflect ? 0.85 : 1}); }
+      const m = mesh(new THREE.PlaneGeometry(L, Z), mat, false); m.rotation.x = -Math.PI / 2; m.position.set(this.W / 200, y, 0); this.add(m); this.floorMesh = m; return m;
+    },
+    table(type, opts = {}) {   // top views: the screen plane is the ground; objects extrude toward +z
+      const W = this.W / 100, H = this.H / 100, r = opts.rep || 2.5;
+      const mat = new THREE.MeshStandardMaterial({map: tex('t_' + type, 512, 512, FLOORS[type], [W * 2 / r, H * 2 / r]), roughness: opts.rough !== undefined ? opts.rough : 0.85});
+      const m = mesh(new THREE.PlaneGeometry(W * 2, H * 2), mat, false); m.position.set(W / 2, -H / 2, 0); this.add(m); this.floorMesh = m; return m;
+    },
+    topLights(o = {}) {
+      const W = this.W / 100, H = this.H / 100;
+      this.add(new THREE.AmbientLight(0xffffff, o.amb !== undefined ? o.amb : 0.35));
+      const key = new THREE.DirectionalLight(0xffffff, (o.key || 2.2) * 0.75); key.position.set(W * 0.75, -H * 0.1, 12); key.target.position.set(W / 2, -H / 2, 0);
+      key.castShadow = true; key.shadow.mapSize.set(2048, 2048); const sc = key.shadow.camera; sc.left = -W; sc.right = W; sc.top = H; sc.bottom = -H; sc.near = 1; sc.far = 40; key.shadow.bias = -0.0005;
+      this.add(key, key.target); const fill = new THREE.DirectionalLight(0xffffff, 0.4); fill.position.set(0, -H, 8); this.add(fill);
+    },
+    resize(W, H) {
+      this.W = W; this.H = H; this.D = (H / 100) / 2 / Math.tan(FOV * Math.PI / 360);
+      this.cam.aspect = W / H; this.cam.position.set(W / 200, -H / 200, this.D); this.cam.lookAt(W / 200, -H / 200, 0); this.cam.updateProjectionMatrix();
+      this.cam.far = this.D + 200; this.cam.updateProjectionMatrix();
+    }
+  };
+
+  /* ---------- page integration ---------- */
+  let cur = null;
+  function render(id, sc) {
+    const def = VIEWS[id]; if (!def) return false;
+    const wrap = sc.g.cv.parentElement; if (sc.g.w < 10 || sc.g.h < 10) return true;
+    if (canvas.parentElement !== wrap) wrap.insertBefore(canvas, wrap.firstChild);
+    const W = Math.round(wrap.clientWidth), H = Math.round(wrap.clientHeight); if (W < 10 || H < 10) return true;
+    let v = views[id];
+    if (!v || v.W !== W || v.H !== H) {
+      if (v) v.scene.traverse(o => { if (o.geometry) o.geometry.dispose(); });
+      v = views[id] = new View(def); v.resize(W, H); def.build(v, sc);
+    }
+    renderer.setSize(W, H, false); canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    def.sync(v, sc, performance.now() / 1000);
+    renderer.render(v.scene, v.cam); cur = id; return true;
+  }
+  function hide() { if (canvas.parentElement) canvas.parentElement.removeChild(canvas); }
+  return {ok: true, render, hide, M, tex, mesh, rbox, cyl, sph, tube, setTube, helix, mannequin, carModel, FLOORS, noise};
+})();
+const VIEWS = {};
+</script>
+<script>
+{
+/* ======================= O1: gallery of oscillators ======================= */
+const o1 = {
+  g: setupCanvas($('co1')), gam: 0, t: 0,
+  S: [{x: 0.8, v: 0, w: 2.6, tr: []}, {x: 0.5, v: 0, w: 3.13, tr: []}, {x: 1, v: 0, w: 2.2, tr: []}],
+  kick() { this.S[0].x = 0.8; this.S[1].x = 0.5; this.S[2].x = 1; this.S.forEach(s => { s.v = 0; s.tr = []; }); },
+  step(dt) {
+    const n = 10, h = dt / n;
+    for (let i = 0; i < n; i++) this.S.forEach((s, k) => { const a = k === 1 ? -s.w * s.w * Math.sin(s.x) - 2 * this.gam * s.v : -s.w * s.w * s.x - 2 * this.gam * s.v; s.v += a * h; s.x += s.v * h; });
+    this.t += dt; this.tt = (this.tt || 0) + dt;
+    if (this.tt > 0.03) { this.tt = 0; this.S.forEach(s => { s.tr.push(s.x); if (s.tr.length > 200) s.tr.shift(); }); }
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const cw = w / 3, top = h * 0.58, cols = ['#1c7ed6', '#e8590c', '#2f9e44'];
+    const names = [L('Masa–resorte', 'Mass–spring'), L('Péndulo', 'Pendulum'), L('Circuito LC', 'LC circuit')];
+    for (let k = 0; k < 3; k++) {
+      const x0 = k * cw, xc = x0 + cw / 2, s = this.S[k];
+      if (!this.r3) { ctx.fillStyle = k % 2 ? '#f8f9fa' : '#fff'; ctx.fillRect(x0, 0, cw, h); }
+      text(ctx, names[k], xc, 20, cols[k], 14, 'center', 750);
+      if (k === 0) {
+        const wy = top * 0.55, eq = xc, bx = eq + s.x * cw * 0.28;
+        if (!this.r3) { ctx.fillStyle = '#868e96'; ctx.fillRect(x0 + 12, wy - 40, 8, 80); ctx.fillStyle = '#e9e7df'; ctx.fillRect(x0 + 12, wy + 22, cw - 24, 5); }
+        if (!this.r3) { spring(ctx, x0 + 20, wy, bx - 22, wy, 10, 9); }
+        if (!this.r3) { ctx.fillStyle = cols[0]; ctx.beginPath(); ctx.roundRect(bx - 22, wy - 22, 44, 44, 5); ctx.fill(); }
+        ctx.save(); ctx.strokeStyle = '#ced4da'; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(eq, wy - 50); ctx.lineTo(eq, wy + 40); ctx.stroke(); ctx.restore();
+        arrow(ctx, bx, wy - 32, bx - s.x * 60, wy - 32, C.F, 3); text(ctx, 'F = −kx', xc, top - 20, C.F, 12.5, 'center', 650);
+      } else if (k === 1) {
+        const px = xc, py = 46, Lp = top * 0.62, bx = px + Lp * Math.sin(s.x), by = py + Lp * Math.cos(s.x);
+        if (!this.r3) { ctx.fillStyle = '#495057'; ctx.fillRect(px - 30, py - 6, 60, 6); }
+        if (!this.r3) { ctx.strokeStyle = '#495057'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke(); }
+        if (!this.r3) { ctx.fillStyle = cols[1]; ctx.beginPath(); ctx.arc(bx, by, 16, 0, 7); ctx.fill(); }
+        text(ctx, 'F = −mg sin θ', xc, top - 20, C.F, 12.5, 'center', 650);
+      } else {
+        const q = s.x, i = s.v / s.w, cy = top * 0.5, cl = xc - cw * 0.28, ind = xc + cw * 0.28;
+        if (!this.r3) { ctx.strokeStyle = '#495057'; ctx.lineWidth = 2.5; ctx.strokeRect(cl, cy - 60, ind - cl, 120); }
+        if (!this.r3) { ctx.fillStyle = k % 2 ? '#f8f9fa' : '#fff'; ctx.fillRect(cl - 12, cy - 14, 24, 28); ctx.fillRect(ind - 14, cy - 40, 28, 80); }
+        if (!this.r3) { ctx.fillStyle = '#495057'; ctx.fillRect(cl - 16, cy - 10, 32, 4); ctx.fillRect(cl - 16, cy + 6, 32, 4); }
+        const nq = Math.round(Math.abs(q) * 6); ctx.font = '700 12px system-ui,sans-serif'; ctx.textAlign = 'center';
+        for (let j = 0; j < nq; j++) { const xx = cl - 14 + j * 5; ctx.fillStyle = '#e03131'; ctx.fillText(q > 0 ? '+' : '−', xx + 2, cy - 14); ctx.fillStyle = '#1c7ed6'; ctx.fillText(q > 0 ? '−' : '+', xx + 2, cy + 24); }
+        if (!this.r3) { ctx.strokeStyle = '#495057'; ctx.lineWidth = 2.5; ctx.beginPath(); for (let j = 0; j <= 5; j++) ctx.arc(ind, cy - 32 + j * 13, 7, -Math.PI / 2, Math.PI / 2); ctx.stroke(); }
+        text(ctx, 'C', cl - 26, cy, C.ink, 13, 'center', 750); text(ctx, 'L', ind + 26, cy, C.ink, 13, 'center', 750);
+        if (Math.abs(i) > 0.03) { const al = clamp(i, -1, 1) * 50; arrow(ctx, xc - al / 2, cy - 60, xc + al / 2, cy - 60, cols[2], 3.5); text(ctx, 'i', xc, cy - 76, cols[2], 13, 'center', 750); }
+        const Ue = q * q, Ub = i * i, tot = Math.max(Ue + Ub, 1e-6);
+        ctx.fillStyle = '#ffe3e3'; ctx.fillRect(x0 + 20, top - 34, (cw - 40) * Ue / tot, 10); ctx.fillStyle = '#d3f9d8'; ctx.fillRect(x0 + 20 + (cw - 40) * Ue / tot, top - 34, (cw - 40) * Ub / tot, 10);
+        text(ctx, L('energía: campo E | campo B', 'energy: E field | B field'), xc, top - 14, C.muted, 11.5, 'center', 600);
+      }
+      // trace
+      const ty = top + 20, th = h - ty - 16, mid = ty + th / 2;
+      ctx.strokeStyle = '#e9ecef'; ctx.beginPath(); ctx.moveTo(x0 + 10, mid); ctx.lineTo(x0 + cw - 10, mid); ctx.stroke();
+      const sc = k === 0 ? 0.8 : k === 1 ? 0.5 : 1;
+      ctx.strokeStyle = cols[k]; ctx.lineWidth = 2; ctx.beginPath(); s.tr.forEach((v, j) => { const xx = x0 + cw - 10 - (s.tr.length - 1 - j) * (cw - 20) / 200, yy = mid - v / sc * th * 0.45; j ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }); ctx.stroke();
+      text(ctx, ['x(t)', 'θ(t)', 'q(t)'][k], x0 + 14, ty + 4, cols[k], 12, 'left', 700);
+      if (k) { ctx.strokeStyle = '#dee2e6'; ctx.beginPath(); ctx.moveTo(x0, 0); ctx.lineTo(x0, h); ctx.stroke(); }
+    }
+  },
+  init() {
+    bindRange('ro1d', 'oo1d', v => v.toFixed(2), v => this.gam = v);
+    $('bo1kick').onclick = () => this.kick();
+  }
+};
+
+/* ======================= O2: mass-spring SHO ======================= */
+const o2 = {
+  g: setupCanvas($('co2')), gg: setupCanvas($('go2')), k: 20, m: 1, b: 0, x: 0.5, v: 0, t: 0, run: true, drag: false, hist: [], ht: 0,
+  w() { return Math.sqrt(this.k / this.m); },
+  step(dt) {
+    if (!this.run || this.drag) return;
+    const n = 20, h = dt / n;
+    for (let i = 0; i < n; i++) { const a = (-this.k * this.x - this.b * this.v) / this.m; this.v += a * h; this.x += this.v * h; if (this.stopX != null && this.x <= this.stopX) { this.stopX = null; this.run = false; this.btn(); break; } }
+    this.t += dt; this.ht += dt;
+    if (this.ht > 0.03) { this.ht = 0; this.hist.push([this.t, this.x, this.v, -(this.k * this.x + this.b * this.v) / this.m]); while (this.hist[0][0] < this.t - 10) this.hist.shift(); }
+  },
+  geo() { const {w, h} = this.g, bw = Math.min(220, w * 0.26); return {eq: (w - bw) * 0.55, s: (w - bw) * 0.3, y: h * 0.5, bw}; },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const {eq, s, y, bw} = this.geo(), bx = eq + this.x * s;
+    if (this.skin || this.r3) {
+      const gy = h - 40, aw = w - bw - 20, cx = aw * 0.45, s2 = Math.min(140, h * 0.28), wheelY = gy - 40, bodyY = wheelY - 120 - this.x * s2;
+      if (!this.r3) { ctx.save(); ctx.beginPath(); ctx.rect(0, 0, aw, h); ctx.clip(); scenery(ctx, aw, h, gy, 'road', this.t * 120); ctx.restore(); }
+      if (!this.r3) { ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.arc(cx, wheelY, 36, 0, 7); ctx.fill(); ctx.fillStyle = '#adb5bd'; ctx.beginPath(); ctx.arc(cx, wheelY, 16, 0, 7); ctx.fill(); }
+      if (!this.r3) { ctx.strokeStyle = '#495057'; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(cx - 60, wheelY); ctx.lineTo(cx, wheelY); ctx.stroke(); }
+      if (!this.r3) { spring(ctx, cx, wheelY - 8, cx, bodyY + 10, 9, 14, '#e8590c', 4); }
+      if (!this.r3) { ctx.fillStyle = '#868e96'; ctx.fillRect(cx + 22, bodyY + 20, 10, wheelY - bodyY - 40); }
+      if (!this.r3) { ctx.fillStyle = '#1c7ed6'; ctx.beginPath(); ctx.roundRect(cx - 160, bodyY - 50, 320, 60, 14); ctx.fill(); ctx.beginPath(); ctx.moveTo(cx - 90, bodyY - 50); ctx.lineTo(cx - 50, bodyY - 100); ctx.lineTo(cx + 80, bodyY - 100); ctx.lineTo(cx + 120, bodyY - 50); ctx.fill(); }
+      if (!this.r3) { ctx.fillStyle = '#d0ebff'; ctx.fillRect(cx - 40, bodyY - 92, 50, 38); ctx.fillRect(cx + 18, bodyY - 92, 55, 38); }
+      text(ctx, L('¼ de auto sobre su resorte (modelo escalado)', '¼ car on its spring (scaled model)'), 14, 22, C.ink, 13, 'left', 650);
+      const F = -this.k * this.x, a = (F - this.b * this.v) / this.m;
+      if (Math.abs(F) > 0.05) { arrow(ctx, cx + 190, bodyY - 20, cx + 190, bodyY - 20 - F * 1.2, C.F, 3.5); text(ctx, 'F', cx + 204, bodyY - 20 - F * 1.2, C.F, 13, 'left', 750); }
+      if (Math.abs(this.v) > 0.02) { arrow(ctx, cx + 230, bodyY - 20, cx + 230, bodyY - 20 - this.v * 25, C.v, 3.5); text(ctx, 'v', cx + 244, bodyY - 20 - this.v * 25, C.v, 13, 'left', 750); }
+      ctx.save(); ctx.strokeStyle = '#ced4da'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(cx - 200, wheelY - 120); ctx.lineTo(cx + 260, wheelY - 120); ctx.stroke(); ctx.restore(); text(ctx, L('equilibrio', 'equilibrium'), cx + 262, wheelY - 120, C.muted, 11, 'left', 600);
+    } else {
+    ctx.fillStyle = '#868e96'; ctx.fillRect(20, y - 60, 10, 120); ctx.fillStyle = '#e9e7df'; ctx.fillRect(20, y + 34, w - bw - 40, 6);
+    ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif'; ctx.textAlign = 'center';
+    for (let x = -1; x <= 1.001; x += 0.25) { ctx.fillRect(eq + x * s - .5, y + 40, 1, 6); ctx.fillText(x.toFixed(2), eq + x * s, y + 58); }
+    text(ctx, 'x (m)', w - bw - 30, y + 58, C.muted, 11, 'right', 500);
+    ctx.save(); ctx.strokeStyle = '#ced4da'; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(eq, y - 70); ctx.lineTo(eq, y + 40); ctx.stroke(); ctx.restore();
+    spring(ctx, 30, y, bx - 30, y, 14, 12);
+    ctx.fillStyle = '#5c7cfa'; ctx.beginPath(); ctx.roundRect(bx - 30, y - 30, 60, 60, 6); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = '600 12px system-ui,sans-serif'; ctx.textBaseline = 'middle'; ctx.fillText(this.m + ' kg', bx, y);
+    const F = -this.k * this.x, a = (F - this.b * this.v) / this.m;
+    if (Math.abs(F) > 0.05) { arrow(ctx, bx, y - 44, bx + F * 4, y - 44, C.F, 3.5); text(ctx, 'F', bx + F * 4 + Math.sign(F) * 10, y - 44, C.F, 13, 'center', 750); }
+    if (Math.abs(this.v) > 0.02) { arrow(ctx, bx, y - 64, bx + this.v * 50, y - 64, C.v, 3.5); text(ctx, 'v', bx + this.v * 50 + Math.sign(this.v) * 10, y - 64, C.v, 13, 'center', 750); }
+    if (Math.abs(a) > 0.05) { arrow(ctx, bx, y - 84, bx + a * 4, y - 84, C.a, 3); text(ctx, 'a', bx + a * 4 + Math.sign(a) * 10, y - 84, C.a, 13, 'center', 750); }
+    }
+    const K = .5 * this.m * this.v ** 2, U = .5 * this.k * this.x ** 2;
+    bars(ctx, w - bw - 10, 12, bw, h - 24, [{label: 'K', value: K, col: C.v}, {label: 'U', value: U, col: C.a}, {label: 'E', value: K + U, col: C.ink}], {max: Math.max(.5 * this.k * 1.1, K + U) * 1.05, title: L('Energía (J)', 'Energy (J)')});
+    text(ctx, `t = ${fx(this.t, 1)} s`, 14, 22, C.ink, 13, 'left');
+    plot(this.gg, [{pts: this.hist.map(p => [p[0], p[1]]), col: C.R, label: 'x (m)'}, {pts: this.hist.map(p => [p[0], p[2] / this.w()]), col: C.v, label: 'v/ω'}, {pts: this.hist.map(p => [p[0], p[3] / (this.w() ** 2)]), col: C.a, label: 'a/ω²'}],
+      {xmin: Math.max(0, this.t - 10), xmax: Math.max(10, this.t), title: L('x, v/ω, a/ω² (m)', 'x, v/ω, a/ω² (m)'), xlab: 't (s)', minSpan: 1});
+  },
+  table() {
+    const w = this.w(), E = .5 * this.m * this.v ** 2 + .5 * this.k * this.x ** 2, r = (a, b, u) => `<tr><td>${a}</td><td>${b}</td><td>${u}</td></tr>`;
+    $('to2').innerHTML = `<tr class="sum"><td>ω = √(k/m)</td><td>${fx(w, 3)}</td><td>rad/s</td></tr>` + r('f = ω/2π', fx(w / (2 * Math.PI), 3), 'Hz') + r('T = 2π/ω', fx(2 * Math.PI / w, 3), 's')
+      + r('A = √(2E/k)', fx(Math.sqrt(2 * E / this.k), 3), 'm') + r('x', fx(this.x, 3), 'm') + r('v', fx(this.v, 3), 'm/s') + r('E', fx(E, 3), 'J');
+  },
+  btn() { setTxt($('bo2run'), this.run ? 'Pausa' : 'Continuar', this.run ? 'Pause' : 'Resume'); },
+  init() {
+    const cv = $('co2');
+    cv.addEventListener('pointerdown', e => { const p = ptr(e, cv), {eq, s, y} = this.geo(); if (Math.abs(p.x - (eq + this.x * s)) < 36 && Math.abs(p.y - y) < 36) { this.drag = true; cv.setPointerCapture(e.pointerId); } });
+    cv.addEventListener('pointermove', e => { const p = ptr(e, cv), {eq, s, y} = this.geo(); if (!this.drag) { cv.style.cursor = Math.abs(p.x - (eq + this.x * s)) < 36 && Math.abs(p.y - y) < 36 ? 'grab' : 'default'; return; } this.x = clamp(snapv((p.x - eq) / s, 0.05), -1, 1); this.v = 0; });
+    const up = () => { if (this.drag) { this.drag = false; this.run = true; this.btn(); } }; cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    bindRange('ro2k', 'oo2k', v => v + ' N/m', v => this.k = v);
+    bindRange('ro2m', 'oo2m', v => v.toFixed(1) + ' kg', v => this.m = v);
+    bindRange('ro2b', 'oo2b', v => v.toFixed(1) + ' kg/s', v => this.b = v);
+    $('bo2run').onclick = () => { this.run = !this.run; this.btn(); };
+    $('bo2reset').onclick = () => { this.x = 0.5; this.v = 0; this.t = 0; this.hist = []; this.run = true; this.btn(); };
+    this.btn();
+  }
+};
+
+/* ======================= O3: reference circle ======================= */
+const o3 = {
+  g: setupCanvas($('co3')), A: 0.8, w: 1.5, ph: 0, t: 0, run: true, va: false, hist: [],
+  phase() { return this.w * this.t + this.ph * Math.PI / 180; },
+  step(dt) { if (!this.run) return; this.t += dt; this.hist.push([this.t, this.phase()]); while (this.hist.length && this.hist[0][0] < this.t - 12) this.hist.shift(); },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const R0 = Math.min(h * 0.38, w * 0.2), cx = R0 + 30, cy = h / 2, Ap = this.A * R0, th = this.phase();
+    const P = {x: cx - Ap * Math.sin(th), y: cy - Ap * Math.cos(th)}, xv = this.A * Math.cos(th);
+    ctx.strokeStyle = '#dee2e6'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, Ap, 0, 7); ctx.stroke();
+    ctx.strokeStyle = C.axis; ctx.beginPath(); ctx.moveTo(cx, cy - R0 - 10); ctx.lineTo(cx, cy + R0 + 10); ctx.moveTo(cx - R0 - 10, cy); ctx.lineTo(w - 10, cy); ctx.stroke();
+    ctx.strokeStyle = C.R; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(P.x, P.y); ctx.stroke();
+    const ang = ((th % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+    ctx.strokeStyle = '#adb5bd'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, 26, -Math.PI / 2, -Math.PI / 2 - ang, true); ctx.stroke();
+    text(ctx, 'ωt+φ', cx - 34 * Math.sin(ang / 2) - 6, cy - 34 * Math.cos(ang / 2) - 6, C.muted, 11.5, 'center', 650);
+    const gx = cx + R0 + 120;
+    ctx.save(); ctx.strokeStyle = '#ced4da'; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(P.x, P.y); ctx.lineTo(gx, P.y); ctx.stroke(); ctx.restore();
+    // spring + mass in between
+    const mx = cx + R0 + 60;
+    if (this.r3) {} else if (this.skin) {
+      const k = 0.011, x0 = cx + R0 + 10, x1 = w - 10, Y = xx => cy - this.A * R0 * Math.cos(th - k * (xx - mx));
+      ctx.fillStyle = 'rgba(25,113,194,.22)'; ctx.beginPath(); ctx.moveTo(x0, h); for (let xx = x0; xx <= x1; xx += 6) ctx.lineTo(xx, Y(xx)); ctx.lineTo(x1, h); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = 'rgba(25,113,194,.5)'; ctx.lineWidth = 2; ctx.beginPath(); for (let xx = x0; xx <= x1; xx += 6) xx === x0 ? ctx.moveTo(xx, Y(xx)) : ctx.lineTo(xx, Y(xx)); ctx.stroke();
+      ctx.fillStyle = '#e03131'; ctx.beginPath(); ctx.moveTo(mx - 18, P.y + 8); ctx.lineTo(mx + 18, P.y + 8); ctx.lineTo(mx + 10, P.y - 22); ctx.lineTo(mx - 10, P.y - 22); ctx.fill(); ctx.fillStyle = '#fff'; ctx.fillRect(mx - 12, P.y - 10, 24, 7); ctx.fillStyle = '#495057'; ctx.fillRect(mx - 2, P.y - 40, 4, 18); ctx.fillStyle = '#ffd43b'; ctx.beginPath(); ctx.arc(mx, P.y - 42, 5, 0, 7); ctx.fill();
+    } else {
+    ctx.fillStyle = '#868e96'; ctx.fillRect(mx - 20, cy - R0 - 30, 40, 6);
+    spring(ctx, mx, cy - R0 - 24, mx, P.y - 14, 10, 8);
+    ctx.fillStyle = '#5c7cfa'; ctx.fillRect(mx - 16, P.y - 14, 32, 28); }
+    // graph: newest at left (gx), older to the right
+    const pxs = (w - gx - 20) / 12;
+    const curve = (f, col, sc) => { ctx.strokeStyle = col; ctx.lineWidth = 2.5; ctx.beginPath(); this.hist.forEach((p, i) => { const xx = gx + (this.t - p[0]) * pxs, yy = cy - f(p[1]) * sc; i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }); ctx.stroke(); };
+    if (this.va) { curve(t => -this.A * this.w * Math.sin(t), C.v, R0 / Math.max(this.w, 1) * 0.9); curve(t => -this.A * this.w * this.w * Math.cos(t), C.a, R0 / Math.max(this.w * this.w, 1) * 0.9); }
+    curve(t => this.A * Math.cos(t), C.R, R0);
+    ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif'; ctx.textAlign = 'center';
+    for (let s = 0; s <= 12; s += 2) ctx.fillText(L(`hace ${s} s`, `${s} s ago`), gx + s * pxs, cy + R0 + 26);
+    // phasor vectors
+    if (this.va) {
+      const vs = R0 * 0.35, vv = {x: -Math.cos(th), y: Math.sin(th)};
+      arrow(ctx, P.x, P.y, P.x + vv.x * this.w * vs * this.A, P.y + vv.y * this.w * vs * this.A, C.v, 3);
+      arrow(ctx, P.x, P.y, P.x + (cx - P.x) * Math.min(1, this.w * this.w * 0.3), P.y + (cy - P.y) * Math.min(1, this.w * this.w * 0.3), C.a, 3);
+    }
+    ctx.fillStyle = C.R; ctx.beginPath(); ctx.arc(P.x, P.y, 8, 0, 7); ctx.fill();
+    badge(ctx, `x = ${fx(this.A)} cos(${fx(this.w, 1)} t ${this.ph >= 0 ? '+' : '−'} ${Math.abs(this.ph)}°) = ${fx(xv, 3)} m`, 12, 12, true);
+  },
+  table() {
+    const th = this.phase(), r = (a, b, u) => `<tr><td>${a}</td><td>${b}</td><td>${u}</td></tr>`;
+    $('to3').innerHTML = r('t', fx(this.t), 's') + r(L('fase ωt + φ', 'phase ωt + φ'), fx(((th * 180 / Math.PI) % 360 + 360) % 360, 0), '°') + `<tr class="sum"><td>x</td><td>${fx(this.A * Math.cos(th), 3)}</td><td>m</td></tr>`
+      + r('v', fx(-this.A * this.w * Math.sin(th), 3), 'm/s') + r('a', fx(-this.A * this.w ** 2 * Math.cos(th), 3), 'm/s²') + r('T = 2π/ω', fx(2 * Math.PI / this.w), 's');
+  },
+  btn() { setTxt($('bo3run'), this.run ? 'Pausa' : 'Continuar', this.run ? 'Pause' : 'Resume'); },
+  init() {
+    bindRange('ro3A', 'oo3A', v => v.toFixed(2) + ' m', v => this.A = v);
+    bindRange('ro3w', 'oo3w', v => v.toFixed(1) + ' rad/s', v => { this.w = v; this.hist = []; });
+    bindRange('ro3p', 'oo3p', v => v + '°', v => { this.ph = v; this.hist = []; });
+    $('ko3va').onchange = e => this.va = e.target.checked;
+    $('bo3run').onclick = () => { this.run = !this.run; this.btn(); };
+    $('bo3reset').onclick = () => { this.t = 0; this.hist = []; };
+    this.btn();
+  }
+};
+
+/* ======================= O4: pendulum ======================= */
+const o4 = {
+  g: setupCanvas($('co4')), gg: setupCanvas($('go4')), gv: 9.81, Lp: 1, th0: 20, ghost: true,
+  th: 0, w: 0, t: 0, run: false, hist: [], ht: 0, cross: [], lastTh: 0,
+  T0() { return 2 * Math.PI * Math.sqrt(this.Lp / this.gv); },
+  Tser() { const a = this.th0 * Math.PI / 180; return this.T0() * (1 + a * a / 16 + 11 * a ** 4 / 3072); },
+  reset() { this.th = this.th0 * Math.PI / 180; this.w = 0; this.t = 0; this.hist = []; this.cross = []; this.run = false; this.btn(); },
+  approx() { return this.th0 * Math.PI / 180 * Math.cos(Math.sqrt(this.gv / this.Lp) * this.t); },
+  step(dt) {
+    if (!this.run) return;
+    const n = 40, h = dt / n;
+    for (let i = 0; i < n; i++) {
+      const prev = this.th; this.w += -(this.gv / this.Lp) * Math.sin(this.th) * h; this.th += this.w * h; this.t += h;
+      if (prev > 0 && this.th <= 0) this.cross.push(this.t);
+    }
+    this.ht += dt; if (this.ht > 0.03) { this.ht = 0; this.hist.push([this.t, this.th * 180 / Math.PI, this.approx() * 180 / Math.PI]); while (this.hist[0][0] < this.t - 15) this.hist.shift(); }
+  },
+  Tmeas() { const c = this.cross; return c.length >= 2 ? (c[c.length - 1] - c[0]) / (c.length - 1) : null; },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const px = w * 0.42, py = 30, s = (h - 70) / 2, Lpx = this.Lp * s, m = 1;
+    if (this.r3) {} else if (this.skin) { ctx.fillStyle = '#f8f0e3'; ctx.fillRect(0, 0, w, h); const cw = Math.max(170, Lpx * Math.sin(Math.max(0.35, this.th0 * Math.PI / 180)) * 2 + 70), top = py - 10, bot = py + Lpx + 40;
+      ctx.fillStyle = '#5c3a1e'; ctx.beginPath(); ctx.roundRect(px - cw / 2 - 16, top - 4, cw + 32, bot - top + 24, 8); ctx.fill(); ctx.fillStyle = '#2b1a0e'; ctx.fillRect(px - cw / 2, top + 6, cw, bot - top); ctx.fillStyle = 'rgba(255,255,255,.06)'; ctx.fillRect(px - cw / 2, top + 6, cw * 0.18, bot - top);
+      text(ctx, L('reloj de péndulo', 'pendulum clock'), 14, h - 16, C.muted, 12, 'left', 600); }
+    ctx.fillStyle = '#495057'; ctx.fillRect(px - 60, py - 8, 120, 8);
+    ctx.save(); ctx.strokeStyle = '#e9ecef'; ctx.setLineDash([4, 5]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + Lpx + 30); ctx.stroke(); ctx.restore();
+    if (this.ghost) { const a = this.approx(), gx = px + Lpx * Math.sin(a), gy = py + Lpx * Math.cos(a); ctx.strokeStyle = '#ced4da'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(gx, gy); ctx.stroke(); ctx.fillStyle = 'rgba(173,181,189,.6)'; ctx.beginPath(); ctx.arc(gx, gy, 14, 0, 7); ctx.fill(); }
+    const bx = px + Lpx * Math.sin(this.th), by = py + Lpx * Math.cos(this.th);
+    if (!this.r3) { ctx.strokeStyle = '#495057'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke(); }
+    ctx.strokeStyle = C.R; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(px, py, 40, Math.PI / 2, Math.PI / 2 - this.th, this.th > 0); ctx.stroke();
+    text(ctx, 'θ', px + 52 * Math.sin(this.th / 2), py + 52 * Math.cos(this.th / 2), C.R, 14, 'center', 750);
+    if (this.r3) {} else if (this.skin) { ballSprite(ctx, bx, by, 22, '#ffe066', '#b8860b'); ctx.strokeStyle = '#8d6e3f'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(bx, by, 22, 0, 7); ctx.stroke(); }
+    else { ctx.fillStyle = '#e8590c'; ctx.beginPath(); ctx.arc(bx, by, 15, 0, 7); ctx.fill(); }
+    const fs = 60 / (m * this.gv), W = m * this.gv;
+    arrow(ctx, bx, by, bx, by + W * fs, '#e03131', 2.5, [4, 3], .6); text(ctx, 'mg', bx + 10, by + W * fs, '#e03131', 12, 'left', 700);
+    const ft = -W * Math.sin(this.th), tu = {x: Math.cos(this.th), y: -Math.sin(this.th)};
+    if (Math.abs(ft) * fs > 4) { arrow(ctx, bx, by, bx + tu.x * ft * fs, by - tu.y * ft * fs, C.F, 4); text(ctx, '−mg sin θ', bx + tu.x * ft * fs, by - tu.y * ft * fs - 16, C.F, 12.5, 'center', 700); }
+    text(ctx, `ℓ = ${fx(this.Lp)} m · g = ${this.gv} m/s²`, 14, h - 16, C.muted, 12.5, 'left', 600);
+    text(ctx, `t = ${fx(this.t, 1)} s`, w - 14, 24, C.ink, 13, 'right');
+    const T = this.Tmeas(); if (T) badge(ctx, L(`Periodo medido: ${fx(T, 3)} s  (ideal: ${fx(this.T0(), 3)} s)`, `Measured period: ${fx(T, 3)} s  (ideal: ${fx(this.T0(), 3)} s)`), 12, 12, Math.abs(T / this.T0() - 1) < 0.01);
+    const series = [{pts: this.hist.map(p => [p[0], p[1]]), col: '#e8590c', label: L('θ real (°)', 'real θ (°)')}];
+    if (this.ghost) series.push({pts: this.hist.map(p => [p[0], p[2]]), col: '#adb5bd', dash: [6, 4], label: L('θ aprox. (°)', 'approx. θ (°)')});
+    plot(this.gg, series, {xmin: Math.max(0, this.t - 15), xmax: Math.max(15, this.t), title: 'θ(t)', xlab: 't (s)', minSpan: 10});
+  },
+  table() {
+    const T = this.Tmeas(), r = (a, b, u) => `<tr><td>${a}</td><td>${b}</td><td>${u}</td></tr>`;
+    $('to4').innerHTML = r('T₀ = 2π√(ℓ/g)', fx(this.T0(), 3), 's') + r(L('T con corrección (θ₀ grande)', 'T with correction (large θ₀)'), fx(this.Tser(), 3), 's')
+      + `<tr class="sum"><td>${L('T medido', 'measured T')}</td><td>${T ? fx(T, 3) : '—'}</td><td>s</td></tr>` + r('g = 4π²ℓ/T²', T ? fx(4 * Math.PI ** 2 * this.Lp / T ** 2, 2) : '—', 'm/s²') + r('θ', fx(this.th * 180 / Math.PI, 1), '°');
+  },
+  btn() { setTxt($('bo4run'), this.run ? 'Pausa' : (this.t > 0 ? 'Continuar' : 'Soltar'), this.run ? 'Pause' : (this.t > 0 ? 'Resume' : 'Release')); },
+  init() {
+    document.querySelectorAll('input[name=g4]').forEach(r => r.onchange = () => { this.gv = +r.value; this.reset(); });
+    bindRange('ro4L', 'oo4L', v => v.toFixed(2) + ' m', v => { this.Lp = v; this.reset(); });
+    bindRange('ro4t', 'oo4t', v => v + '°', v => { this.th0 = v; this.reset(); });
+    $('ko4g').onchange = e => this.ghost = e.target.checked;
+    $('bo4run').onclick = () => { this.run = !this.run; this.btn(); };
+    $('bo4reset').onclick = () => this.reset();
+    this.reset();
+  }
+};
+
+/* ---------- 3D views · Themes 4–6 ---------- */
+if (G3.ok) {
+const {M, mesh, rbox, cyl, sph, tube, setTube, helix, mannequin, carModel, tex} = G3;
+function fanModel(R) {
+  const g = new THREE.Group(), wd = M.wood('#9a6236');
+  for (let i = 0; i < 4; i++) { const arm = new THREE.Group(); const bl = mesh(rbox(R * 0.78, R * 0.22, 0.03, 0.04), wd); bl.position.x = R * 0.58; bl.rotation.x = 0.12; arm.add(bl); const br = mesh(new THREE.BoxGeometry(R * 0.2, 0.04, 0.03), M.chrome()); br.position.x = R * 0.22; arm.add(br); arm.rotation.z = i * Math.PI / 2; g.add(arm); }
+  const hub = cyl(R * 0.2, R * 0.22, 0.16, M.chrome(), 48); hub.rotation.x = Math.PI / 2; hub.position.z = 0.05; g.add(hub);
+  const cap = sph(R * 0.08, M.chrome()); cap.position.z = 0.15; g.add(cap); return g;
+}
+const topMan = o => { const m = mannequin(o); m.group.rotation.x = Math.PI / 2; const w = new THREE.Group(); w.add(m.group); w.userData.m = m; return w; };
+
+[['r1', w => [w * 0.45, null]], ['r2', null]].forEach(([id]) => {
+  VIEWS[id] = {
+    build(v, sc) { v.back('studio'); v.lights({key: 500, kpos: [v.W / 100 * 0.7, 2, v.D * 0.8]}); const c = v.wall(0xe9e2d4, -0.6); v.o.fan = v.add(new THREE.Group()); v.R = 0; },
+    sync(v, sc) {
+      const w = v.W, h = v.H, g = id === 'r1' ? {cx: w * 0.45, cy: h * 0.52, R: Math.min(w, h) * 0.36} : {cx: w * 0.3, cy: h / 2, R: Math.min(w * 0.25, h * 0.4)};
+      if (v.R !== g.R) { v.R = g.R; v.o.fan.clear(); v.o.fan.add(fanModel(g.R / 100)); }
+      v.o.fan.position.copy(v.P(g.cx, g.cy, -0.3)); v.o.fan.rotation.z = sc.th;
+    }
+  };
+});
+
+VIEWS.r3 = {   // merry-go-round (top view)
+  build(v, sc) {
+    v.table('grass', {rep: 2}); v.topLights();
+    const {R} = sc.geo(), r = R / 100, top = new THREE.Group();
+    const plat = cyl(r, r, 0.12, M.metal(0x495057, 0.5), 64); plat.rotation.x = Math.PI / 2; top.add(plat);
+    const deck = new THREE.Mesh(new THREE.CircleGeometry(r * 0.98, 64), new THREE.MeshStandardMaterial({roughness: 0.6, map: tex('carousel', 512, 512, (g, w, h) => { const c = ['#ff6b6b', '#ffd43b', '#4dabf7', '#69db7c', '#da77f2', '#ffa94d']; for (let i = 0; i < 6; i++) { g.fillStyle = c[i]; g.beginPath(); g.moveTo(256, 256); g.arc(256, 256, 256, i * Math.PI / 3, (i + 1) * Math.PI / 3); g.fill(); } })}));
+    deck.position.z = 0.061; top.add(deck);
+    for (let i = 0; i < 6; i++) { const a = (i + 0.5) * Math.PI / 3; const bar = tube([new THREE.Vector3(r * 0.3 * Math.cos(a), r * 0.3 * Math.sin(a), 0.07), new THREE.Vector3(r * 0.6 * Math.cos(a), r * 0.6 * Math.sin(a), 0.32), new THREE.Vector3(r * 0.9 * Math.cos(a), r * 0.9 * Math.sin(a), 0.07)], 0.02, M.chrome(), 20); top.add(bar); }
+    const pole = cyl(r * 0.1, r * 0.1, 0.5, M.chrome()); pole.rotation.x = Math.PI / 2; pole.position.z = 0.25; top.add(pole);
+    v.o.top = v.add(top); v.o.k1 = v.add(topMan({shirt: 0xe64980, long: true})); v.o.k2 = v.add(topMan({shirt: 0x1c7ed6}));
+  },
+  sync(v, sc) {
+    const {cx, cy, R, s} = sc.geo(), ang = sc.th + sc.phi; v.o.top.position.copy(v.P(cx, cy, 0)); v.o.top.rotation.z = sc.th;
+    const kid = (k, rr, a) => { k.position.copy(v.P(cx + rr * Math.cos(a), cy - rr * Math.sin(a), 0.07)); k.rotation.z = a + Math.PI / 2; k.scale.setScalar(0.55); };
+    kid(v.o.k1, sc.rP * s, ang); kid(v.o.k2, R * 0.5, sc.th + 2.6);
+  }
+};
+
+VIEWS.q1 = {   // rolling race (4 lanes)
+  build(v, sc) {
+    v.back('studio'); v.lights({key: 550}); v.lanes = new THREE.Group(); v.add(v.lanes); v.thL = null;
+    const R = 0.15;
+    const crate = mesh(rbox(0.3, 0.26, 0.3, 0.02), M.cardboard());
+    const bowl = new THREE.Group(); bowl.add(sph(R, M.plastic(0x1d2b8f, 0.15))); [[0.04, 0.05], [-0.03, 0.06], [0.0, -0.01]].forEach(([x, y]) => { const h = sph(0.022, M.matte(0x05060c)); h.position.set(x, y + 0.03, R * 0.93); bowl.add(h); });
+    const tape = new THREE.Group(); const tr = mesh(new THREE.TorusGeometry(0.1, 0.05, 20, 48), M.matte(0xc8a165, 0.5)); tr.scale.z = 1.6; tape.add(tr); const strip = mesh(new THREE.BoxGeometry(0.02, 0.06, 0.16), M.matte(0xa07d4a)); strip.position.y = 0.14; tape.add(strip);
+    const wheel = new THREE.Group(); wheel.add(mesh(new THREE.TorusGeometry(0.135, 0.016, 12, 64), M.rubber())); for (let k = 0; k < 12; k++) { const sp = cyl(0.002, 0.002, 0.13, M.chrome(), 4); sp.rotation.z = k * Math.PI / 6; sp.position.set(0.065 * Math.sin(-k * Math.PI / 6), 0.065 * Math.cos(k * Math.PI / 6), 0); wheel.add(sp); } const hb = cyl(0.02, 0.02, 0.06, M.chrome()); hb.rotation.x = Math.PI / 2; wheel.add(hb);
+    v.o.obj = [crate, bowl, tape, wheel].map(o => v.add(o));
+  },
+  geo(v, sc) { const th = sc.th * Math.PI / 180, bw = Math.min(260, v.W * 0.3), Hl = (v.H - 16) / 4, Wi = v.W - bw - 50, Lp = Math.min((Wi - 30) / Math.cos(th), (Hl - 40) / Math.sin(th)); return {th, Hl, Lp, sc: Lp / sc.Ls}; },
+  sync(v, sc) {
+    const G = this.geo(v, sc), u = {x: Math.cos(G.th), y: Math.sin(G.th)}, n = {x: Math.sin(G.th), y: -Math.cos(G.th)};
+    if (v.thL !== sc.th || v.LpL !== G.Lp) { v.thL = sc.th; v.LpL = G.Lp; v.lanes.clear();
+      for (let i = 0; i < 4; i++) { const y0 = 8 + i * G.Hl, A = {x: 24, y: y0 + G.Hl - 14 - G.Lp * Math.sin(G.th)}, B = {x: 24 + G.Lp * Math.cos(G.th), y: y0 + G.Hl - 14};
+        const sh = new THREE.Shape(); sh.moveTo(A.x / 100, -A.y / 100); sh.lineTo(B.x / 100, -B.y / 100); sh.lineTo(A.x / 100, -B.y / 100); sh.closePath();
+        const geo = new THREE.ExtrudeGeometry(sh, {depth: 0.5, bevelEnabled: false}); geo.translate(0, 0, -0.25); v.lanes.add(mesh(geo, M.matte(0x868e96, 0.6)));
+        const stop = mesh(new THREE.BoxGeometry(0.04, 0.3, 0.5), M.metal(0x343a40)); stop.position.set(B.x / 100 + 0.02, -B.y / 100 + 0.15, 0); v.lanes.add(stop); } }
+    sc.O.forEach((o, i) => { const y0 = 8 + i * G.Hl, A = {x: 24, y: y0 + G.Hl - 14 - G.Lp * Math.sin(G.th)}, s = sc.pos(o), P = {x: A.x + u.x * s * G.sc, y: A.y + u.y * s * G.sc}, off = o.c === 0 ? 13 : 15;
+      const ob = v.o.obj[i]; ob.position.copy(v.P(P.x + n.x * off, P.y + n.y * off, 0)); ob.rotation.z = o.c === 0 ? -G.th : -(s * G.sc / 15); });
+  }
+};
+
+VIEWS.q2 = {   // tightrope walker's pole (top view)
+  build(v, sc) {
+    v.back('studio'); v.topLights({key: 2});
+    const rope = mesh(new THREE.CylinderGeometry(0.02, 0.02, 60, 8), M.matte(0x343a40)); rope.rotation.z = Math.PI / 2; rope.position.set(v.W / 200, -v.H / 200, -0.1); v.add(rope);
+    v.o.pole = v.add(cyl(0.025, 0.025, 1, M.wood('#c08552'), 12)); v.o.man = v.add(topMan({shirt: 0xe64980, long: true}));
+    v.o.w1 = v.add(sph(0.1, M.metal(0x343a40, 0.3))); v.o.w2 = v.add(sph(0.1, M.metal(0x343a40, 0.3)));
+  },
+  sync(v, sc) {
+    const {cx, cy, s} = sc.geo(), u = {x: Math.cos(sc.th), y: Math.sin(sc.th)};
+    v.o.pole.position.copy(v.P(cx, cy, 0.3)); v.o.pole.scale.y = 2 * s / 100; v.o.pole.rotation.z = sc.th - Math.PI / 2;
+    v.o.man.position.copy(v.P(cx, cy, 0)); v.o.man.rotation.z = sc.th + Math.PI / 2; v.o.man.scale.setScalar(0.9);
+    [[v.o.w1, sc.x1, sc.m1], [v.o.w2, sc.x2, sc.m2]].forEach(([w, x, m]) => { w.position.copy(v.P(cx + u.x * x * s, cy - u.y * x * s, 0.3)); w.scale.setScalar((8 + 5 * Math.sqrt(m)) / 10); });
+  }
+};
+
+VIEWS.q3 = {   // solids spinning about a movable axis
+  build(v, sc) { v.back('studio'); v.lights({key: 550}); v.o.g = v.add(new THREE.Group()); v.o.axis = v.add(cyl(0.025, 0.025, 1.4, M.chrome())); v.o.axis.rotation.x = Math.PI / 2; v.key0 = ''; },
+  sync(v, sc) {
+    const {cx, cy, s} = sc.geo(), R = sc.R * s / 100, key = sc.shape + R;
+    if (key !== v.key0) { v.key0 = key; const g = v.o.g; g.clear(); let m;
+      if (sc.shape === 'ring') { m = mesh(new THREE.TorusGeometry(R - 0.05, 0.05, 20, 80), M.plastic(0xae3ec9)); }
+      else if (sc.shape === 'disk') { m = new THREE.Group(); const d = cyl(R, R, 0.12, M.metal(0x6c7580, 0.3), 64); d.rotation.x = Math.PI / 2; m.add(d); for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3, hl = cyl(R * 0.1, R * 0.1, 0.13, M.matte(0x111111), 20); hl.rotation.x = Math.PI / 2; hl.position.set(Math.cos(a) * R * 0.55, Math.sin(a) * R * 0.55, 0); m.add(hl); } }
+      else if (sc.shape === 'sphere') m = sph(R, M.plastic(0xe8590c, 0.25), 48);
+      else if (sc.shape === 'shell') m = sph(R, new THREE.MeshPhysicalMaterial({color: 0xfd7e14, roughness: 0.1, transparent: true, opacity: 0.45, clearcoat: 1}), 48);
+      else if (sc.shape === 'rod') { m = cyl(0.05, 0.05, 2 * R, M.metal(0x495057, 0.3)); m.rotation.z = Math.PI / 2; }
+      else m = mesh(rbox(2 * R, 1.2 * R, 0.06, 0.02), M.plastic(0x40c057));
+      const holder = new THREE.Group(); holder.add(m); g.add(holder); v.o.shape = holder; }
+    const A = v.P(cx + sc.ax.x * s, cy - sc.ax.y * s, 0), off = rot({x: -sc.ax.x, y: -sc.ax.y}, sc.th);
+    v.o.axis.position.copy(A); v.o.shape.position.set(A.x + off.x * s / 100, A.y + off.y * s / 100, 0); v.o.shape.rotation.z = sc.th;
+  }
+};
+
+VIEWS.q4 = {   // emergency door (top view)
+  build(v, sc) {
+    v.table('tile', {rep: 1, rough: 0.4}); v.topLights();
+    const P = sc.pts(); v.o.wall = v.add(mesh(new THREE.BoxGeometry(v.W / 100 * 2, 0.14, 0.5), M.matte(0xced4da, 0.8))); v.o.wall.position.copy(v.P(v.W / 2, P.oy + 13, 0.25));
+    const side = mesh(new THREE.BoxGeometry(0.14, P.oy / 100, 0.5), M.matte(0xced4da, 0.8)); side.position.copy(v.P(P.ox - 13, P.oy / 2, 0.25)); v.add(side);
+    const door = new THREE.Group(), slab = mesh(new THREE.BoxGeometry(sc.Ld * P.s / 100, 0.12, 0.45), M.wood('#a0522d')); slab.position.set(sc.Ld * P.s / 200, 0, 0.23); door.add(slab);
+    const handle = mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.22, 12), M.chrome()); handle.position.set(1.6 * P.s / 100, -0.1, 0.25); door.add(handle);
+    const hinge = cyl(0.04, 0.04, 0.5, M.chrome()); hinge.rotation.x = Math.PI / 2; hinge.position.z = 0.25; door.add(hinge);
+    v.o.door = v.add(door);
+  },
+  sync(v, sc) { const P = sc.pts(); v.o.door.position.copy(v.P(P.ox, P.oy, 0)); v.o.door.rotation.z = sc.beta; }
+};
+
+VIEWS.q5 = {   // seesaw with kids
+  build(v, sc) {
+    const {cx, cy, s} = sc.geo(); v.back('sky', 40); v.floor('grass', cy + 60, {rep: 2}); v.lights({key: 700, amb: 0.3, hemi: 0.6});
+    const piv = mesh(new THREE.ConeGeometry(0.4, 0.62, 4), M.metal(0x868e96, 0.5)); piv.position.copy(v.P(cx, cy + 31, 0)); piv.rotation.y = Math.PI / 4; v.add(piv);
+    const board = new THREE.Group(), plank = mesh(rbox(2 * sc.Lh * s / 100, 0.12, 0.45, 0.03), M.wood('#a0522d')); plank.position.y = -0.02; board.add(plank);
+    [-1, 1].forEach(k => { const hdl = tube([new THREE.Vector3(k * (sc.Lh * s / 100 - 0.35), 0.04, -0.15), new THREE.Vector3(k * (sc.Lh * s / 100 - 0.35), 0.3, -0.15), new THREE.Vector3(k * (sc.Lh * s / 100 - 0.35), 0.3, 0.15), new THREE.Vector3(k * (sc.Lh * s / 100 - 0.35), 0.04, 0.15)], 0.02, M.chrome(), 12); board.add(hdl); });
+    board.position.copy(v.P(cx, cy, 0)); v.o.board = v.add(board); v.o.kids = [];
+  },
+  sync(v, sc) {
+    const {cx, cy, s} = sc.geo(); v.o.board.rotation.z = sc.beta;
+    const cols = [0xe64980, 0x1c7ed6, 0x2f9e44, 0xf59f00, 0x7950f2];
+    while (v.o.kids.length < sc.B.length) { const i = v.o.kids.length, k = mannequin({shirt: cols[i % 5], long: i % 2 === 1}); v.add(k.group); v.o.kids.push(k); }
+    v.o.kids.forEach((k, i) => { const b = sc.B[i]; k.group.visible = !!b; if (!b) return; const p = sc.bpos(b); k.group.position.copy(v.P(p.x, p.y - 4, 0)); k.group.rotation.set(0, b.x < 0 ? 0 : Math.PI, b.x < 0 ? sc.beta : -sc.beta); k.group.scale.setScalar((70 + 3.2 * b.m) / 100 * 1.6); k.pose({sit: true, armL: 0.9, armR: 1.0}); });
+  }
+};
+
+VIEWS.q6 = {   // skater grabbing a pole (top view)
+  build(v, sc) { v.table('ice', {rep: 3, rough: 0.3}); v.floorMesh.material.color.set(0xc9dcea); v.topLights(); v.o.pole = v.add(cyl(0.08, 0.08, 1.2, M.chrome())); v.o.pole.rotation.x = Math.PI / 2; v.o.sk = v.add(topMan({shirt: 0xe8590c, skates: true})); },
+  sync(v, sc) {
+    const s = Math.min(v.W / 11.5, v.H / 8), cx = v.W / 2, cy = v.H * 0.6, P = sc.pos(), V = sc.vel();
+    v.o.pole.position.copy(v.P(cx, cy, 0.6)); v.o.sk.position.copy(v.P(cx + P.x * s, cy - P.y * s, 0)); v.o.sk.rotation.z = Math.atan2(V.y, V.x); v.o.sk.scale.setScalar(0.9);
+  }
+};
+
+VIEWS.q7 = {   // spinning figure skater (top view)
+  build(v, sc) {
+    v.table('ice', {rep: 3, rough: 0.3}); v.floorMesh.material.color.set(0xc9dcea); v.topLights();
+    const g = new THREE.Group(); const torso = sph(0.3, M.matte(0xc2255c, 0.6)); torso.scale.set(0.6, 1, 0.5); torso.position.z = 0.4; g.add(torso);
+    const head = sph(0.11, M.matte(0x5c3d2e, 0.9)); head.position.z = 0.75; g.add(head);
+    v.o.armA = cyl(0.04, 0.04, 1, M.matte(0xf1c27d, 0.6)); v.o.armB = v.o.armA.clone(); g.add(v.o.armA, v.o.armB);
+    v.o.dA = sph(0.09, M.metal(0x343a40, 0.3)); v.o.dB = v.o.dA.clone(); g.add(v.o.dA, v.o.dB); v.o.sk = v.add(g);
+  },
+  sync(v, sc) {
+    const cx = v.W * 0.33, cy = v.H / 2, s = Math.min(v.W * 0.26, v.H * 0.4) / 1.25, r = sc.r * s / 100;
+    v.o.sk.position.copy(v.P(cx, cy, 0)); v.o.sk.rotation.z = sc.th;
+    [[v.o.armA, v.o.dA, 1], [v.o.armB, v.o.dB, -1]].forEach(([a, d, k]) => { a.scale.y = Math.max(0.05, r - 0.1); a.position.set(k * r / 2, 0, 0.55); a.rotation.z = Math.PI / 2; d.position.set(k * r, 0, 0.55); });
+  }
+};
+
+/* ---- Theme 6 ---- */
+VIEWS.o1 = {
+  build(v, sc) {
+    v.back('studio'); v.lights({key: 450});
+    v.o.spr = v.add(tube([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)], 0.02, M.chrome())); v.o.blk = v.add(mesh(rbox(0.44, 0.44, 0.44, 0.06), M.plastic(0x1d3a9e)));
+    v.o.wall = v.add(mesh(new THREE.BoxGeometry(0.1, 0.9, 0.6), M.metal()));
+    v.o.rod = v.add(cyl(0.008, 0.008, 1, M.chrome(), 8)); v.o.bob = v.add(sph(0.16, M.metal(0xd4a017, 0.2))); v.o.bar = v.add(mesh(new THREE.BoxGeometry(0.6, 0.06, 0.2), M.metal()));
+    const cu = new THREE.MeshStandardMaterial({color: 0xb87333, metalness: 1, roughness: 0.3}); v.o.coil = v.add(tube([new THREE.Vector3(), new THREE.Vector3(0, 1, 0)], 0.018, cu));
+    v.o.p1 = v.add(mesh(new THREE.BoxGeometry(0.36, 0.04, 0.3), M.metal(0x868e96, 0.3))); v.o.p2 = v.add(mesh(new THREE.BoxGeometry(0.36, 0.04, 0.3), M.metal(0x868e96, 0.3)));
+    v.o.gl1 = v.add(mesh(new THREE.BoxGeometry(0.34, 0.02, 0.28), M.glow(0xff6b6b, 0))); v.o.gl2 = v.add(mesh(new THREE.BoxGeometry(0.34, 0.02, 0.28), M.glow(0x4dabf7, 0)));
+    v.o.wire = v.add(new THREE.Group());
+  },
+  sync(v, sc) {
+    const w = v.W, h = v.H, cw = w / 3, top = h * 0.58, S = sc.S;
+    { const x0 = 0, xc = cw / 2, wy = top * 0.55, bx = xc + S[0].x * cw * 0.28; v.o.wall.position.copy(v.P(x0 + 16, wy, 0)); setTube(v.o.spr, helix(v.P(x0 + 20, wy, 0), v.P(bx - 22, wy, 0), 0.09, 10), 0.02); v.o.blk.position.copy(v.P(bx, wy, 0)); }
+    { const xc = cw * 1.5, py = 46, Lp = top * 0.62, bx = xc + Lp * Math.sin(S[1].x), by = py + Lp * Math.cos(S[1].x); v.o.bar.position.copy(v.P(xc, py - 3, 0)); const a = v.P(xc, py, 0), b = v.P(bx, by, 0); v.o.rod.position.copy(a).add(b).multiplyScalar(0.5); v.o.rod.scale.y = a.distanceTo(b); v.o.rod.rotation.z = S[1].x; v.o.bob.position.copy(b); }
+    { const xc = cw * 2.5, cy = top * 0.5, cl = xc - cw * 0.28, ind = xc + cw * 0.28, q = S[2].x;
+      v.o.p1.position.copy(v.P(cl, cy - 8, 0)); v.o.p2.position.copy(v.P(cl, cy + 8, 0)); v.o.gl1.position.copy(v.P(cl, cy - 12, 0)); v.o.gl2.position.copy(v.P(cl, cy + 12, 0));
+      v.o.gl1.material.emissiveIntensity = Math.max(0, q) * 3; v.o.gl2.material.emissiveIntensity = Math.max(0, q) * 3; v.o.gl1.material.emissive.set(q >= 0 ? 0xff6b6b : 0x4dabf7); v.o.gl2.material.emissive.set(q >= 0 ? 0x4dabf7 : 0xff6b6b); v.o.gl1.material.emissiveIntensity = v.o.gl2.material.emissiveIntensity = Math.abs(q) * 3;
+      if (!v.wired) { v.wired = true; const cu = M.metal(0x8d6e3f, 0.4); const pts = [[cl, cy - 12], [cl, cy - 60], [ind, cy - 60], [ind, cy - 40]].map(([x, y]) => v.P(x, y, 0)); v.o.wire.add(tube(pts, 0.012, cu, 20)); const pts2 = [[ind, cy + 40], [ind, cy + 60], [cl, cy + 60], [cl, cy + 12]].map(([x, y]) => v.P(x, y, 0)); v.o.wire.add(tube(pts2, 0.012, cu, 20)); setTube(v.o.coil, helix(v.P(ind, cy - 40, 0), v.P(ind, cy + 40, 0), 0.08, 7), 0.018); } }
+  }
+};
+
+VIEWS.o2 = {   // quarter-car suspension
+  build(v, sc) {
+    const bw = Math.min(220, v.W * 0.26), gy = v.H - 40; v.bw = bw; v.back('city', 40); v.floor('asphalt', gy, {rep: 3}); v.lights({key: 700, amb: 0.3, hemi: 0.5});
+    v.o.wheel = new THREE.Group(); const t = cyl(0.36, 0.36, 0.26, M.rubber(), 40); t.rotation.x = Math.PI / 2; v.o.wheel.add(t); const rim = cyl(0.2, 0.2, 0.27, M.chrome(), 24); rim.rotation.x = Math.PI / 2; v.o.wheel.add(rim); v.add(v.o.wheel);
+    v.o.spr = v.add(tube([new THREE.Vector3(), new THREE.Vector3(0, 1, 0)], 0.035, M.plastic(0xe8590c, 0.3)));
+    v.o.shock = v.add(cyl(0.05, 0.05, 1, M.metal(0x495057, 0.3)));
+    const car = carModel(0x1c7ed6); car.userData.wheels.forEach(w => w.visible = false); car.scale.setScalar(3.4); v.o.car = v.add(car);
+  },
+  sync(v, sc) {
+    const aw = v.W - v.bw - 20, gy = v.H - 40, cx = aw * 0.45, s2 = Math.min(140, v.H * 0.28), wheelY = gy - 40, bodyY = wheelY - 120 - sc.x * s2;
+    v.o.wheel.position.copy(v.P(cx, wheelY, 0.4)); v.o.wheel.rotation.z = -sc.t * 6;
+    setTube(v.o.spr, helix(v.P(cx, wheelY - 8, 0.4), v.P(cx, bodyY + 10, 0.4), 0.16, 8), 0.035);
+    const a = v.P(cx + 30, wheelY - 10, 0.4), b = v.P(cx + 30, bodyY + 10, 0.4); v.o.shock.position.copy(a).add(b).multiplyScalar(0.5); v.o.shock.scale.y = a.distanceTo(b);
+    v.o.car.position.copy(v.P(cx, bodyY + 30, 0)); if (v.floorMesh) v.floorMesh.material.map.offset.x = sc.t * 1.2 / 3;
+  }
+};
+
+VIEWS.o3 = {   // buoy on the swell
+  build(v, sc) {
+    v.back('sky', 40); v.lights({key: 600, amb: 0.35, hemi: 0.5});
+    v.o.sea = v.add(mesh(new THREE.PlaneGeometry(1, 4, 120, 1), new THREE.MeshPhysicalMaterial({color: 0x1c6ea4, roughness: 0.2, metalness: 0.05, clearcoat: 1, transparent: true, opacity: 0.55}), false));
+    const b = new THREE.Group(); const body = mesh(new THREE.CylinderGeometry(0.16, 0.24, 0.32, 32), M.plastic(0xe03131)); b.add(body); const band = mesh(new THREE.CylinderGeometry(0.205, 0.215, 0.07, 32), M.plastic(0xf8f9fa)); band.position.y = 0.03; b.add(band);
+    const mast = cyl(0.02, 0.02, 0.35, M.metal(0x343a40)); mast.position.y = 0.33; b.add(mast); const lamp = sph(0.05, M.glow(0xffd43b, 2.5)); lamp.position.y = 0.52; b.add(lamp); v.o.buoy = v.add(b);
+  },
+  sync(v, sc) {
+    const R0 = Math.min(v.H * 0.38, v.W * 0.2), cx = R0 + 30, cy = v.H / 2, mx = cx + R0 + 60, th = sc.phase(), k = 0.011, x0 = cx + R0 + 10, x1 = v.W - 10;
+    const Y = xx => cy - sc.A * R0 * Math.cos(th - k * (xx - mx)), sea = v.o.sea, pos = sea.geometry.attributes.position;
+    for (let i = 0; i < pos.count; i++) { const col = i % 121, xx = x0 + (x1 - x0) * col / 120, top = i < 121; pos.setXYZ(i, xx / 100, top ? -Y(xx) / 100 : -v.H / 100 - 1, top ? 0 : 0.5); }
+    pos.needsUpdate = true; sea.geometry.computeVertexNormals(); sea.position.set(0, 0, 0); sea.rotation.set(0, 0, 0);
+    const py = cy - sc.A * R0 * Math.cos(th); v.o.buoy.position.copy(v.P(mx, py - 6, 0.1)); v.o.buoy.rotation.z = 0.25 * Math.sin(th - Math.PI / 2) * sc.A;
+  }
+};
+
+VIEWS.o4 = {   // pendulum clock
+  build(v, sc) {
+    v.back('studio'); v.lights({key: 500}); v.wall(0x2b1f16, -3);
+    v.o.case = v.add(new THREE.Group()); v.o.rod = v.add(cyl(0.012, 0.012, 1, M.metal(0xd4a017, 0.2), 8));
+    const bob = cyl(0.24, 0.24, 0.05, M.metal(0xd4a017, 0.15), 48); bob.rotation.x = Math.PI / 2; v.o.bob = v.add(bob); v.key0 = '';
+  },
+  sync(v, sc) {
+    const px = v.W * 0.42, py = 30, s = (v.H - 70) / 2, Lpx = sc.Lp * s, key = Lpx + '|' + sc.th0;
+    if (key !== v.key0) { v.key0 = key; v.o.case.clear(); const cw = Math.max(1.7, (Lpx * Math.sin(Math.max(0.35, sc.th0 * Math.PI / 180)) * 2 + 70) / 100), ch = (Lpx + 70) / 100, wd = M.wood('#5c3a1e');
+      const back = mesh(new THREE.BoxGeometry(cw, ch, 0.05), M.wood('#2b1a0e')); back.position.copy(v.P(px, py + ch * 50 - 10, -0.5)); v.o.case.add(back);
+      [[-1], [1]].forEach(([k]) => { const sd = mesh(new THREE.BoxGeometry(0.12, ch + 0.2, 0.6), wd); sd.position.copy(v.P(px + k * (cw * 50 + 6), py + ch * 50 - 10, -0.2)); v.o.case.add(sd); });
+      const base = mesh(new THREE.BoxGeometry(cw + 0.36, 0.14, 0.7), wd); base.position.copy(v.P(px, py + ch * 100 - 3, -0.2)); v.o.case.add(base);
+      const glass = mesh(new THREE.BoxGeometry(cw, ch, 0.01), M.glass(0x334455)); glass.material.opacity = 0.12; glass.position.copy(v.P(px, py + ch * 50 - 10, 0.12)); v.o.case.add(glass); }
+    const a = v.P(px, py, 0), b = v.P(px + Lpx * Math.sin(sc.th), py + Lpx * Math.cos(sc.th), 0);
+    v.o.rod.position.copy(a).add(b).multiplyScalar(0.5); v.o.rod.scale.y = a.distanceTo(b); v.o.rod.rotation.z = sc.th; v.o.bob.position.copy(b);
+  }
+};
+}
+
+const PROB = {
+  o1: {title: ['Sintonizar una estación de radio AM', 'Tuning an AM radio station'],
+    text: ['El sintonizador de un radio AM es un circuito LC con una bobina de L = 250 µH y un capacitor de C = 100 pF. Oscila exactamente como la masa y el resorte.', 'An AM radio tuner is an LC circuit with a 250 µH coil and a 100 pF capacitor. It oscillates exactly like the mass and spring.'],
+    q: ['¿A qué frecuencia oscila? ¿Qué pasaría con la frecuencia si se aumenta C?', 'At what frequency does it oscillate? What happens to the frequency if C increases?'],
+    steps: [['Analogía: m ↔ L y k ↔ 1/C, así que ω = 1/√(LC).', 'Analogy: m ↔ L and k ↔ 1/C, so ω = 1/√(LC).'],
+      ['f = 1 / (2π √(250×10⁻⁶ × 100×10⁻¹²)) = 1 / (2π × 1.58×10⁻⁷ s).', 'f = 1 / (2π √(250×10⁻⁶ × 100×10⁻¹²)) = 1 / (2π × 1.58×10⁻⁷ s).'],
+      ['Aumentar C es como aumentar la «blandura» del resorte: la frecuencia baja (f ∝ 1/√C). Así se gira la perilla del radio.', 'Increasing C is like making the spring «softer»: the frequency drops (f ∝ 1/√C). That is what turning the dial does.']],
+    ans: ['f ≈ 1.0 MHz (1007 kHz), en la banda de AM. Si C aumenta, f disminuye.', 'f ≈ 1.0 MHz (1007 kHz), in the AM band. If C increases, f decreases.'],
+    load() { setR('ro1d', 0); o1.kick(); }},
+  o2: {title: ['Suspensión de un auto', 'Car suspension'],
+    text: ['Cada rueda de un auto carga ≈ 300 kg y su resorte tiene k = 30 000 N/m. La simulación usa un modelo escalado con la misma razón k/m (k = 100 N/m, m = 1 kg).', 'Each wheel of a car carries ≈ 300 kg and its spring has k = 30 000 N/m. The simulation uses a scaled model with the same k/m ratio (k = 100 N/m, m = 1 kg).'],
+    q: ['¿Con qué frecuencia rebota el auto al pasar un tope si no tuviera amortiguadores? ¿Qué hacen los amortiguadores?', 'At what frequency would the car bounce over a speed bump without shock absorbers? What do the shock absorbers do?'],
+    steps: [['ω = √(k/m) = √(30 000 / 300) = 10 rad/s.', 'ω = √(k/m) = √(30 000 / 300) = 10 rad/s.'],
+      ['f = ω / 2π ≈ 1.59 Hz; T ≈ 0.63 s (un rebote cada 0.6 s, que es incómodo y peligroso).', 'f = ω / 2π ≈ 1.59 Hz; T ≈ 0.63 s (a bounce every 0.6 s — uncomfortable and dangerous).'],
+      ['Los amortiguadores agregan una fuerza −b v que disipa energía. Sube b a ≈ 3 kg/s en la simulación: la oscilación muere en pocos ciclos.', 'Shock absorbers add a −b v force that dissipates energy. Raise b to ≈ 3 kg/s in the simulation: the oscillation dies within a few cycles.']],
+    ans: ['f ≈ 1.6 Hz (T ≈ 0.63 s). Los amortiguadores disipan la energía para que no siga rebotando.', 'f ≈ 1.6 Hz (T ≈ 0.63 s). Shock absorbers dissipate the energy so it stops bouncing.'],
+    load() { setR('ro2k', 100); setR('ro2m', 1); setR('ro2b', 0); $('bo2reset').click(); }},
+  o3: {title: ['Boya en el oleaje', 'A buoy in the swell'],
+    text: ['Una boya sube y baja con las olas en un MAS de amplitud 0.8 m. Una ola completa pasa cada ≈ 3.9 s (ω = 1.6 rad/s).', 'A buoy rises and falls with the waves in SHM with amplitude 0.8 m. A full wave passes every ≈ 3.9 s (ω = 1.6 rad/s).'],
+    q: ['¿Cuál es la velocidad máxima de la boya? ¿Y su aceleración máxima? ¿En qué posiciones ocurren?', 'What is the buoy\'s maximum speed? And its maximum acceleration? At which positions do they occur?'],
+    steps: [['v = −A ω sin(ωt + φ) ⇒ v_máx = A ω = 0.8 × 1.6.', 'v = −A ω sin(ωt + φ) ⇒ v_max = A ω = 0.8 × 1.6.'],
+      ['a = −ω² x ⇒ a_máx = A ω² = 0.8 × 2.56.', 'a = −ω² x ⇒ a_max = A ω² = 0.8 × 2.56.'],
+      ['v es máxima al pasar por x = 0 (el nivel medio); a es máxima en los extremos (crestas y valles). Activa «Mostrar v(t) y a(t)» para verlo.', 'v is maximum passing x = 0 (mean level); a is maximum at the extremes (crests and troughs). Turn on «Show v(t) and a(t)» to see it.']],
+    ans: ['v_máx ≈ 1.28 m/s (en el nivel medio); a_máx ≈ 2.05 m/s² (en crestas y valles).', 'v_max ≈ 1.28 m/s (at mean level); a_max ≈ 2.05 m/s² (at crests and troughs).'],
+    load() { setR('ro3A', 0.8); setR('ro3w', 1.6); setR('ro3p', 0); setChk('ko3va', true); o3.t = 0; o3.hist = []; o3.run = true; o3.btn(); }},
+  o4: {title: ['El péndulo de un reloj de pared', 'A grandfather clock pendulum'],
+    text: ['Los relojes de pared clásicos usan un «péndulo de segundos»: cada ida (media oscilación) dura 1 s, es decir, T = 2 s.', 'Classic grandfather clocks use a «seconds pendulum»: each swing (half an oscillation) lasts 1 s, so T = 2 s.'],
+    q: ['¿Qué longitud debe tener? Si llevaras ese reloj a la Luna (g = 1.62 m/s²), ¿cuál sería su periodo?', 'How long must it be? If you took that clock to the Moon (g = 1.62 m/s²), what would its period be?'],
+    steps: [['T = 2π √(ℓ/g) ⇒ ℓ = g T² / 4π² = 9.81 × 4 / 39.48 ≈ 0.994 m.', 'T = 2π √(ℓ/g) ⇒ ℓ = g T² / 4π² = 9.81 × 4 / 39.48 ≈ 0.994 m.'],
+      ['En la Luna: T = 2π √(0.994 / 1.62) ≈ 4.9 s — el reloj se atrasaría muchísimo.', 'On the Moon: T = 2π √(0.994 / 1.62) ≈ 4.9 s — the clock would run very slow.'],
+      ['La amplitud debe ser pequeña (aquí 10°) para que el periodo no dependa de ella. Prueba θ₀ = 60° y compara.', 'The amplitude must be small (here 10°) so the period doesn\'t depend on it. Try θ₀ = 60° and compare.']],
+    ans: ['ℓ ≈ 0.99 m (≈ 1 m). En la Luna, T ≈ 4.9 s.', 'ℓ ≈ 0.99 m (≈ 1 m). On the Moon, T ≈ 4.9 s.'],
+    load() { setRad('g4', '9.81'); setR('ro4L', 1); setR('ro4t', 10); o4.reset(); o4.run = true; o4.btn(); }}
+};
+addProblems(PROB, {o1, o2, o3, o4});
+
+addRetos([
+  {tab: 'o2', title: ['Rapidez a medio camino', 'Speed halfway in'],
+   text: ['Un bloque de 2 kg unido a un resorte de k = 50 N/m se suelta desde x = 0.5 m (sin fricción).', 'A 2 kg block on a k = 50 N/m spring is released from x = 0.5 m (no friction).'],
+   q: ['¿Qué rapidez tiene al pasar por x = 0.3 m?', 'What is its speed as it passes x = 0.3 m?'], unit: 'm/s', answer: 2.0, tol: 0.03,
+   hint: ['conserva la energía: ½ k A² = ½ k x² + ½ m v².', 'conserve energy: ½ k A² = ½ k x² + ½ m v².'],
+   steps: [['ω = √(k/m) = 5 rad/s.', 'ω = √(k/m) = 5 rad/s.'], ['v = ω √(A² − x²) = 5 √(0.25 − 0.09) = 5 × 0.4.', 'v = ω √(A² − x²) = 5 √(0.25 − 0.09) = 5 × 0.4.']],
+   ans: ['v = 2.0 m/s', 'v = 2.0 m/s'],
+   setup() { this.revealed = false; setR('ro2k', 50); setR('ro2m', 2); setR('ro2b', 0); o2.x = 0.5; o2.v = 0; o2.t = 0; o2.hist = []; o2.run = true; o2.btn(); },
+   preview: 1300, pause() { o2.run = false; o2.btn(); if (!this.revealed) { o2.x = 0.5; o2.v = 0; } },
+   reveal() { this.revealed = true; o2.stopX = 0.3; o2.x = 0.5; o2.v = 0; o2.run = true; o2.btn(); },
+   done() { return !o2.run && o2.x <= 0.3; }, measured: () => `|v| = ${fx(Math.abs(o2.v), 2)} m/s ${L('en', 'at')} x = ${fx(o2.x, 3)} m`},
+  {tab: 'o4', title: ['Un reloj para Marte', 'A clock for Mars'],
+   text: ['Quieres un reloj de péndulo que funcione en Marte (g = 3.71 m/s²) con un periodo de 3 s.', 'You want a pendulum clock that works on Mars (g = 3.71 m/s²) with a 3 s period.'],
+   q: ['¿Qué longitud debe tener el péndulo?', 'How long must the pendulum be?'], unit: 'm', answer: 0.846, tol: 0.03,
+   hint: ['despeja ℓ de T = 2π √(ℓ / g).', 'solve T = 2π √(ℓ / g) for ℓ.'],
+   steps: [['ℓ = g T² / (4π²) = 3.71 × 9 / 39.48.', 'ℓ = g T² / (4π²) = 3.71 × 9 / 39.48.'], ['ℓ ≈ 0.85 m (en la Tierra ese péndulo tendría T ≈ 1.85 s).', 'ℓ ≈ 0.85 m (on Earth that pendulum would have T ≈ 1.85 s).']],
+   ans: ['ℓ ≈ 0.85 m', 'ℓ ≈ 0.85 m'],
+   setup() { setRad('g4', '3.71'); setR('ro4L', 1.5); setR('ro4t', 10); o4.reset(); o4.run = true; o4.btn(); },
+   preview: 1800, pause() { o4.run = false; o4.btn(); },
+   reveal() { setR('ro4L', 0.85); setR('ro4t', 10); o4.reset(); o4.run = true; o4.btn(); },
+   done: () => o4.cross.length >= 3, measured: () => `T = ${fx(o4.Tmeas() || 0, 3)} s ${L('con ℓ = 0.85 m', 'with ℓ = 0.85 m')}`}
+]);
+
+startApp({o1, o2, o3, o4});
+}
+</script>
+</body>
+</html>

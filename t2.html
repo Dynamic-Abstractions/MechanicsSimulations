@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tema 2 · Trabajo y energía</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>:root{
+  --bg:#f5f4ef; --panel:#ffffff; --ink:#1d2329; --muted:#5d6873; --line:#e1dfd7;
+  --F:#e03131; --a:#2f9e44; --v:#1c7ed6; --R:#6741d9; --fr:#f08c00;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column}
+header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 16px 0}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header h1{font-size:17px;margin:0;font-weight:680;letter-spacing:-.01em}
+header .sub{color:var(--muted);font-size:12.5px}
+.themes{display:flex;gap:4px;margin-left:auto;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.themes a,.themes span.cur{display:inline-block;padding:4px 9px;border-radius:7px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:600}
+.themes a:hover{background:#f1f0ea}
+.themes span.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+nav{display:flex;gap:2px;overflow-x:auto;margin-top:8px;scrollbar-width:thin}
+nav button{font:inherit;font-size:13.5px;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);padding:8px 12px 7px;cursor:pointer;white-space:nowrap}
+nav button:hover{color:var(--ink)}
+nav button.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:650}
+.btn{font:inherit;font-size:13.5px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 12px;border-radius:8px;cursor:pointer}
+.btn:hover{background:#f1f0ea}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.primary:hover{background:#363e46}
+#langBtn{font:inherit;font-size:12.5px;padding:4px 9px;border-radius:7px;border:1px solid var(--line);background:#fff;cursor:pointer}
+main{flex:1;min-height:0;position:relative}
+.scene{position:absolute;inset:0;display:none;grid-template-columns:1fr 370px}
+.scene.on{display:grid}
+.stage{display:flex;flex-direction:column;min-width:0;min-height:0;padding:12px;gap:10px}
+.cvwrap{position:relative;flex:1;min-height:240px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.cvwrap.graph{flex:0 0 190px;min-height:150px}
+.cvwrap canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.side{overflow:auto;border-left:1px solid var(--line);background:var(--panel);padding:16px 18px 30px}
+.side h2{font-size:17px;margin:0 0 8px}
+.concept{font-size:14px;line-height:1.5;color:#2a3138}
+.concept p{margin:0 0 8px}
+.eq{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:17px;text-align:center;background:#f6f5f0;border-radius:8px;padding:8px;margin:8px 0;line-height:1.6}
+.eq b{font-weight:700}
+h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 0 8px}
+.ctrls{display:flex;flex-direction:column;gap:8px}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.row{display:grid;grid-template-columns:118px 1fr 70px;align-items:center;gap:8px;font-size:13.5px}
+.row output{font-variant-numeric:tabular-nums;text-align:right;font-size:13px}
+.row input[type=range]{width:100%}
+.chk{display:flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px}
+table.ro{width:100%;border-collapse:collapse;font-size:12.8px;font-variant-numeric:tabular-nums}
+table.ro th,table.ro td{padding:4px 5px;border-bottom:1px solid #eeede7;text-align:right}
+table.ro th:first-child,table.ro td:first-child{text-align:left}
+table.ro th{color:var(--muted);font-weight:600}
+table.ro tr.sum td{font-weight:700}
+.try{font-size:13.5px;line-height:1.5;padding-left:18px;margin:0}
+.try li{margin-bottom:5px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:5px;vertical-align:middle;background:var(--c)}
+.hint{font-size:12.5px;color:var(--muted)}
+@media (max-width:900px){
+  .scene{position:static;grid-template-columns:1fr}
+  .scene.on{display:block}
+  .stage{height:72vh}
+  .side{border-left:0;border-top:1px solid var(--line)}
+  main{overflow:auto}
+}
+.prob{margin:14px 0 4px;padding:12px 14px;border-radius:10px;background:#fff9db;border:1px solid #ffe066;border-left:5px solid #f08c00;font-size:14px;line-height:1.5}
+.prob .tag{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#e8590c}
+.prob h4{margin:2px 0 6px;font-size:15px}
+.prob p{margin:0 0 8px}
+.prob .q{font-weight:600}
+.prob .btns{margin-top:6px}
+.prob .sol{margin-top:10px;padding-top:8px;border-top:1px dashed #fcc419}
+.prob .sol ol{margin:0;padding-left:20px}
+.prob .sol li{margin-bottom:4px}
+.prob .ans{margin-top:6px;font-weight:700;color:#2b8a3e}
+/* ===== dark studio theme ===== */
+body{background:#0b0b0d;color:#e9ecef;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:#111214;border-bottom:1px solid #26282c}
+header .sub,.hint,.legend{color:#9aa1a9}
+.themes{color:#9aa1a9}.themes a,.themes span.cur{border-color:#2f3237;color:#e9ecef}.themes a:hover{background:#1c1e22}.themes span.cur{background:#1c7ed6;border-color:#1c7ed6}
+#langBtn{background:#1c1e22;color:#e9ecef;border-color:#2f3237}
+nav button{color:#9aa1a9}nav button:hover{color:#fff}nav button.on{color:#fff;border-bottom-color:#4dabf7}
+.side{background:#111214;border-left:1px solid #26282c}
+.concept{color:#ced4da}.eq{background:#1a1c20;color:#f1f3f5}
+h3{color:#868e96}
+.btn{background:#1c1e22;color:#e9ecef;border-color:#2f3237}.btn:hover{background:#262a30}
+.btn.primary{background:#1c7ed6;border-color:#1c7ed6;color:#fff}.btn.primary:hover{background:#228be6}
+table.ro th,table.ro td{border-bottom-color:#26282c}table.ro th{color:#868e96}
+input[type=range]{accent-color:#4dabf7}
+.cvwrap{border-color:#26282c}
+.scene.dark .cvwrap{background:#0e0f11}
+.gl3{position:absolute;inset:0;display:block;z-index:0}
+.cvwrap canvas:not(.gl3){z-index:1}
+.prob{background:#1d1a12;border-color:#5c4a12;border-left-color:#f08c00;color:#e9ecef}
+.prob .sol{border-top-color:#5c4a12}.prob .ans{color:#69db7c}
+.try{color:#ced4da}
+.reto{margin:12px 0 6px;padding:14px;border-radius:12px;background:linear-gradient(160deg,#1b1530,#141225);border:1px solid #4c3a8f;border-left:5px solid #9775fa;font-size:14px;line-height:1.5;color:#e9ecef}
+.reto .tag{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#b197fc}
+.reto h4{margin:2px 0 6px;font-size:15.5px}.reto p{margin:0 0 8px}.reto .q{font-weight:600;color:#fff}
+.reto .ans-row{display:flex;gap:8px;align-items:center;margin:8px 0}
+.reto input[type=number]{width:110px;font:inherit;font-size:15px;padding:7px 9px;border-radius:8px;border:1px solid #4c3a8f;background:#0e0c1a;color:#fff}
+.reto .fb{font-weight:650;margin-top:4px}.reto .fb.ok{color:#69db7c}.reto .fb.no{color:#ffa8a8}
+.reto .sol{margin-top:10px;padding-top:8px;border-top:1px dashed #4c3a8f}.reto .sol ol{margin:0;padding-left:20px}.reto .sol li{margin-bottom:4px}
+.reto .meas{color:#b197fc;font-weight:600;margin-top:6px}
+.scene.quiz table.ro{filter:blur(7px);pointer-events:none}
+nav button.has-reto::after{content:" ★";color:#b197fc}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div>
+      <h1 data-es="Tema 2 · Trabajo y energía" data-en="Theme 2 · Work and energy"></h1>
+      <div class="sub" data-es="Mecánica para Ingeniería — simulaciones interactivas" data-en="Mechanics for Engineering — interactive simulations"></div>
+    </div>
+    <div class="themes"><span data-es="Temas:" data-en="Themes:"></span><a href="t1.html" target="_top" data-es="1 · Dinámica" data-en="1 · Dynamics"></a><span class="cur" data-es="2 · Trabajo y energía" data-en="2 · Work & energy"></span><a href="t3.html" target="_top" data-es="3 · Colisiones" data-en="3 · Collisions"></a><a href="t4.html" target="_top" data-es="4 · Cinemática rot." data-en="4 · Rot. kinematics"></a><a href="t5.html" target="_top" data-es="5 · Dinámica rot." data-en="5 · Rot. dynamics"></a><a href="t6.html" target="_top" data-es="6 · Oscilaciones" data-en="6 · Oscillations"></a></div>
+    <button id="langBtn"></button>
+  </div>
+  <nav id="tabs">
+    <button data-s="w1" class="on" data-es="2.1 Trabajo" data-en="2.1 Work"></button>
+    <button data-s="w2" data-es="2.1 Trabajo de una fuerza variable" data-en="2.1 Work of a variable force"></button>
+    <button data-s="w4" data-es="2.2 Potencia" data-en="2.2 Power"></button>
+    <button data-s="w3" data-es="2.3 Energía cinética" data-en="2.3 Kinetic energy"></button>
+    <button data-s="w5" data-es="2.4 Fuerzas conservativas y U" data-en="2.4 Conservative forces and U"></button>
+    <button data-s="w7" data-es="2.5 Curvas de energía potencial" data-en="2.5 Potential energy curves"></button>
+    <button data-s="w6" data-es="2.6 Conservación de la energía" data-en="2.6 Energy conservation"></button>
+  </nav>
+</header>
+<main>
+
+<!-- ============ W1: definition of work ============ -->
+<section class="scene on" id="w1">
+  <div class="stage"><div class="cvwrap"><canvas id="cw1"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="Trabajo de una fuerza constante" data-en="Work done by a constant force"></h2>
+    <div class="concept">
+      <p data-es="El trabajo es el <b>producto escalar</b> de la fuerza por el desplazamiento. Solo cuenta la componente de <b>F</b> a lo largo de <b>d</b>:" data-en="Work is the <b>dot product</b> of force and displacement. Only the component of <b>F</b> along <b>d</b> counts:"></p>
+      <div class="eq">W = <b>F</b> · <b>d</b> = F d cos φ = F<sub>x</sub>d<sub>x</sub> + F<sub>y</sub>d<sub>y</sub></div>
+      <p data-es="Es un escalar con unidades de joule (1 J = 1 N·m). Puede ser positivo (la fuerza ayuda al movimiento), cero (fuerza perpendicular) o negativo (la fuerza se opone)." data-en="It is a scalar measured in joules (1 J = 1 N·m). It can be positive (the force helps the motion), zero (perpendicular force) or negative (the force opposes it)."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="hint" data-es="Arrastra las puntas de <b>F</b> (N) y <b>d</b> (m). Misma cuadrícula: 1 cuadro = 1 N o 1 m." data-en="Drag the tips of <b>F</b> (N) and <b>d</b> (m). Same grid: 1 square = 1 N or 1 m."></div>
+      <div class="btns">
+        <button class="btn" data-p="pull" data-es="Jalar con ángulo" data-en="Pull at an angle"></button>
+        <button class="btn" data-p="perp" data-es="F ⊥ d (W = 0)" data-en="F ⊥ d (W = 0)"></button>
+        <button class="btn" data-p="fric" data-es="Fricción (W &lt; 0)" data-en="Friction (W &lt; 0)"></button>
+      </div>
+      <label class="chk"><input type="checkbox" id="kw1p" checked><span data-es="Mostrar proyección F cos φ" data-en="Show projection F cos φ"></span></label>
+      <div class="legend"><span style="--c:#e03131">F</span><span style="--c:#1c7ed6">d</span><span style="--c:#2f9e44">F cos φ</span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="tw1"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Gira F alrededor de d manteniendo |F|: W es máximo con φ = 0°, cero con 90° y negativo pasando de 90°." data-en="Rotate F around d keeping |F|: W is maximum at φ = 0°, zero at 90° and negative beyond 90°."></li>
+      <li data-es="Comprueba en la tabla que F<sub>x</sub>d<sub>x</sub> + F<sub>y</sub>d<sub>y</sub> da lo mismo que F d cos φ." data-en="Check in the table that F<sub>x</sub>d<sub>x</sub> + F<sub>y</sub>d<sub>y</sub> equals F d cos φ."></li>
+      <li data-es="Pregunta: cargar una mochila caminando en horizontal, ¿hace trabajo la fuerza que la sostiene? (preset F ⊥ d)." data-en="Question: carrying a backpack walking horizontally — does the supporting force do work? (F ⊥ d preset)."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ W2: variable force ============ -->
+<section class="scene" id="w2">
+  <div class="stage"><div class="cvwrap"><canvas id="cw2"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="Trabajo de una fuerza variable" data-en="Work done by a variable force"></h2>
+    <div class="concept">
+      <p data-es="Si F cambia con la posición, se divide el camino en pedazos Δx donde F es casi constante y se suman: en el límite es una integral, el <b>área bajo la curva F(x)</b>." data-en="If F changes with position, split the path into pieces Δx where F is nearly constant and add them up: in the limit it is an integral, the <b>area under the F(x) curve</b>."></p>
+      <div class="eq">W = lim Σ F(xᵢ) Δx = ∫<sub>x₁</sub><sup>x₂</sup> F(x) dx</div>
+      <p data-es="Resorte (ley de Hooke): F = −k x &nbsp;⇒&nbsp; W = −½ k (x₂² − x₁²). En dos dimensiones, W = ∫ <b>F</b> · d<b>r</b> a lo largo de la trayectoria (ver 2.4)." data-en="Spring (Hooke's law): F = −k x &nbsp;⇒&nbsp; W = −½ k (x₂² − x₁²). In two dimensions, W = ∫ <b>F</b> · d<b>r</b> along the path (see 2.4)."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="hint" data-es="Arrastra los marcadores <b>x₁</b> (inicio) y <b>x₂</b> (final) en la gráfica." data-en="Drag the <b>x₁</b> (start) and <b>x₂</b> (end) markers on the graph."></div>
+      <div class="radios">
+        <label class="chk"><input type="radio" name="fw2" value="spring" checked><span data-es="Resorte F = −kx" data-en="Spring F = −kx"></span></label>
+        <label class="chk"><input type="radio" name="fw2" value="const"><span data-es="Constante F = F₀" data-en="Constant F = F₀"></span></label>
+        <label class="chk"><input type="radio" name="fw2" value="quad"><span data-es="No lineal F = b x²" data-en="Nonlinear F = b x²"></span></label>
+      </div>
+      <div class="row"><span data-es="Parámetro (k, F₀, b)" data-en="Parameter (k, F₀, b)"></span><input type="range" id="rw2k" min="5" max="50" step="1" value="20"><output id="ow2k"></output></div>
+      <label class="chk"><input type="checkbox" id="kw2r"><span data-es="Mostrar suma de Riemann" data-en="Show Riemann sum"></span></label>
+      <div class="row"><span data-es="Rectángulos N" data-en="Rectangles N"></span><input type="range" id="rw2n" min="2" max="40" step="1" value="6"><output id="ow2n"></output></div>
+      <div class="btns"><button class="btn primary" id="bw2run" data-es="Mover de x₁ a x₂" data-en="Move from x₁ to x₂"></button></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="tw2"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Resorte de x₁ = 0 a x₂ = 1 m: W es negativo (el resorte se opone al estiramiento). Ahora de 1 m a 0: positivo." data-en="Spring from x₁ = 0 to x₂ = 1 m: W is negative (the spring resists stretching). Now from 1 m to 0: positive."></li>
+      <li data-es="Ve de −1 a +1 m: el área positiva y la negativa se cancelan, W = 0." data-en="Go from −1 to +1 m: the positive and negative areas cancel, W = 0."></li>
+      <li data-es="Activa la suma de Riemann y aumenta N: la suma converge a la integral exacta." data-en="Turn on the Riemann sum and increase N: the sum converges to the exact integral."></li>
+      <li data-es="Duplica el estiramiento: el trabajo se cuadruplica (W ∝ x²)." data-en="Double the stretch: the work quadruples (W ∝ x²)."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ W3: work-energy theorem ============ -->
+<section class="scene" id="w3">
+  <div class="stage"><div class="cvwrap"><canvas id="cw3"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="Energía cinética y teorema trabajo–energía" data-en="Kinetic energy and the work–energy theorem"></h2>
+    <div class="concept">
+      <p data-es="El trabajo <b>neto</b> (de todas las fuerzas) sobre un cuerpo es igual al cambio de su energía cinética:" data-en="The <b>net</b> work (by all forces) on a body equals the change in its kinetic energy:"></p>
+      <div class="eq">W<sub>neto</sub> = ΔK = ½ m v<sub>f</sub>² − ½ m v<sub>i</sub>²</div>
+      <p data-es="Se deduce de ΣF = m a integrando a lo largo del camino. Fuerzas a favor del movimiento aumentan K; fuerzas en contra (como la fricción) la disminuyen." data-en="It follows from ΣF = m a integrated along the path. Forces along the motion increase K; forces against it (like friction) decrease it."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="row"><span data-es="F aplicada" data-en="Applied F"></span><input type="range" id="rw3F" min="-20" max="30" step="1" value="12"><output id="ow3F"></output></div>
+      <div class="row"><span data-es="Masa" data-en="Mass"></span><input type="range" id="rw3m" min="1" max="10" step="0.5" value="2"><output id="ow3m"></output></div>
+      <div class="row"><span>μ<sub>k</sub></span><input type="range" id="rw3mu" min="0" max="0.5" step="0.01" value="0.2"><output id="ow3mu"></output></div>
+      <div class="row"><span data-es="v inicial" data-en="Initial v"></span><input type="range" id="rw3v" min="0" max="8" step="0.5" value="1"><output id="ow3v"></output></div>
+      <div class="btns">
+        <button class="btn primary" id="bw3run"></button>
+        <button class="btn" id="bw3reset" data-es="Reiniciar" data-en="Reset"></button>
+      </div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="tw3"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="En todo momento la barra morada (W<sub>neto</sub>) mide lo mismo que la azul (ΔK)." data-en="At every instant the purple bar (W<sub>net</sub>) matches the blue one (ΔK)."></li>
+      <li data-es="Pon F = 0 con v inicial: solo la fricción hace trabajo; el bloque se detiene cuando W<sub>f</sub> = −K<sub>i</sub>." data-en="Set F = 0 with an initial v: only friction does work; the block stops when W<sub>f</sub> = −K<sub>i</sub>."></li>
+      <li data-es="Calcula a mano la distancia de frenado d = v²/(2 μ g) y compárala." data-en="Compute the stopping distance d = v²/(2 μ g) by hand and compare."></li>
+      <li data-es="¿Por qué el peso y la normal no aparecen? (son ⊥ al desplazamiento: W = 0)." data-en="Why don't weight and normal appear? (they're ⊥ to the displacement: W = 0)."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ W4: power ============ -->
+<section class="scene" id="w4">
+  <div class="stage">
+    <div class="cvwrap"><canvas id="cw4"></canvas></div>
+    <div class="cvwrap graph"><canvas id="gw4"></canvas></div>
+  </div>
+  <aside class="side">
+    <h2 data-es="Potencia" data-en="Power"></h2>
+    <div class="concept">
+      <p data-es="La potencia es la <b>rapidez</b> con la que se hace trabajo. Para una fuerza que actúa sobre un cuerpo con velocidad <b>v</b>:" data-en="Power is the <b>rate</b> at which work is done. For a force acting on a body moving with velocity <b>v</b>:"></p>
+      <div class="eq">P = dW/dt = <b>F</b> · <b>v</b> &nbsp;&nbsp; [W = J/s]</div>
+      <p data-es="Un motor tiene una potencia máxima. Con P fija, la fuerza disponible baja al subir la velocidad: F = P / v. Por eso un auto acelera fuerte al arrancar y cada vez menos." data-en="An engine has a maximum power. At fixed P, the available force drops as speed rises: F = P / v. That's why a car accelerates hard at first and less and less later."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="radios">
+        <label class="chk"><input type="radio" name="mw4" value="P" checked><span data-es="Potencia constante" data-en="Constant power"></span></label>
+        <label class="chk"><input type="radio" name="mw4" value="F"><span data-es="Fuerza constante" data-en="Constant force"></span></label>
+      </div>
+      <div class="row"><span data-es="Potencia P" data-en="Power P"></span><input type="range" id="rw4P" min="10" max="150" step="5" value="60"><output id="ow4P"></output></div>
+      <div class="row"><span data-es="Fuerza F" data-en="Force F"></span><input type="range" id="rw4F" min="500" max="8000" step="100" value="3000"><output id="ow4F"></output></div>
+      <div class="row"><span data-es="Masa del auto" data-en="Car mass"></span><input type="range" id="rw4m" min="600" max="2500" step="50" value="1200"><output id="ow4m"></output></div>
+      <label class="chk"><input type="checkbox" id="kw4air" checked><span data-es="Resistencia del aire (F = c v², c = 0.4 kg/m)" data-en="Air resistance (F = c v², c = 0.4 kg/m)"></span></label>
+      <div class="btns">
+        <button class="btn primary" id="bw4run"></button>
+        <button class="btn" id="bw4reset" data-es="Reiniciar" data-en="Reset"></button>
+      </div>
+      <div class="hint" data-es="El motor no puede dar más de F<sub>máx</sub> = 0.8 m g (límite de tracción)." data-en="The engine can't give more than F<sub>max</sub> = 0.8 m g (traction limit)."></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="tw4"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Fuerza constante: P = F v crece linealmente con el tiempo. ¿Puede un motor real hacer esto indefinidamente?" data-en="Constant force: P = F v grows linearly with time. Can a real engine do this forever?"></li>
+      <li data-es="Potencia constante con aire: la velocidad máxima se alcanza cuando P = c v³. Duplicar P solo sube v<sub>máx</sub> un 26 %." data-en="Constant power with air: top speed is reached when P = c v³. Doubling P only raises v<sub>max</sub> by 26 %."></li>
+      <li data-es="Sin aire, compara la energía entregada ∫P dt con K: son iguales." data-en="Without air, compare delivered energy ∫P dt with K: they're equal."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ W5: conservative forces ============ -->
+<section class="scene" id="w5">
+  <div class="stage"><div class="cvwrap"><canvas id="cw5"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="Fuerzas conservativas y energía potencial" data-en="Conservative forces and potential energy"></h2>
+    <div class="concept">
+      <p data-es="Una fuerza es <b>conservativa</b> si el trabajo que hace entre A y B <b>no depende del camino</b>; equivalentemente, si su trabajo en cualquier trayectoria cerrada es cero. Solo entonces se puede definir una energía potencial U:" data-en="A force is <b>conservative</b> if the work it does between A and B <b>doesn't depend on the path</b>; equivalently, if its work around any closed path is zero. Only then can a potential energy U be defined:"></p>
+      <div class="eq">W<sub>A→B</sub> = ∫ <b>F</b> · d<b>r</b> = −[U(B) − U(A)]</div>
+      <div class="eq">gravedad: U = m g y &nbsp;&nbsp; resorte: U = ½ k r²</div>
+      <p data-es="La fricción y los campos con «remolino» no son conservativos." data-en="Friction and «swirling» fields are not conservative."></p>
+    </div>
+    <h3 data-es="Campo de fuerza" data-en="Force field"></h3>
+    <div class="ctrls">
+      <div class="radios">
+        <label class="chk"><input type="radio" name="fw5" value="grav" checked><span data-es="Gravedad (m = 1 kg)" data-en="Gravity (m = 1 kg)"></span></label>
+        <label class="chk"><input type="radio" name="fw5" value="spring"><span data-es="Resorte 2D (k = 2 N/m)" data-en="2D spring (k = 2 N/m)"></span></label>
+        <label class="chk"><input type="radio" name="fw5" value="vortex"><span data-es="Remolino F = k(−y, x)" data-en="Swirl F = k(−y, x)"></span></label>
+        <label class="chk"><input type="radio" name="fw5" value="fric"><span data-es="Fricción (3 N, opuesta a d<b>r</b>)" data-en="Friction (3 N, opposite d<b>r</b>)"></span></label>
+      </div>
+      <div class="hint" data-es="Elige caminos de A a B o <b>dibuja</b> uno arrastrando sobre el campo. Cada tramo se colorea según el signo de <b>F</b>·d<b>r</b>." data-en="Pick paths from A to B or <b>draw</b> one by dragging on the field. Each segment is colored by the sign of <b>F</b>·d<b>r</b>."></div>
+      <div class="btns">
+        <button class="btn" data-path="straight" data-es="Recto" data-en="Straight"></button>
+        <button class="btn" data-path="step" data-es="Escalón" data-en="Step"></button>
+        <button class="btn" data-path="arc" data-es="Curvo" data-en="Curved"></button>
+        <button class="btn" data-path="loop" data-es="Lazo cerrado A→A" data-en="Closed loop A→A"></button>
+        <button class="btn" id="bw5clr" data-es="Borrar" data-en="Clear"></button>
+      </div>
+      <div class="legend"><span style="--c:#2f9e44" data-es="F·dr &gt; 0" data-en="F·dr &gt; 0"></span><span style="--c:#e03131" data-es="F·dr &lt; 0" data-en="F·dr &lt; 0"></span></div>
+    </div>
+    <h3 data-es="Trabajo por camino" data-en="Work per path"></h3>
+    <table class="ro" id="tw5"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Gravedad: los tres caminos A→B dan el mismo W = −m g Δy. El lazo cerrado da 0." data-en="Gravity: all three A→B paths give the same W = −m g Δy. The closed loop gives 0."></li>
+      <li data-es="Cambia a remolino: ahora cada camino da distinto W y el lazo cerrado no da 0 → no existe U." data-en="Switch to swirl: now each path gives a different W and the closed loop isn't 0 → no U exists."></li>
+      <li data-es="Fricción: W = −f × (longitud del camino). Siempre negativo, y mayor cuanto más largo el camino." data-en="Friction: W = −f × (path length). Always negative, and larger for longer paths."></li>
+      <li data-es="Dibuja un camino loco que empiece en A y termine en B con gravedad: W sigue siendo el mismo." data-en="Draw a crazy path starting at A and ending at B under gravity: W is still the same."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ W6: energy conservation ============ -->
+<section class="scene" id="w6">
+  <div class="stage"><div class="cvwrap"><canvas id="cw6"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="Teorema generalizado de conservación de la energía" data-en="Generalized energy conservation theorem"></h2>
+    <div class="concept">
+      <p data-es="Si solo hacen trabajo fuerzas conservativas, la energía mecánica E = K + U se conserva. Si además actúan fuerzas no conservativas (fricción), su trabajo cambia E y esa energía aparece como energía térmica:" data-en="If only conservative forces do work, mechanical energy E = K + U is conserved. If non-conservative forces (friction) also act, their work changes E and that energy shows up as thermal energy:"></p>
+      <div class="eq">ΔK + ΔU = W<sub>nc</sub> &nbsp;&nbsp; ⇔ &nbsp;&nbsp; K + U + E<sub>térm</sub> = cte.</div>
+      <p data-es="Donde la línea de E toca la pista están los <b>puntos de retorno</b>: ahí K = 0." data-en="Where the E line touches the track are the <b>turning points</b>: there K = 0."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="hint" data-es="Arrastra los puntos blancos para cambiar la forma de la pista. En pausa, arrastra la bola para soltarla desde otra posición." data-en="Drag the white points to reshape the track. While paused, drag the ball to release it from another spot."></div>
+      <div class="row"><span data-es="Fricción μ" data-en="Friction μ"></span><input type="range" id="rw6mu" min="0" max="0.3" step="0.01" value="0"><output id="ow6mu"></output></div>
+      <div class="row"><span data-es="Masa" data-en="Mass"></span><input type="range" id="rw6m" min="0.5" max="5" step="0.5" value="1"><output id="ow6m"></output></div>
+      <label class="chk"><input type="checkbox" id="kw6E" checked><span data-es="Mostrar línea de energía total" data-en="Show total energy line"></span></label>
+      <div class="btns">
+        <button class="btn primary" id="bw6run"></button>
+        <button class="btn" id="bw6reset" data-es="Reiniciar" data-en="Reset"></button>
+        <button class="btn" id="bw6shape" data-es="Otra pista" data-en="Another track"></button>
+      </div>
+      <div class="legend"><span style="--c:#1c7ed6" data-es="K cinética" data-en="K kinetic"></span><span style="--c:#2f9e44" data-es="U potencial" data-en="U potential"></span><span style="--c:#f08c00" data-es="E térmica" data-en="E thermal"></span><span style="--c:#1d2329" data-es="total" data-en="total"></span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="tw6"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Sin fricción, la bola regresa siempre a la misma altura: la barra total no cambia y K ↔ U se intercambian." data-en="Without friction, the ball always returns to the same height: the total bar stays put while K ↔ U trade."></li>
+      <li data-es="Suelta la bola por debajo de una colina: no puede pasar, porque necesitaría K &lt; 0." data-en="Release the ball below a hill's top: it can't cross, because it would need K &lt; 0."></li>
+      <li data-es="Con fricción, la energía mecánica baja pero el total (incluyendo E<sub>térm</sub>) se conserva." data-en="With friction, mechanical energy drops but the total (including E<sub>therm</sub>) is conserved."></li>
+      <li data-es="La masa no cambia la trayectoria: todas las energías escalan con m." data-en="Mass doesn't change the motion: every energy scales with m."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ W7: potential energy curves ============ -->
+<section class="scene" id="w7">
+  <div class="stage"><div class="cvwrap"><canvas id="cw7"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="Curvas de energía potencial" data-en="Potential energy curves"></h2>
+    <div class="concept">
+      <p data-es="Una gráfica U(x) dice casi todo sobre el movimiento en una dimensión. La fuerza es menos la pendiente:" data-en="A U(x) graph tells you almost everything about 1D motion. The force is minus the slope:"></p>
+      <div class="eq">F(x) = −dU/dx &nbsp;&nbsp;&nbsp; K = E − U(x) ≥ 0</div>
+      <p data-es="El cuerpo solo puede estar donde U ≤ E. Donde U = E están los <b>puntos de retorno</b>. En un mínimo de U (F = 0) hay <b>equilibrio estable</b>; en un máximo, <b>inestable</b>." data-en="The body can only be where U ≤ E. Where U = E are the <b>turning points</b>. At a minimum of U (F = 0) there is <b>stable equilibrium</b>; at a maximum, <b>unstable</b>."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="radios">
+        <label class="chk"><input type="radio" name="uw7" value="spring" checked><span data-es="Resorte ½kx²" data-en="Spring ½kx²"></span></label>
+        <label class="chk"><input type="radio" name="uw7" value="well"><span data-es="Doble pozo x⁴ − 4x²" data-en="Double well x⁴ − 4x²"></span></label>
+        <label class="chk"><input type="radio" name="uw7" value="mol"><span data-es="Molécula (Lennard-Jones)" data-en="Molecule (Lennard-Jones)"></span></label>
+      </div>
+      <div class="hint" data-es="Arrastra la bola sobre la curva para soltarla desde ahí (E = U). Arrastra la línea punteada de E para darle energía cinética extra." data-en="Drag the ball along the curve to release it there (E = U). Drag the dashed E line to give it extra kinetic energy."></div>
+      <div class="btns">
+        <button class="btn primary" id="bw7run"></button>
+      </div>
+      <div class="legend"><span style="--c:#2f9e44">U(x)</span><span style="--c:#1d2329">E</span><span style="--c:#1c7ed6">K = E − U</span><span style="--c:#e03131">F = −dU/dx</span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="tw7"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Compara las dos gráficas: donde U tiene pendiente positiva, F es negativa (empuja hacia la izquierda), y viceversa. F = 0 justo en los extremos de U." data-en="Compare the two graphs: where U slopes up, F is negative (pushes left), and vice versa. F = 0 exactly at the extremes of U."></li>
+      <li data-es="Doble pozo: con E &lt; 0 la bola queda atrapada en un pozo; sube E por encima de 0 y oscila entre ambos." data-en="Double well: with E &lt; 0 the ball is trapped in one well; raise E above 0 and it swings between both."></li>
+      <li data-es="Pon la bola exactamente en x = 0 del doble pozo: equilibrio inestable — cualquier empujón la hace caer." data-en="Put the ball exactly at x = 0 in the double well: unstable equilibrium — any nudge makes it fall."></li>
+      <li data-es="Molécula: con E &lt; 0 el sistema está <b>ligado</b>; con E &gt; 0 los átomos se separan sin regresar." data-en="Molecule: with E &lt; 0 the system is <b>bound</b>; with E &gt; 0 the atoms fly apart for good."></li>
+    </ul>
+  </aside>
+</section>
+
+</main>
+<script src="lib/three.min.js"></script><script src="lib/three-extras.js"></script><script>
+"use strict";
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+let LANG = 'es';
+const L = (es, en) => LANG === 'es' ? es : en;
+const add = (a, b) => ({x: a.x + b.x, y: a.y + b.y});
+const sub = (a, b) => ({x: a.x - b.x, y: a.y - b.y});
+const mul = (a, s) => ({x: a.x * s, y: a.y * s});
+const len = a => Math.hypot(a.x, a.y);
+const dot = (a, b) => a.x * b.x + a.y * b.y;
+const angDeg = a => Math.atan2(a.y, a.x) * 180 / Math.PI;
+const fx = (x, d = 2) => { const v = Math.abs(x) < 0.5 * Math.pow(10, -d) ? 0 : x; return v.toFixed(d); };
+const snapv = (v, s) => Math.round(v / s) * s;
+const C = {F: '#e03131', a: '#2f9e44', v: '#1c7ed6', R: '#6741d9', fr: '#f08c00', ink: '#1d2329', muted: '#8a949d', grid: '#eceae3', axis: '#c4c1b6', teal: '#0c8599'};
+const PAL_L = {...C}, PAL_D = {F: '#ff6b6b', a: '#69db7c', v: '#4dabf7', R: '#b197fc', fr: '#ffa94d', ink: '#f1f3f5', muted: '#a5adb5', grid: 'rgba(255,255,255,.08)', axis: 'rgba(255,255,255,.3)', teal: '#3bc9db'};
+let DARK = false;
+function setDark(on) { if (on === DARK) return; DARK = on; Object.assign(C, on ? PAL_D : PAL_L); }
+
+function setupCanvas(cv) {
+  const o = {cv, ctx: cv.getContext('2d'), w: 1, h: 1};
+  const ro = new ResizeObserver(() => {
+    const r = cv.parentElement.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    o.w = Math.max(1, r.width); o.h = Math.max(1, r.height);
+    cv.width = Math.round(o.w * d); cv.height = Math.round(o.h * d);
+    o.ctx.setTransform(d, 0, 0, d, 0, 0);
+  });
+  ro.observe(cv.parentElement);
+  return o;
+}
+function ptr(e, cv) { const r = cv.getBoundingClientRect(); return {x: e.clientX - r.left, y: e.clientY - r.top}; }
+
+function arrow(ctx, x0, y0, x1, y1, col, w = 3, dash = null, alpha = 1) {
+  const dx = x1 - x0, dy = y1 - y0, Ln = Math.hypot(dx, dy);
+  if (Ln < 1.5) return;
+  const ux = dx / Ln, uy = dy / Ln, hl = Math.min(10 + w * 2.2, Ln * 0.55), hw = hl * 0.48;
+  ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - ux * hl * 0.85, y1 - uy * hl * 0.85); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x1, y1);
+  ctx.lineTo(x1 - ux * hl - uy * hw, y1 - uy * hl + ux * hw);
+  ctx.lineTo(x1 - ux * hl + uy * hw, y1 - uy * hl - ux * hw);
+  ctx.closePath(); ctx.fill(); ctx.restore();
+}
+function text(ctx, s, x, y, col = C.ink, size = 14, align = 'left', weight = 650) {
+  ctx.save(); ctx.font = `${weight} ${size}px system-ui,-apple-system,Segoe UI,sans-serif`;
+  ctx.textAlign = align; ctx.textBaseline = 'middle';
+  ctx.lineWidth = 4; ctx.strokeStyle = DARK ? 'rgba(0,0,0,.7)' : 'rgba(255,255,255,.92)'; ctx.lineJoin = 'round';
+  ctx.strokeText(s, x, y); ctx.fillStyle = col; ctx.fillText(s, x, y); ctx.restore();
+}
+// label placed just beyond an arrow tip
+function tipLabel(ctx, s, x0, y0, x1, y1, col) {
+  const dx = x1 - x0, dy = y1 - y0, Ln = Math.hypot(dx, dy) || 1;
+  text(ctx, s, x1 + dx / Ln * 16, y1 + dy / Ln * 16, col, 15, 'center', 700);
+}
+function badge(ctx, s, x, y, ok) {
+  ctx.save(); ctx.font = '650 14px system-ui,sans-serif'; ctx.textAlign = 'left';
+  const w = ctx.measureText(s).width + 22;
+  ctx.fillStyle = DARK ? 'rgba(20,21,24,.78)' : (ok ? '#ebfbee' : '#fff5f5'); ctx.strokeStyle = ok ? (DARK ? '#40c057' : '#2f9e44') : (DARK ? '#fa5252' : '#e03131'); ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.roundRect(x, y, w, 30, 8); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = DARK ? (ok ? '#8ce99a' : '#ffa8a8') : (ok ? '#2b8a3e' : '#c92a2a'); ctx.textBaseline = 'middle'; ctx.fillText(s, x + 11, y + 15); ctx.restore();
+}
+function grid(ctx, w, h, cx, cy, s, axes = true) {
+  ctx.save(); ctx.lineWidth = 1; ctx.strokeStyle = C.grid; ctx.beginPath();
+  for (let x = cx % s; x < w; x += s) { ctx.moveTo(Math.round(x) + .5, 0); ctx.lineTo(Math.round(x) + .5, h); }
+  for (let y = cy % s; y < h; y += s) { ctx.moveTo(0, Math.round(y) + .5); ctx.lineTo(w, Math.round(y) + .5); }
+  ctx.stroke();
+  if (axes) { ctx.strokeStyle = C.axis; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke(); }
+  ctx.restore();
+}
+function puck(ctx, x, y, r, m) {
+  ctx.save();
+  const g = ctx.createRadialGradient(x - r * .35, y - r * .35, r * .2, x, y, r);
+  g.addColorStop(0, '#5c6670'); g.addColorStop(1, '#22282e');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = '600 11px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(m, x, y); ctx.restore();
+}
+function handle(ctx, x, y, col) {
+  ctx.save(); ctx.fillStyle = '#fff'; ctx.strokeStyle = col; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore();
+}
+// generic time plot
+function plot(g, series, o) {
+  const {ctx, w, h} = g; ctx.clearRect(0, 0, w, h);
+  const pl = 54, pr = 14, pt = 26, pb = 28, W = w - pl - pr, H = h - pt - pb;
+  let ymin = 0, ymax = 0;
+  series.forEach(s => s.pts.forEach(p => { if (p[0] >= o.xmin && p[0] <= o.xmax) { ymin = Math.min(ymin, p[1]); ymax = Math.max(ymax, p[1]); } }));
+  if (ymax - ymin < (o.minSpan || 1)) { const c = (ymax + ymin) / 2, sp = (o.minSpan || 1) / 2; ymin = Math.min(ymin, c - sp); ymax = Math.max(ymax, c + sp); }
+  const pad = (ymax - ymin) * 0.1; ymin -= pad; ymax += pad;
+  const X = t => pl + (t - o.xmin) / (o.xmax - o.xmin) * W, Y = v => pt + (ymax - v) / (ymax - ymin) * H;
+  // grid & ticks
+  ctx.save(); ctx.font = '11px system-ui,sans-serif'; ctx.fillStyle = C.muted; ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
+  const step = niceStep((ymax - ymin) / 4);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let v = Math.ceil(ymin / step) * step; v <= ymax; v += step) { const y = Y(v); ctx.beginPath(); ctx.moveTo(pl, y); ctx.lineTo(pl + W, y); ctx.stroke(); ctx.fillText(+v.toFixed(3), pl - 6, y); }
+  const xs = niceStep((o.xmax - o.xmin) / 6); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let t = Math.ceil(o.xmin / xs) * xs; t <= o.xmax; t += xs) { const x = X(t); ctx.beginPath(); ctx.moveTo(x, pt); ctx.lineTo(x, pt + H); ctx.stroke(); ctx.fillText(+t.toFixed(3), x, pt + H + 5); }
+  ctx.strokeStyle = C.axis; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(pl, Y(0)); ctx.lineTo(pl + W, Y(0)); ctx.stroke();
+  ctx.fillStyle = C.ink; ctx.font = '600 12px system-ui,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText(o.title, pl, 13);
+  ctx.textAlign = 'right'; ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif'; ctx.fillText(o.xlab, pl + W, 13);
+  // clip & draw
+  ctx.beginPath(); ctx.rect(pl, pt, W, H); ctx.clip();
+  series.forEach(s => {
+    if (!s.pts.length) return;
+    if (s.fill) {
+      ctx.beginPath(); ctx.moveTo(X(s.pts[0][0]), Y(0));
+      s.pts.forEach(p => ctx.lineTo(X(p[0]), Y(p[1]))); ctx.lineTo(X(s.pts[s.pts.length - 1][0]), Y(0)); ctx.closePath();
+      ctx.globalAlpha = 0.15; ctx.fillStyle = s.col; ctx.fill(); ctx.globalAlpha = 1;
+    }
+    ctx.beginPath(); ctx.strokeStyle = s.col; ctx.lineWidth = 2.5; ctx.setLineDash(s.dash || []);
+    s.pts.forEach((p, i) => i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))); ctx.stroke(); ctx.setLineDash([]);
+  });
+  ctx.restore();
+  // legend
+  let lx = pl + 160; ctx.save(); ctx.font = '600 12px system-ui,sans-serif'; ctx.textBaseline = 'middle';
+  series.forEach(s => { ctx.strokeStyle = s.col; ctx.lineWidth = 3; ctx.setLineDash(s.dash || []); ctx.beginPath(); ctx.moveTo(lx, 13); ctx.lineTo(lx + 18, 13); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = s.col; ctx.fillText(s.label, lx + 23, 13); lx += ctx.measureText(s.label).width + 46; });
+  ctx.restore();
+}
+function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw || 1))); const n = raw / p; return (n < 1.5 ? 1 : n < 3.5 ? 2 : n < 7.5 ? 5 : 10) * p; }
+function setTxt(el, es, en) { el.dataset.es = es; el.dataset.en = en; el.innerHTML = L(es, en); }
+function bindRange(id, outId, fmt, cb) {
+  const r = $(id), o = $(outId);
+  const f = () => { o.textContent = fmt(+r.value); cb(+r.value); };
+  r.addEventListener('input', f); f();
+}
+
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const rot = (v, a) => ({x: v.x * Math.cos(a) - v.y * Math.sin(a), y: v.x * Math.sin(a) + v.y * Math.cos(a)});
+function spring(ctx, x0, y0, x1, y1, coils = 10, amp = 8, col = '#495057', w = 2) {
+  const dx = x1 - x0, dy = y1 - y0, Ln = Math.hypot(dx, dy) || 1, ux = dx / Ln, uy = dy / Ln;
+  ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(x0, y0);
+  const lead = Math.min(8, Ln * 0.1), n = coils * 2;
+  ctx.lineTo(x0 + ux * lead, y0 + uy * lead);
+  for (let i = 1; i < n; i++) { const t = lead + (Ln - 2 * lead) * i / n, s = i % 2 ? amp : -amp; ctx.lineTo(x0 + ux * t - uy * s, y0 + uy * t + ux * s); }
+  ctx.lineTo(x1 - ux * lead, y1 - uy * lead); ctx.lineTo(x1, y1); ctx.stroke(); ctx.restore();
+}
+// vertical bar chart: items [{label, value, col}] ; zero line in middle if negatives
+function bars(ctx, x, y, w, h, items, o = {}) {
+  ctx.save();
+  ctx.fillStyle = DARK ? 'rgba(20,21,24,.72)' : '#fafaf7'; ctx.strokeStyle = DARK ? 'rgba(255,255,255,.12)' : '#e6e4dc'; ctx.beginPath(); ctx.roundRect(x, y, w, h, 10); ctx.fill(); ctx.stroke();
+  const pt = 30, pb = 34, H = h - pt - pb, n = items.length, bw = Math.min(46, (w - 20) / n * 0.62), gap = (w - 20) / n;
+  let vmax = o.max || Math.max(1e-9, ...items.map(i => Math.abs(i.value)));
+  const neg = items.some(i => i.value < -1e-9) || o.neg;
+  const y0 = neg ? y + pt + H / 2 : y + pt + H, sc = (neg ? H / 2 : H) / vmax;
+  if (o.title) { ctx.fillStyle = C.ink; ctx.font = '650 12.5px system-ui,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(o.title, x + 10, y + 15); }
+  ctx.strokeStyle = C.axis; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x + 8, y0); ctx.lineTo(x + w - 8, y0); ctx.stroke();
+  items.forEach((it, i) => {
+    const cx = x + 10 + gap * (i + .5), v = clamp(it.value, -vmax * 1.05, vmax * 1.05), bh = v * sc;
+    ctx.fillStyle = it.col; ctx.globalAlpha = it.alpha || 1;
+    ctx.fillRect(cx - bw / 2, bh >= 0 ? y0 - bh : y0, bw, Math.abs(bh)); ctx.globalAlpha = 1;
+    ctx.fillStyle = C.ink; ctx.font = '600 11.5px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(it.label, cx, y + h - 22);
+    ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif';
+    ctx.fillText(it.txt !== undefined ? it.txt : fx(it.value, 1), cx, y + h - 9);
+  });
+  ctx.restore();
+}
+function startApp(scenes) {
+  let active = Object.keys(scenes)[0];
+  Object.values(scenes).forEach(s => s.init && s.init());
+  const tabs = document.querySelectorAll('#tabs button[data-s]');
+  const show = id => {
+    if (!scenes[id]) return; active = id;
+    tabs.forEach(x => x.classList.toggle('on', x.dataset.s === id));
+    document.querySelectorAll('.scene').forEach(sc => sc.classList.toggle('on', sc.id === id));
+    if (scenes[id].onShow) scenes[id].onShow();
+  };
+  tabs.forEach(b => b.onclick = () => { show(b.dataset.s); try { history.replaceState(null, '', '#' + b.dataset.s); } catch (e) {} });
+  const h = location.hash.slice(1); if (scenes[h]) show(h);
+  const h1 = document.querySelector('header h1');
+  window.applyLang = () => {
+    document.documentElement.lang = LANG;
+    document.querySelectorAll('[data-es]').forEach(e => { e.innerHTML = e.dataset[LANG]; });
+    $('langBtn').textContent = LANG === 'es' ? 'English' : 'Español';
+    document.title = h1.textContent;
+  };
+  $('langBtn').onclick = () => { LANG = LANG === 'es' ? 'en' : 'es'; applyLang(); };
+  applyLang();
+  let last = performance.now(), tabT = 0;
+  function loop(now) {
+    const dt = Math.min(0.04, (now - last) / 1000); last = now;
+    const S = scenes[active];
+    try {
+      S.step && S.step(dt);
+      S.r3 = !!(typeof G3 !== 'undefined' && G3.ok && VIEWS[active] && S.skin);
+      if (S.r3 && !G3.render(active, S)) S.r3 = false;
+      if (!S.r3 && typeof G3 !== 'undefined' && G3.ok) G3.hide();
+      setDark(S.r3); document.getElementById(active).classList.toggle('dark', S.r3);
+      S.draw && S.draw(); tabT += dt; if (tabT > 0.1) { tabT = 0; S.table && S.table(); } }
+    catch (e) { console.error(e); }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+/* ---------- real-life problem cards ---------- */
+function setR(id, v) { const r = $(id); if (!r) return; r.value = v; r.dispatchEvent(new Event('input')); }
+function setRad(name, v) { const r = document.querySelector(`input[name=${name}][value="${v}"]`); if (r) { r.checked = true; r.dispatchEvent(new Event('change')); } }
+function setChk(id, v) { const c = $(id); if (c) { c.checked = v; c.dispatchEvent(new Event('change')); } }
+function addProblems(P, S = {}) {
+  const bi = (a, tag = 'span', cls = '') => `<${tag}${cls ? ` class="${cls}"` : ''} data-es="${a[0].replace(/"/g, '&quot;')}" data-en="${a[1].replace(/"/g, '&quot;')}"></${tag}>`;
+  Object.entries(P).forEach(([id, p]) => {
+    const aside = document.querySelector(`#${id} .side`), concept = aside && aside.querySelector('.concept');
+    if (!concept) return;
+    const box = document.createElement('div'); box.className = 'prob';
+    box.innerHTML = bi(['Problema de la vida real', 'Real-life problem'], 'div', 'tag') + bi(p.title, 'h4') + bi(p.text, 'p') + bi(p.q, 'p', 'q')
+      + `<div class="btns"><button class="btn primary" data-load data-es="Cargar en la simulación" data-en="Load into the simulation"></button><button class="btn" data-sol data-es="Ver solución" data-en="Show solution"></button><button class="btn" data-skin hidden data-es="Ver como diagrama" data-en="Show as diagram"></button></div>`
+      + `<div class="sol" hidden><ol>${p.steps.map(s => bi(s, 'li')).join('')}</ol>${bi(p.ans, 'div', 'ans')}</div>`;
+    concept.after(box);
+    const sk = box.querySelector('[data-skin]'), scn = S[id];
+    const setSkin = on => { if (!scn) return; scn.skin = on; sk.hidden = false; sk.dataset.es = on ? 'Ver como diagrama' : 'Ver escena real'; sk.dataset.en = on ? 'Show as diagram' : 'Show real scene'; sk.innerHTML = sk.dataset[LANG]; };
+    box.querySelector('[data-load]').onclick = () => { try { setSkin(true); p.load(); } catch (e) { console.error(e); } };
+    sk.onclick = () => setSkin(!scn.skin);
+    if (!p.noDefault) setSkin(true);
+    const sb = box.querySelector('[data-sol]'), sol = box.querySelector('.sol');
+    sb.onclick = () => { sol.hidden = !sol.hidden; sb.dataset.es = sol.hidden ? 'Ver solución' : 'Ocultar solución'; sb.dataset.en = sol.hidden ? 'Show solution' : 'Hide solution'; sb.innerHTML = sb.dataset[LANG]; };
+  });
+}
+/* ---------- sprites for real-life scenes ---------- */
+function person(ctx, x, y, H, o = {}) {
+  // feet at (x, y); returns world position of the front hand
+  const f = o.facing || 1, lean = o.lean || 0, s = H / 100, a = o.arm !== undefined ? o.arm : 0.4, a2 = o.arm2 !== undefined ? o.arm2 : a, st = o.stride || 6;
+  if (o.dry) { const ty0 = o.pose === 'sit' ? 6 : 0, hx = 4 + (o.armLen || 28) * Math.cos(a), hy = -76 + ty0 + (o.armLen || 28) * Math.sin(a), c = Math.cos(lean), sn = Math.sin(lean); return {x: x + f * s * (hx * c - hy * sn), y: y + s * (hx * sn + hy * c)}; }
+  if (!o.noShadow) shadow(ctx, x, y + 2, H * 0.42);
+  ctx.save(); ctx.translate(x, y); ctx.scale(f * s, s); ctx.rotate(lean); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const pants = o.pants || '#364fc7', shirt = o.col || '#e8590c', skin = o.skin || '#f1c27d';
+  ctx.strokeStyle = pants; ctx.lineWidth = 11;
+  if (o.pose === 'sit') { ctx.beginPath(); ctx.moveTo(-4, -40); ctx.lineTo(20, -40); ctx.lineTo(22, -14); ctx.stroke(); }
+  else { ctx.beginPath(); ctx.moveTo(-2, -48); ctx.lineTo(-st, 0); ctx.stroke(); ctx.globalAlpha = 1; ctx.beginPath(); ctx.moveTo(2, -48); ctx.lineTo(st, 0); ctx.stroke();
+    if (!o.skates) { ctx.fillStyle = o.shoe || '#212529'; ctx.beginPath(); ctx.ellipse(-st + 4, -1, 9, 4.5, 0, 0, 7); ctx.ellipse(st + 4, -1, 9, 4.5, 0, 0, 7); ctx.fill(); } }
+  const ty = o.pose === 'sit' ? 6 : 0;
+  ctx.strokeStyle = skin; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(-2, -76 + ty); ctx.lineTo(-2 + (o.armLen || 26) * Math.cos(a2), -76 + ty + (o.armLen || 26) * Math.sin(a2)); ctx.stroke();
+  ctx.fillStyle = shirt; ctx.beginPath(); ctx.roundRect(-11, -84 + ty, 22, 40, 7); ctx.fill();
+  ctx.strokeStyle = skin; ctx.beginPath(); ctx.moveTo(4, -76 + ty); ctx.lineTo(4 + (o.armLen || 28) * Math.cos(a), -76 + ty + (o.armLen || 28) * Math.sin(a)); ctx.stroke();
+  ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(1, -95 + ty, 10.5, 0, 7); ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(-11, -84 + ty, 6, 40);
+  ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.arc(7, -96 + ty, 1.6, 0, 7); ctx.fill();
+  ctx.fillStyle = o.hair || '#5c3d2e'; ctx.beginPath(); ctx.arc(0, -97 + ty, 11, Math.PI * 1.05, Math.PI * 2.02); ctx.fill();
+  if (o.long) { ctx.fillRect(-11, -98 + ty, 6, 18); }
+  if (o.skates) { ctx.fillStyle = '#f8f9fa'; ctx.beginPath(); ctx.roundRect(-st - 6, -8, 16, 8, 3); ctx.roundRect(st - 6, -8, 16, 8, 3); ctx.fill(); ctx.strokeStyle = '#868e96'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(-st - 9, 3); ctx.lineTo(-st + 12, 3); ctx.moveTo(st - 9, 3); ctx.lineTo(st + 12, 3); ctx.stroke(); }
+  ctx.restore();
+  const hx = 4 + (o.armLen || 28) * Math.cos(a), hy = -76 + ty + (o.armLen || 28) * Math.sin(a), c = Math.cos(lean), sn = Math.sin(lean);
+  return {x: x + f * s * (hx * c - hy * sn), y: y + s * (hx * sn + hy * c)};
+}
+function carSprite(ctx, x, y, Lp, col = '#e03131', f = 1, spin = 0) {
+  const H = Lp * 0.28, x0 = x - Lp / 2, y0 = y - H - Lp * 0.08;
+  ctx.save(); ctx.translate(x, 0); ctx.scale(f, 1); ctx.translate(-x, 0);
+  ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(x0, y0, Lp, H, Lp * 0.06); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(x0 + Lp * .22, y0 + 1); ctx.lineTo(x0 + Lp * .34, y0 - H * .75); ctx.lineTo(x0 + Lp * .68, y0 - H * .75); ctx.lineTo(x0 + Lp * .82, y0 + 1); ctx.fill();
+  ctx.fillStyle = '#d0ebff'; ctx.fillRect(x0 + Lp * .37, y0 - H * .6, Lp * .14, H * .5); ctx.fillRect(x0 + Lp * .54, y0 - H * .6, Lp * .12, H * .5);
+  ctx.fillStyle = '#fff3bf'; ctx.fillRect(x0 + Lp - 5, y0 + H * .25, 5, H * .25);
+  const r = Lp * 0.09;
+  [x0 + Lp * .2, x0 + Lp * .8].forEach(wx => { ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.arc(wx, y - r, r, 0, 7); ctx.fill(); ctx.fillStyle = '#adb5bd'; ctx.beginPath(); ctx.arc(wx, y - r, r * .45, 0, 7); ctx.fill(); ctx.strokeStyle = '#495057'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(wx, y - r); ctx.lineTo(wx + Math.cos(spin) * r * .45, y - r + Math.sin(spin) * r * .45); ctx.stroke(); });
+  ctx.restore();
+}
+function boxSprite(ctx, cx, cy, w, h, rot = 0, col = '#c8a165') {
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  ctx.fillStyle = col; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.5; ctx.strokeRect(-w / 2, -h / 2, w, h);
+  ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(-w * .08, -h / 2, w * .16, h);
+  ctx.restore();
+}
+function ballSprite(ctx, x, y, r, c1, c2) {
+  const g = ctx.createRadialGradient(x - r * .35, y - r * .4, r * .1, x, y, r); g.addColorStop(0, c1); g.addColorStop(1, c2);
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+}
+function basketball(ctx, x, y, r, rot = 0) {
+  ballSprite(ctx, x, y, r, '#ffa94d', '#d9480f');
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.strokeStyle = '#5f3dc4'; ctx.strokeStyle = '#3b2314'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(-r, 0); ctx.lineTo(r, 0); ctx.moveTo(0, -r); ctx.lineTo(0, r); ctx.stroke();
+  ctx.beginPath(); ctx.arc(-r * 1.3, 0, r * .95, -0.75, 0.75); ctx.stroke(); ctx.beginPath(); ctx.arc(r * 1.3, 0, r * .95, Math.PI - 0.75, Math.PI + 0.75); ctx.stroke();
+  ctx.restore();
+}
+function billiard(ctx, x, y, r, col, num) {
+  ballSprite(ctx, x, y, r, col === '#fff' ? '#ffffff' : '#495057', col === '#fff' ? '#ced4da' : '#000');
+  if (num) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x, y, r * .45, 0, 7); ctx.fill(); ctx.fillStyle = '#000'; ctx.font = `700 ${Math.round(r * .6)}px system-ui,sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(num, x, y + 1); }
+}
+function phoneSprite(ctx, cx, cy, w, h, rot = 0) {
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.roundRect(-w / 2, -h / 2, w, h, w * .18); ctx.fill();
+  const g = ctx.createLinearGradient(-w / 2, -h / 2, w / 2, h / 2); g.addColorStop(0, '#4dabf7'); g.addColorStop(1, '#9775fa');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(-w / 2 + 3, -h / 2 + 6, w - 6, h - 12, 3); ctx.fill();
+  ctx.restore();
+}
+function droneSprite(ctx, x, y, s, t = 0) {
+  ctx.save(); ctx.translate(x, y);
+  ctx.strokeStyle = '#343a40'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-s, -s * .25); ctx.lineTo(s, -s * .25); ctx.stroke();
+  ctx.fillStyle = '#495057'; ctx.beginPath(); ctx.roundRect(-s * .4, -s * .35, s * .8, s * .4, 5); ctx.fill();
+  ctx.fillStyle = '#c8a165'; ctx.fillRect(-s * .28, s * .08, s * .56, s * .38); ctx.strokeStyle = '#8d6e3f'; ctx.lineWidth = 1; ctx.strokeRect(-s * .28, s * .08, s * .56, s * .38);
+  [-1, 1].forEach(k => { ctx.fillStyle = 'rgba(134,142,150,.55)'; ctx.beginPath(); ctx.ellipse(k * s, -s * .32, s * .38 * Math.abs(Math.cos(t * 20 + k)), s * .07, 0, 0, 7); ctx.fill(); ctx.fillStyle = '#212529'; ctx.fillRect(k * s - 2, -s * .36, 4, 6); });
+  ctx.restore();
+}
+function treeOrWindowRow() {}
+/* ---------- scenery painters ---------- */
+function shadow(ctx, x, y, w, a = 0.18) { ctx.save(); ctx.fillStyle = `rgba(0,0,0,${a})`; ctx.beginPath(); ctx.ellipse(x, y, w / 2, Math.max(2, w * 0.09), 0, 0, 7); ctx.fill(); ctx.restore(); }
+function scenery(ctx, w, h, gy, type, shift = 0) {
+  // gy: ground line in px; shift: horizontal scroll in px (for parallax)
+  ctx.save();
+  const sky = (c1, c2) => { const g = ctx.createLinearGradient(0, 0, 0, gy); g.addColorStop(0, c1); g.addColorStop(1, c2); ctx.fillStyle = g; ctx.fillRect(0, 0, w, gy); };
+  const clouds = (n = 4, s = 0.25) => { ctx.fillStyle = 'rgba(255,255,255,.9)'; for (let i = 0; i < n; i++) { const x = ((i * 0.29 + 0.07) * w * 1.3 - shift * s) % (w * 1.3), xx = x < -120 ? x + w * 1.3 : x, y = gy * (0.12 + 0.18 * ((i * 7) % 3) / 2); [[0, 0, 22], [24, -10, 26], [52, 0, 20], [26, 6, 22]].forEach(([dx, dy, r]) => { ctx.beginPath(); ctx.arc(xx + dx, y + dy, r, 0, 7); ctx.fill(); }); } };
+  const hills = (col, amp, base, s, k) => { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(0, gy); for (let x = 0; x <= w; x += 8) ctx.lineTo(x, base - amp * (0.5 + 0.5 * Math.sin((x + shift * s) * k) * Math.cos((x + shift * s) * k * 0.37))); ctx.lineTo(w, gy); ctx.closePath(); ctx.fill(); };
+  if (type === 'park') {
+    sky('#74c0fc', '#d0ebff'); clouds(); hills('#b2f2bb', 26, gy - 18, 0.15, 0.011); hills('#8ce99a', 16, gy - 4, 0.3, 0.02);
+    const g = ctx.createLinearGradient(0, gy, 0, h); g.addColorStop(0, '#69db7c'); g.addColorStop(1, '#40c057'); ctx.fillStyle = g; ctx.fillRect(0, gy, w, h - gy);
+    ctx.fillStyle = 'rgba(255,255,255,.18)'; for (let x = (-shift % 40 + 40) % 40 - 40; x < w; x += 40) ctx.fillRect(x, gy + 4, 20, 3);
+  } else if (type === 'ice') {
+    const g0 = ctx.createLinearGradient(0, 0, 0, gy); g0.addColorStop(0, '#343a40'); g0.addColorStop(1, '#495057'); ctx.fillStyle = g0; ctx.fillRect(0, 0, w, gy);
+    for (let i = 0; i < 40; i++) { ctx.fillStyle = ['#ffd43b', '#ff8787', '#74c0fc', '#f8f9fa'][i % 4]; ctx.globalAlpha = .35; ctx.beginPath(); ctx.arc((i * 97) % w, 20 + (i * 53) % (gy * 0.55), 3, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1; const bh = 34; ctx.fillStyle = '#f8f9fa'; ctx.fillRect(0, gy - bh, w, bh);
+    ['#1c7ed6', '#e03131', '#2f9e44', '#f59f00'].forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(((i * 0.27 + 0.05) * w - shift) % w, gy - bh + 7, w * 0.16, bh - 14); });
+    ctx.fillStyle = '#ffc9c9'; ctx.fillRect(0, gy - 4, w, 4);
+    const g = ctx.createLinearGradient(0, gy, 0, h); g.addColorStop(0, '#e7f5ff'); g.addColorStop(1, '#c5e4fb'); ctx.fillStyle = g; ctx.fillRect(0, gy, w, h - gy);
+    ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 1; for (let i = 0; i < 12; i++) { const y = gy + 8 + ((i * 37) % (h - gy - 10)); ctx.beginPath(); ctx.moveTo(((i * 131) % w), y); ctx.lineTo(((i * 131) % w) + 60, y + 3); ctx.stroke(); }
+  } else if (type === 'indoor') {
+    const g0 = ctx.createLinearGradient(0, 0, 0, gy); g0.addColorStop(0, '#f8f0e3'); g0.addColorStop(1, '#efe3cf'); ctx.fillStyle = g0; ctx.fillRect(0, 0, w, gy);
+    ctx.fillStyle = 'rgba(0,0,0,.035)'; for (let x = 0; x < w; x += 46) ctx.fillRect(x, 0, 23, gy);
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, gy - 14, w, 14);
+    const g = ctx.createLinearGradient(0, gy, 0, h); g.addColorStop(0, '#c08552'); g.addColorStop(1, '#a0673a'); ctx.fillStyle = g; ctx.fillRect(0, gy, w, h - gy);
+    ctx.strokeStyle = 'rgba(70,40,15,.25)'; ctx.lineWidth = 1; for (let y = gy + 14; y < h; y += 14) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+    for (let r = 0, y = gy; y < h; y += 14, r++) for (let x = ((r % 2) * 60 - shift) % 120 - 120; x < w; x += 120) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + 14); ctx.stroke(); }
+  } else if (type === 'road') {
+    sky('#91a7ff', '#dbe4ff'); clouds(3, 0.1);
+    for (let i = 0; i < 18; i++) { const bw = 40 + (i * 23) % 50, bh = 50 + (i * 47) % 90, x = ((i * 71 - shift * 0.3) % (w + 200) + w + 200) % (w + 200) - 100; ctx.fillStyle = ['#adb5bd', '#ced4da', '#868e96'][i % 3]; ctx.fillRect(x, gy - 10 - bh, bw, bh); ctx.fillStyle = 'rgba(255,255,255,.5)'; for (let wy = gy - bh; wy < gy - 20; wy += 14) for (let wx = x + 6; wx < x + bw - 8; wx += 12) ctx.fillRect(wx, wy, 6, 7); }
+    ctx.fillStyle = '#ced4da'; ctx.fillRect(0, gy - 10, w, 10);
+    ctx.fillStyle = '#495057'; ctx.fillRect(0, gy, w, h - gy); ctx.fillStyle = '#f8f9fa'; for (let x = (-shift % 80 + 80) % 80 - 80; x < w; x += 80) ctx.fillRect(x, gy + (h - gy) * 0.45, 40, 4);
+  } else if (type === 'night') {
+    const g = ctx.createLinearGradient(0, 0, 0, gy); g.addColorStop(0, '#0b1026'); g.addColorStop(1, '#2b3a67'); ctx.fillStyle = g; ctx.fillRect(0, 0, w, gy);
+    ctx.fillStyle = '#fff'; for (let i = 0; i < 90; i++) { ctx.globalAlpha = 0.3 + ((i * 13) % 7) / 10; ctx.fillRect((i * 151) % w, (i * 89) % (gy * 0.9), 1.6, 1.6); } ctx.globalAlpha = 1;
+    ctx.fillStyle = '#1b1f3b'; ctx.beginPath(); ctx.moveTo(0, gy); for (let x = 0; x <= w; x += 30) ctx.lineTo(x, gy - 20 - 18 * Math.abs(Math.sin(x * 0.013))); ctx.lineTo(w, gy); ctx.fill();
+    ctx.fillStyle = '#212544'; ctx.fillRect(0, gy, w, h - gy);
+  } else if (type === 'sea') {
+    sky('#a5d8ff', '#e7f5ff'); clouds(3, 0.05); ctx.fillStyle = '#1971c2'; ctx.fillRect(0, gy, w, h - gy);
+  } else if (type === 'felt') {
+    ctx.fillStyle = '#5c3a1e'; ctx.fillRect(0, 0, w, h); const g = ctx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, Math.max(w, h) * 0.7); g.addColorStop(0, '#2b9348'); g.addColorStop(1, '#1b6b33'); ctx.fillStyle = g; ctx.fillRect(18, 18, w - 36, h - 36);
+    ctx.fillStyle = '#111'; [[18, 18], [w / 2, 14], [w - 18, 18], [18, h - 18], [w / 2, h - 14], [w - 18, h - 18]].forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 14, 0, 7); ctx.fill(); });
+  } else if (type === 'warehouse') {
+    const g0 = ctx.createLinearGradient(0, 0, 0, gy); g0.addColorStop(0, '#dee2e6'); g0.addColorStop(1, '#ced4da'); ctx.fillStyle = g0; ctx.fillRect(0, 0, w, gy);
+    ctx.strokeStyle = 'rgba(0,0,0,.08)'; ctx.lineWidth = 2; for (let x = 0; x < w; x += 18) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, gy); ctx.stroke(); }
+    ctx.fillStyle = '#adb5bd'; ctx.fillRect(0, gy, w, h - gy); ctx.fillStyle = '#fcc419'; for (let x = 0; x < w; x += 60) ctx.fillRect(x, gy + 10, 30, 5);
+  }
+  ctx.restore();
+}
+/* ---------- challenge problems (Retos) ---------- */
+function addRetos(R) {
+  const bi = (a, tag = 'span', cls = '') => `<${tag}${cls ? ` class="${cls}"` : ''} data-es="${a[0].replace(/"/g, '&quot;')}" data-en="${a[1].replace(/"/g, '&quot;')}"></${tag}>`;
+  R.forEach((r, n) => {
+    const sec = document.getElementById(r.tab), aside = sec && sec.querySelector('.side'); if (!aside) return;
+    const nb = document.querySelector(`#tabs button[data-s=${r.tab}]`); if (nb) nb.classList.add('has-reto');
+    const box = document.createElement('div'); box.className = 'reto';
+    box.innerHTML = bi(['Reto · problema desafiante', 'Challenge problem'], 'div', 'tag') + bi(r.title, 'h4') + bi(r.text, 'p') + bi(r.q, 'p', 'q')
+      + `<div class="btns"><button class="btn primary" data-a="see" data-es="1 · Ver la situación" data-en="1 · Watch the setup"></button></div>`
+      + `<div class="ans-row"><input type="number" step="any" data-a="in"><span>${r.unit}</span><button class="btn" data-a="chk" data-es="2 · Comprobar" data-en="2 · Check"></button></div>`
+      + `<div class="fb"></div><div class="btns"><button class="btn" data-a="rev" data-es="3 · Revelar con la simulación" data-en="3 · Reveal with the simulation"></button></div>`
+      + `<div class="sol" hidden><ol>${r.steps.map(s => bi(s, 'li')).join('')}</ol>${bi(r.ans, 'div', 'fb ok')}<div class="meas"></div></div>`;
+    const h2 = aside.querySelector('h2'); h2.after(box);
+    const fb = box.querySelector('.fb'), sol = box.querySelector('.sol'), meas = box.querySelector('.meas'); let timer = null;
+    const watch = (cond, then, maxMs = 30000) => { clearInterval(timer); const t0 = performance.now(); timer = setInterval(() => { if (cond() || performance.now() - t0 > maxMs) { clearInterval(timer); then(); } }, 30); };
+    box.querySelector('[data-a=see]').onclick = () => {
+      sec.classList.add('quiz'); sol.hidden = true; fb.textContent = ''; r.setup();
+      const t0 = performance.now(); watch(() => performance.now() - t0 > (r.preview || 1500), () => { r.pause(); fb.className = 'fb'; fb.textContent = L('Pausado en el momento clave. Resuelve en tu cuaderno y escribe tu respuesta.', 'Paused at the key moment. Solve it on paper and enter your answer.'); });
+    };
+    box.querySelector('[data-a=chk]').onclick = () => {
+      const v = parseFloat(box.querySelector('[data-a=in]').value); if (!isFinite(v)) { fb.className = 'fb no'; fb.textContent = L('Escribe un número.', 'Enter a number.'); return; }
+      const ok = Math.abs(v - r.answer) <= Math.max(r.tol * Math.abs(r.answer), r.abs || 0);
+      fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.textContent = ok ? L('¡Correcto! Compruébalo con la simulación (paso 3).', 'Correct! Check it with the simulation (step 3).') : L('Todavía no. Pista: ', 'Not yet. Hint: ') + (ok ? '' : L(r.hint[0], r.hint[1]));
+    };
+    box.querySelector('[data-a=rev]').onclick = () => {
+      sec.classList.remove('quiz'); sol.hidden = false; meas.textContent = L('Simulando…', 'Simulating…'); r.reveal();
+      watch(r.done, () => { r.pause && r.stopAtEnd !== false && r.pause(); meas.textContent = L('La simulación mide: ', 'The simulation measures: ') + r.measured(); }, 40000);
+    };
+  });
+}
+
+/* ================= 3D studio (Three.js, rendering only) =================
+   World units = screen px / 100 on the plane z = 0, so 3D objects line up
+   exactly with the 2D overlay (arrows, labels, drag handles). */
+const G3 = (() => {
+  let ok = false;
+  try { ok = !!window.THREE && !!document.createElement('canvas').getContext('webgl2'); } catch (e) { ok = false; }
+  if (!ok) return {ok: false};
+  const canvas = document.createElement('canvas'); canvas.className = 'gl3';
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({canvas, antialias: true}); } catch (e) { return {ok: false}; }
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.82;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const pm = new THREE.PMREMGenerator(renderer);
+  const env = pm.fromScene(new THREE.RoomEnvironment(), 0.04).texture;
+  const FOV = 28, views = {};
+
+  /* ---------- textures & materials ---------- */
+  const texCache = {};
+  function tex(key, w, h, paint, rep = [1, 1]) {
+    if (!texCache[key]) { const c = document.createElement('canvas'); c.width = w; c.height = h; paint(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8; texCache[key] = t; }
+    const t = texCache[key].clone(); t.needsUpdate = true; t.repeat.set(rep[0], rep[1]); return t;
+  }
+  const noise = (c, w, h, n, col, a, sz = 2) => { c.fillStyle = col; for (let i = 0; i < n; i++) { c.globalAlpha = Math.random() * a; c.fillRect(Math.random() * w, Math.random() * h, sz, sz); } c.globalAlpha = 1; };
+  const M = {
+    chrome: () => new THREE.MeshStandardMaterial({color: 0xd7d9de, roughness: 0.18, metalness: 1}),
+    metal: (c = 0x3a3b3f, r = 0.45) => new THREE.MeshStandardMaterial({color: c, roughness: r, metalness: 0.85}),
+    plastic: (c, r = 0.32) => new THREE.MeshPhysicalMaterial({color: c, roughness: r, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.15}),
+    matte: (c, r = 0.8) => new THREE.MeshStandardMaterial({color: c, roughness: r, metalness: 0}),
+    rubber: () => new THREE.MeshStandardMaterial({color: 0x1a1a1c, roughness: 0.85}),
+    glass: (c = 0x223344) => new THREE.MeshPhysicalMaterial({color: c, roughness: 0.05, metalness: 0.2, transmission: 0, clearcoat: 1, opacity: 0.85, transparent: true}),
+    glow: (c, i = 2) => new THREE.MeshStandardMaterial({color: c, emissive: c, emissiveIntensity: i}),
+    wood: (c = '#8b5a2b') => new THREE.MeshStandardMaterial({map: tex('wood' + c, 256, 256, (g, w, h) => { g.fillStyle = c; g.fillRect(0, 0, w, h); for (let y = 0; y < h; y += 3) { g.fillStyle = `rgba(0,0,0,${0.04 + Math.random() * 0.08})`; g.fillRect(0, y, w, 1 + Math.random() * 2); } }), roughness: 0.6}),
+    cardboard: () => new THREE.MeshStandardMaterial({map: tex('card', 256, 256, (g, w, h) => { g.fillStyle = '#c8a165'; g.fillRect(0, 0, w, h); noise(g, w, h, 3000, '#7f5539', 0.25); g.fillStyle = 'rgba(230,220,190,.85)'; g.fillRect(w * 0.42, 0, w * 0.16, h); }), roughness: 0.85})
+  };
+
+  /* ---------- geometry helpers ---------- */
+  const rbox = (w, h, d, r = 0.04) => new THREE.RoundedBoxGeometry(w, h, d, 4, Math.min(r, w / 2.2, h / 2.2, d / 2.2));
+  const mesh = (geo, mat, cast = true) => { const m = new THREE.Mesh(geo, mat); m.castShadow = cast; m.receiveShadow = true; return m; };
+  const cyl = (r1, r2, h, mat, seg = 32) => mesh(new THREE.CylinderGeometry(r1, r2, h, seg), mat);
+  const sph = (r, mat, seg = 32) => mesh(new THREE.SphereGeometry(r, seg, seg / 2), mat);
+  function tube(points, r, mat, seg) { const c = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.2); return mesh(new THREE.TubeGeometry(c, seg || points.length * 4, r, 10, false), mat); }
+  function setTube(m, points, r, seg) { const c = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.2); m.geometry.dispose(); m.geometry = new THREE.TubeGeometry(c, seg || points.length * 4, r, 10, false); }
+  function helix(a, b, R, coils, n = 20) {   // points of a coil spring between Vector3 a and b
+    const d = new THREE.Vector3().subVectors(b, a), L = d.length(), u = d.clone().normalize();
+    const v = Math.abs(u.y) < 0.9 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0), p = new THREE.Vector3().crossVectors(u, v).normalize(), q = new THREE.Vector3().crossVectors(u, p);
+    const pts = [a.clone()], lead = Math.min(0.25 * L, 0.18);
+    pts.push(a.clone().addScaledVector(u, lead * 0.6));
+    const N = coils * n;
+    for (let i = 0; i <= N; i++) { const t = i / N, ang = t * coils * 2 * Math.PI, rr = R * Math.min(1, Math.min(t, 1 - t) * 25); pts.push(a.clone().addScaledVector(u, lead + (L - 2 * lead) * t).addScaledVector(p, rr * Math.sin(ang)).addScaledVector(q, rr * Math.cos(ang))); }
+    pts.push(b.clone().addScaledVector(u, -lead * 0.6), b.clone());
+    return pts;
+  }
+
+  /* ---------- people & vehicles ---------- */
+  function mannequin(o = {}) {
+    const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+    const skin = M.matte(o.skin || 0xf1c27d, 0.6), shirt = M.matte(o.shirt || 0xe8590c, 0.7), pants = M.matte(o.pants || 0x364fc7, 0.75), hair = M.matte(o.hair || 0x5c3d2e, 0.9), shoe = M.matte(0x212529, 0.5);
+    const torso = mesh(new THREE.CapsuleGeometry(0.115, 0.22, 6, 16), shirt); torso.position.y = 0.66; body.add(torso);
+    const neck = cyl(0.04, 0.04, 0.06, skin); neck.position.y = 0.83; body.add(neck);
+    const head = sph(0.088, skin); head.position.y = 0.92; body.add(head);
+    const hr = sph(0.093, hair); hr.scale.set(1, 0.75, 1); hr.position.set(-0.012, 0.955, 0); body.add(hr);
+    if (o.long) { const pony = mesh(new THREE.CapsuleGeometry(0.035, 0.14, 4, 8), hair); pony.position.set(-0.1, 0.86, 0); body.add(pony); }
+    const limb = (len, r, mat) => { const p = new THREE.Group(), m = mesh(new THREE.CapsuleGeometry(r, len, 4, 12), mat); m.position.y = -len / 2 - r * 0.3; p.add(m); return p; };
+    const armL = limb(0.3, 0.036, shirt), armR = limb(0.3, 0.036, shirt);
+    [armL, armR].forEach((a, i) => { a.position.set(0, 0.79, i ? -0.15 : 0.15); const hand = sph(0.04, skin); hand.position.y = -0.37; a.add(hand); body.add(a); });
+    const legL = limb(0.36, 0.05, pants), legR = limb(0.36, 0.05, pants);
+    [legL, legR].forEach((l, i) => { l.position.set(0, 0.47, i ? -0.065 : 0.065); const sh = mesh(rbox(0.13, 0.05, 0.07, 0.02), shoe); sh.position.set(0.03, -0.44, 0); l.add(sh);
+      if (o.skates) { const bl = mesh(new THREE.BoxGeometry(0.17, 0.012, 0.012), M.chrome()); bl.position.set(0.03, -0.475, 0); l.add(bl); }
+      body.add(l); });
+    const api = {group: g, body, armL, armR, legL, legR,
+      pose(p = {}) {
+        body.rotation.z = -(p.lean || 0);
+        armL.rotation.z = p.armL !== undefined ? p.armL : 0.15; armR.rotation.z = p.armR !== undefined ? p.armR : (p.armL !== undefined ? p.armL : 0.15);
+        const sp = p.stride || 0.12; legL.rotation.z = sp; legR.rotation.z = -sp;
+        if (p.sit) { legL.rotation.z = legR.rotation.z = Math.PI / 2; body.position.y = -0.38; } else body.position.y = 0;
+        return api;
+      }};
+    return api.pose();
+  }
+  function carModel(color = 0xe03131) {
+    const g = new THREE.Group(), paint = M.plastic(color, 0.25);
+    const bodyM = mesh(rbox(1, 0.24, 0.44, 0.08), paint); bodyM.position.y = 0.22; g.add(bodyM);
+    const cab = mesh(rbox(0.56, 0.2, 0.4, 0.08), paint); cab.position.set(-0.04, 0.41, 0); g.add(cab);
+    const win = mesh(rbox(0.5, 0.15, 0.405, 0.05), M.glass(0x1b2a3a)); win.position.set(-0.04, 0.42, 0); g.add(win);
+    const hl = mesh(new THREE.BoxGeometry(0.02, 0.05, 0.1), M.glow(0xfff3bf, 1.5)); hl.position.set(0.5, 0.25, 0.13); g.add(hl); const hl2 = hl.clone(); hl2.position.z = -0.13; g.add(hl2);
+    const tl = mesh(new THREE.BoxGeometry(0.02, 0.05, 0.1), M.glow(0xff3333, 1)); tl.position.set(-0.5, 0.25, 0.13); g.add(tl); const tl2 = tl.clone(); tl2.position.z = -0.13; g.add(tl2);
+    const wheels = [];
+    [[0.32, 0.2], [0.32, -0.2], [-0.32, 0.2], [-0.32, -0.2]].forEach(([x, z]) => { const w = new THREE.Group(); const t = cyl(0.1, 0.1, 0.07, M.rubber(), 28); t.rotation.x = Math.PI / 2; w.add(t); const rim = cyl(0.055, 0.055, 0.075, M.chrome(), 16); rim.rotation.x = Math.PI / 2; w.add(rim); const sp = mesh(new THREE.BoxGeometry(0.1, 0.015, 0.08), M.metal(0x495057)); w.add(sp); w.position.set(x, 0.1, z); g.add(w); wheels.push(w); });
+    g.userData.wheels = wheels; return g;
+  }
+
+  /* ---------- environments ---------- */
+  function paintSky(g, w, h, top, bot, clouds) { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, top); gr.addColorStop(1, bot); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    if (clouds) for (let i = 0; i < 9; i++) { const x = Math.random() * w, y = h * (0.1 + Math.random() * 0.45), s = 30 + Math.random() * 50; g.fillStyle = 'rgba(255,255,255,.85)'; [[0, 0, 1], [0.9, -0.3, 1.2], [1.9, 0, 0.9], [1, 0.25, 1]].forEach(([dx, dy, r]) => { g.beginPath(); g.arc(x + dx * s, y + dy * s, r * s, 0, 7); g.fill(); }); } }
+  const BACKS = {
+    studio: (g, w, h) => { g.fillStyle = '#0c0c0e'; g.fillRect(0, 0, w, h); const gr = g.createRadialGradient(w * 0.78, h * 0.05, 10, w * 0.78, h * 0.05, w * 0.6); gr.addColorStop(0, 'rgba(120,120,128,.55)'); gr.addColorStop(0.5, 'rgba(50,50,56,.25)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); },
+    sky: (g, w, h) => paintSky(g, w, h, '#4a90d9', '#cfe6fb', true),
+    night: (g, w, h) => { paintSky(g, w, h, '#05081a', '#253563', false); for (let i = 0; i < 400; i++) { g.fillStyle = `rgba(255,255,255,${Math.random()})`; g.fillRect(Math.random() * w, Math.random() * h * 0.85, 1.5, 1.5); } },
+    space: (g, w, h) => { g.fillStyle = '#05060c'; g.fillRect(0, 0, w, h); for (let i = 0; i < 600; i++) { g.fillStyle = `rgba(200,220,255,${Math.random() * 0.8})`; g.fillRect(Math.random() * w, Math.random() * h, 1.4, 1.4); } const gr = g.createRadialGradient(w * .3, h * .3, 0, w * .3, h * .3, w * .5); gr.addColorStop(0, 'rgba(90,60,160,.25)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); },
+    city: (g, w, h) => { paintSky(g, w, h, '#5d8fd6', '#dbe7f7', true); for (let i = 0; i < 40; i++) { const bw = 40 + Math.random() * 70, bh = h * (0.12 + Math.random() * 0.3), x = Math.random() * w; g.fillStyle = ['#7f8a96', '#99a3ad', '#6c7680'][i % 3]; g.fillRect(x, h - bh, bw, bh); g.fillStyle = 'rgba(255,240,200,.55)'; for (let y = h - bh + 8; y < h - 10; y += 14) for (let xx = x + 6; xx < x + bw - 8; xx += 12) if (Math.random() > 0.3) g.fillRect(xx, y, 6, 7); } }
+  };
+  const FLOORS = {
+    grass: g => { g.fillStyle = '#4c9a3e'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 9000, '#2f6b27', 0.5, 3); noise(g, 512, 512, 5000, '#8fd37a', 0.35, 2); },
+    asphalt: g => { g.fillStyle = '#3d4045'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 12000, '#000', 0.35, 2); noise(g, 512, 512, 6000, '#888', 0.3, 2); },
+    wood: g => { for (let y = 0; y < 512; y += 64) { g.fillStyle = ['#b07a4a', '#a56f40', '#bb8656', '#9e6a3c'][(y / 64) % 4]; g.fillRect(0, y, 512, 64); for (let k = 0; k < 40; k++) { g.fillStyle = 'rgba(60,30,10,.07)'; g.fillRect(0, y + Math.random() * 64, 512, 1); } g.fillStyle = 'rgba(40,20,5,.35)'; g.fillRect(0, y, 512, 2); g.fillRect(((y / 64) % 2) * 256 + 120, y, 2, 64); } },
+    tile: g => { g.fillStyle = '#d5d8dc'; g.fillRect(0, 0, 512, 512); g.strokeStyle = '#a9adb3'; g.lineWidth = 3; for (let i = 0; i <= 512; i += 128) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 512); g.moveTo(0, i); g.lineTo(512, i); g.stroke(); } },
+    concrete: g => { g.fillStyle = '#9ea3a8'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 15000, '#555', 0.25, 2); g.fillStyle = '#f1c40f'; g.fillRect(0, 230, 512, 14); },
+    felt: g => { g.fillStyle = '#1f7a3a'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 20000, '#0d4a20', 0.3, 2); },
+    water: g => { g.fillStyle = '#1c6ea4'; g.fillRect(0, 0, 512, 512); g.strokeStyle = 'rgba(255,255,255,.25)'; g.lineWidth = 2; for (let i = 0; i < 70; i++) { const x = Math.random() * 512, y = Math.random() * 512; g.beginPath(); g.arc(x, y, 14, Math.PI * 1.1, Math.PI * 1.9); g.stroke(); } },
+    carpet: g => { g.fillStyle = '#4c3a8f'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 30000, '#000', 0.25, 2); noise(g, 512, 512, 10000, '#9f8cf0', 0.25, 2); },
+    dashes: g => { g.clearRect(0, 0, 512, 512); g.fillStyle = '#f1f3f5'; g.fillRect(0, 240, 300, 32); },
+    shelves: g => { g.fillStyle = '#e9ecef'; g.fillRect(0, 0, 512, 512); for (let r = 0; r < 4; r++) { g.fillStyle = '#868e96'; g.fillRect(0, r * 128 + 116, 512, 12); for (let x = 4; x < 508; x += 26 + Math.random() * 20) { g.fillStyle = ['#e03131', '#1c7ed6', '#f59f00', '#2f9e44', '#ae3ec9', '#f8f9fa'][Math.floor(Math.random() * 6)]; const hh = 50 + Math.random() * 55; g.fillRect(x, r * 128 + 116 - hh, 22, hh); } } },
+    ice: g => { g.fillStyle = '#eaf6ff'; g.fillRect(0, 0, 512, 512); g.strokeStyle = 'rgba(160,200,230,.5)'; for (let i = 0; i < 60; i++) { g.beginPath(); const x = Math.random() * 512, y = Math.random() * 512; g.moveTo(x, y); g.lineTo(x + 40 + Math.random() * 80, y + Math.random() * 10 - 5); g.stroke(); } }
+  };
+
+  /* ---------- view object ---------- */
+  function View(def) {
+    this.def = def; this.scene = new THREE.Scene(); this.cam = new THREE.PerspectiveCamera(FOV, 1, 0.05, 500); this.W = 0; this.H = 0; this.o = {};
+    this.scene.environment = env; this.scene.environmentIntensity = def.env !== undefined ? def.env : 0.4; this.scene.background = new THREE.Color(0x0b0b0d);
+  }
+  View.prototype = {
+    P(px, py, z = 0) { return new THREE.Vector3(px / 100, -py / 100, z); },
+    u(px) { return px / 100; },
+    add(...m) { m.forEach(x => this.scene.add(x)); return m[0]; },
+    lights(o = {}) {
+      const W = this.W / 100, H = this.H / 100, D = this.D;
+      this.add(new THREE.AmbientLight(0xffffff, o.amb !== undefined ? o.amb : 0.15));
+      if (o.hemi) this.add(new THREE.HemisphereLight(0xcfe6ff, 0x3a5a2a, o.hemi));
+      const key = new THREE.SpotLight(0xffffff, (o.key || 600) * 0.55, 0, 0.6, 0.6, 1.4);
+      const kp = o.kpos || [W * 0.85, 4, D * 0.55]; key.position.set(kp[0], kp[1], kp[2]); key.target.position.set(W / 2, -H * 0.6, 0);
+      key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.camera.near = 1; key.shadow.camera.far = 80;
+      this.add(key, key.target); this.key = key;
+      const rim = new THREE.DirectionalLight(0x9fb8ff, o.rim !== undefined ? o.rim : 0.5); rim.position.set(-6, 4, -6); this.add(rim);
+      const fill = new THREE.DirectionalLight(0xffffff, o.fill !== undefined ? o.fill : 0.35); fill.position.set(W * 0.2, 2, D); this.add(fill);
+    },
+    back(type, dist = 30) {   // far backdrop covering the frustum
+      const d = this.D + dist, hh = 2 * d * Math.tan(FOV * Math.PI / 360) * 1.25, ww = hh * (this.W / this.H) * 1.25;
+      const key = 'back_' + type, t = tex(key, 1024, 512, BACKS[type] || BACKS.studio);
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(ww, hh), new THREE.MeshBasicMaterial({map: t, toneMapped: false}));
+      m.position.set(this.W / 200, -this.H / 200, -dist); this.add(m); return m;
+    },
+    wall(color, z = -2.5, opts = {}) {   // near wall (indoor scenes)
+      const m = mesh(new THREE.PlaneGeometry(80, 40), opts.map ? new THREE.MeshStandardMaterial({map: opts.map, roughness: 0.9}) : M.matte(color, 0.95), false);
+      m.position.set(this.W / 200, -this.H / 200 + 10, z); this.add(m); return m;
+    },
+    floor(type, gy, opts = {}) {   // horizontal floor at screen px line gy
+      const y = -gy / 100, L = 120, Z = 60;
+      if (type === 'mirror' || type === 'ice' || opts.reflect) {
+        const mir = new THREE.Reflector(new THREE.PlaneGeometry(L, Z), {clipBias: 0.003, textureWidth: 1024, textureHeight: 1024, color: type === 'ice' ? 0x99aabb : 0x777777});
+        mir.rotation.x = -Math.PI / 2; mir.position.set(this.W / 200, y - 0.003, 0); this.add(mir);
+      }
+      let mat;
+      if (type === 'mirror') mat = new THREE.MeshStandardMaterial({color: 0x141416, roughness: 0.55, metalness: 0.4, transparent: true, opacity: 0.86});
+      else if (type === 'ice') mat = new THREE.MeshStandardMaterial({map: tex('f_ice', 512, 512, FLOORS.ice, [L / 6, Z / 6]), roughness: 0.15, metalness: 0, transparent: true, opacity: 0.72});
+      else { const r = opts.rep || 2.5; mat = new THREE.MeshStandardMaterial({map: tex('f_' + type, 512, 512, FLOORS[type], [L / r, Z / r]), roughness: opts.rough !== undefined ? opts.rough : 0.85, metalness: 0, transparent: !!opts.reflect, opacity: opts.reflect ? 0.85 : 1}); }
+      const m = mesh(new THREE.PlaneGeometry(L, Z), mat, false); m.rotation.x = -Math.PI / 2; m.position.set(this.W / 200, y, 0); this.add(m); this.floorMesh = m; return m;
+    },
+    table(type, opts = {}) {   // top views: the screen plane is the ground; objects extrude toward +z
+      const W = this.W / 100, H = this.H / 100, r = opts.rep || 2.5;
+      const mat = new THREE.MeshStandardMaterial({map: tex('t_' + type, 512, 512, FLOORS[type], [W * 2 / r, H * 2 / r]), roughness: opts.rough !== undefined ? opts.rough : 0.85});
+      const m = mesh(new THREE.PlaneGeometry(W * 2, H * 2), mat, false); m.position.set(W / 2, -H / 2, 0); this.add(m); this.floorMesh = m; return m;
+    },
+    topLights(o = {}) {
+      const W = this.W / 100, H = this.H / 100;
+      this.add(new THREE.AmbientLight(0xffffff, o.amb !== undefined ? o.amb : 0.35));
+      const key = new THREE.DirectionalLight(0xffffff, (o.key || 2.2) * 0.75); key.position.set(W * 0.75, -H * 0.1, 12); key.target.position.set(W / 2, -H / 2, 0);
+      key.castShadow = true; key.shadow.mapSize.set(2048, 2048); const sc = key.shadow.camera; sc.left = -W; sc.right = W; sc.top = H; sc.bottom = -H; sc.near = 1; sc.far = 40; key.shadow.bias = -0.0005;
+      this.add(key, key.target); const fill = new THREE.DirectionalLight(0xffffff, 0.4); fill.position.set(0, -H, 8); this.add(fill);
+    },
+    resize(W, H) {
+      this.W = W; this.H = H; this.D = (H / 100) / 2 / Math.tan(FOV * Math.PI / 360);
+      this.cam.aspect = W / H; this.cam.position.set(W / 200, -H / 200, this.D); this.cam.lookAt(W / 200, -H / 200, 0); this.cam.updateProjectionMatrix();
+      this.cam.far = this.D + 200; this.cam.updateProjectionMatrix();
+    }
+  };
+
+  /* ---------- page integration ---------- */
+  let cur = null;
+  function render(id, sc) {
+    const def = VIEWS[id]; if (!def) return false;
+    const wrap = sc.g.cv.parentElement; if (sc.g.w < 10 || sc.g.h < 10) return true;
+    if (canvas.parentElement !== wrap) wrap.insertBefore(canvas, wrap.firstChild);
+    const W = Math.round(wrap.clientWidth), H = Math.round(wrap.clientHeight); if (W < 10 || H < 10) return true;
+    let v = views[id];
+    if (!v || v.W !== W || v.H !== H) {
+      if (v) v.scene.traverse(o => { if (o.geometry) o.geometry.dispose(); });
+      v = views[id] = new View(def); v.resize(W, H); def.build(v, sc);
+    }
+    renderer.setSize(W, H, false); canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    def.sync(v, sc, performance.now() / 1000);
+    renderer.render(v.scene, v.cam); cur = id; return true;
+  }
+  function hide() { if (canvas.parentElement) canvas.parentElement.removeChild(canvas); }
+  return {ok: true, render, hide, M, tex, mesh, rbox, cyl, sph, tube, setTube, helix, mannequin, carModel, FLOORS, noise};
+})();
+const VIEWS = {};
+</script>
+<script>
+{
+/* ======================= W1: work as dot product ======================= */
+const w1 = {
+  g: setupCanvas($('cw1')), F: {x: 4, y: 3}, d: {x: 6, y: 0}, proj: true, drag: null,
+  geo() { const {w, h} = this.g, s = Math.min(w, h) / 14; return {s, ox: w * 0.4, oy: h * 0.62}; },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const {s, ox, oy} = this.geo(), S = v => [ox + v.x * s, oy - v.y * s];
+    if (this.r3) {} else if (this.skin) { scenery(ctx, w, h, oy + 18, 'park'); ctx.globalAlpha = .25; grid(ctx, w, h, ox, oy, s); ctx.globalAlpha = 1; } else grid(ctx, w, h, ox, oy, s);
+    const F = this.F, d = this.d, W = dot(F, d), dl = len(d), Fl = len(F);
+    // boxes
+    const [dx, dy] = S(d);
+    ctx.save(); ctx.setLineDash([5, 4]); ctx.strokeStyle = '#91a7ff'; ctx.lineWidth = 2; ctx.strokeRect(dx - 20, dy - 20, 40, 40); ctx.restore();
+    if (this.r3) {} else if (this.skin) {
+      const wag = (x, y, ghost) => { ctx.save(); if (ghost) ctx.globalAlpha = .3; if (!ghost) shadow(ctx, x, y + 18, 70); ctx.fillStyle = '#e03131'; ctx.beginPath(); ctx.roundRect(x - 34, y - 14, 68, 22, 3); ctx.fill(); ctx.fillStyle = '#c92a2a'; ctx.fillRect(x - 34, y - 14, 68, 5); ctx.fillStyle = '#212529'; [x - 22, x + 22].forEach(wx => { ctx.beginPath(); ctx.arc(wx, y + 10, 8, 0, 7); ctx.fill(); ctx.fillStyle = '#adb5bd'; ctx.beginPath(); ctx.arc(wx, y + 10, 3, 0, 7); ctx.fill(); ctx.fillStyle = '#212529'; }); if (!ghost) { ctx.fillStyle = '#fcc419'; ctx.beginPath(); ctx.arc(x - 8, y - 22, 9, 0, 7); ctx.fill(); ctx.fillStyle = '#4dabf7'; ctx.fillRect(x + 4, y - 30, 16, 16); } ctx.restore(); };
+      wag(dx, oy, true);
+      const ang = Math.atan2(this.F.y, this.F.x);
+      if (len(this.F) > 0.1 && Math.cos(ang) > 0.05) { const o = {facing: -1, lean: -0.15, arm: ang - 0.15, col: '#f59f00', pants: '#1864ab', armLen: 30}, hd = person(ctx, 0, 0, 130, {...o, dry: true}), hy = oy + 18 + hd.y, dyy = oy - hy, dxx = ang > 0.05 ? clamp(dyy / Math.tan(ang), 60, 260) : 150;
+        person(ctx, ox + 34 + dxx - hd.x, oy + 18, 130, o); ctx.strokeStyle = '#495057'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(ox + 34, oy - 4); ctx.lineTo(ox + 34 + dxx, hy); ctx.stroke(); }
+      wag(ox, oy, false);
+    } else ctx.fillStyle = '#5c7cfa', ctx.beginPath(), ctx.roundRect(ox - 20, oy - 20, 40, 40, 5), ctx.fill();
+    // projection
+    if (this.proj && dl > 0.01) {
+      const k = W / (dl * dl), foot = mul(d, k), [px, py] = S(foot), [fx_, fy_] = S(F);
+      ctx.save(); ctx.strokeStyle = '#adb5bd'; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(fx_, fy_); ctx.lineTo(px, py); ctx.stroke();
+      if (k < 0 || k > 1) { const [ex, ey] = S(mul(d, Math.min(0, k))), [ex2, ey2] = S(mul(d, Math.max(1, k))); ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex2, ey2); ctx.stroke(); }
+      ctx.restore();
+      arrow(ctx, ox, oy, px, py, W >= 0 ? C.a : '#c92a2a', 8, null, .45);
+      text(ctx, 'F cos φ', (ox + px) / 2 + (d.y) * 3, (oy + py) / 2 + 22, W >= 0 ? '#2b8a3e' : '#c92a2a', 13, 'center');
+    }
+    // angle arc
+    if (dl > 0.01 && Fl > 0.01) {
+      const a1 = -Math.atan2(d.y, d.x), a2 = -Math.atan2(F.y, F.x);
+      let da = a2 - a1; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
+      ctx.strokeStyle = C.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(ox, oy, 38, a1, a1 + da, da < 0); ctx.stroke();
+      const am = a1 + da / 2; text(ctx, 'φ', ox + Math.cos(am) * 52, oy + Math.sin(am) * 52, C.ink, 15, 'center');
+    }
+    const [Fx, Fy] = S(F);
+    arrow(ctx, ox, oy, dx, dy, C.v, 4); arrow(ctx, ox, oy, Fx, Fy, C.F, 4);
+    handle(ctx, Fx, Fy, C.F); handle(ctx, dx, dy, C.v);
+    tipLabel(ctx, 'F', ox, oy, Fx, Fy, C.F); tipLabel(ctx, 'd', ox, oy, dx, dy, C.v);
+    const z = Math.abs(W) < 1e-6;
+    badge(ctx, `W = F · d = ${fx(W)} J` + (z ? L('  (fuerza ⊥ desplazamiento)', '  (force ⊥ displacement)') : W > 0 ? L('  (la fuerza ayuda)', '  (force helps)') : L('  (la fuerza se opone)', '  (force opposes)')), 12, 12, W >= 0);
+  },
+  table() {
+    const F = this.F, d = this.d, W = dot(F, d), c = len(F) * len(d) > 0 ? W / (len(F) * len(d)) : 0;
+    const phi = len(F) * len(d) > 0 ? Math.acos(clamp(c, -1, 1)) * 180 / Math.PI : 0;
+    $('tw1').innerHTML = `<tr><th></th><th>x</th><th>y</th><th>${L('magnitud', 'magnitude')}</th></tr>
+      <tr><td style="color:${C.F}"><b>F</b> (N)</td><td>${fx(F.x)}</td><td>${fx(F.y)}</td><td>${fx(len(F))}</td></tr>
+      <tr><td style="color:${C.v}"><b>d</b> (m)</td><td>${fx(d.x)}</td><td>${fx(d.y)}</td><td>${fx(len(d))}</td></tr>
+      <tr><td>φ</td><td colspan="3">${fx(phi, 1)}°</td></tr>
+      <tr><td>F d cos φ</td><td colspan="3">${fx(len(F))} × ${fx(len(d))} × ${fx(c, 3)} = ${fx(W)} J</td></tr>
+      <tr class="sum"><td>FₓDₓ + F_yD_y</td><td colspan="3">${fx(F.x * d.x)} + ${fx(F.y * d.y)} = ${fx(W)} J</td></tr>`;
+  },
+  init() {
+    const cv = $('cw1');
+    cv.addEventListener('pointerdown', e => {
+      const p = ptr(e, cv), {s, ox, oy} = this.geo();
+      const dF = Math.hypot(ox + this.F.x * s - p.x, oy - this.F.y * s - p.y), dd = Math.hypot(ox + this.d.x * s - p.x, oy - this.d.y * s - p.y);
+      this.drag = dF < 20 && dF <= dd ? 'F' : dd < 20 ? 'd' : null;
+      if (this.drag) cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener('pointermove', e => {
+      const p = ptr(e, cv), {s, ox, oy} = this.geo();
+      if (!this.drag) { const near = [this.F, this.d].some(v => Math.hypot(ox + v.x * s - p.x, oy - v.y * s - p.y) < 20); cv.style.cursor = near ? 'grab' : 'default'; return; }
+      let v = {x: (p.x - ox) / s, y: (oy - p.y) / s}; if (len(v) > 9) v = mul(v, 9 / len(v));
+      this[this.drag] = {x: snapv(v.x, .5), y: snapv(v.y, .5)};
+    });
+    const up = () => this.drag = null; cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    $('kw1p').onchange = e => this.proj = e.target.checked;
+    document.querySelectorAll('#w1 [data-p]').forEach(b => b.onclick = () => {
+      const k = b.dataset.p;
+      if (k === 'pull') { this.F = {x: 4, y: 3}; this.d = {x: 6, y: 0}; }
+      if (k === 'perp') { this.F = {x: 0, y: 5}; this.d = {x: 6, y: 0}; }
+      if (k === 'fric') { this.F = {x: -3, y: 0}; this.d = {x: 6, y: 0}; }
+    });
+  }
+};
+
+/* ======================= W2: variable force ======================= */
+const w2 = {
+  g: setupCanvas($('cw2')), mode: 'spring', p: 20, x1: 0, x2: 1, riem: false, N: 6, anim: null, drag: null, xmin: -1.5, xmax: 1.5,
+  f(x) { return this.mode === 'spring' ? -this.p * x : this.mode === 'const' ? this.p / 2 : this.p / 2 * x * x; },
+  exact(a, b) { return this.mode === 'spring' ? -this.p / 2 * (b * b - a * a) : this.mode === 'const' ? this.p / 2 * (b - a) : this.p / 6 * (b ** 3 - a ** 3); },
+  formula() { return this.mode === 'spring' ? 'W = −½k(x₂² − x₁²)' : this.mode === 'const' ? 'W = F₀ (x₂ − x₁)' : 'W = (b/3)(x₂³ − x₁³)'; },
+  riemann() { const dx = (this.x2 - this.x1) / this.N; let s = 0; for (let i = 0; i < this.N; i++) s += this.f(this.x1 + (i + .5) * dx) * dx; return s; },
+  geo() {
+    const {w, h} = this.g, pl = 70, pr = 40, X = x => pl + (x - this.xmin) / (this.xmax - this.xmin) * (w - pl - pr);
+    const top = 150, bot = h - 36; let fm = 0; for (let x = this.xmin; x <= this.xmax + 1e-9; x += 0.05) fm = Math.max(fm, Math.abs(this.f(x)));
+    fm = Math.max(fm, 1) * 1.15; const neg = this.mode === 'spring';
+    const y0 = neg ? (top + bot) / 2 : bot - 10, sy = neg ? (bot - top) / 2 / fm : (bot - 10 - top) / fm;
+    return {X, Xi: px => this.xmin + (px - pl) / (w - pl - pr) * (this.xmax - this.xmin), Y: F => y0 - F * sy, y0, top, bot, pl, pr, fm};
+  },
+  xe() { return this.anim === null ? this.x2 : this.x1 + (this.x2 - this.x1) * this.anim; },
+  step(dt) { if (this.anim !== null) { this.anim += dt / 2.5; if (this.anim >= 1) this.anim = null; } },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const G = this.geo(), xe = this.xe();
+    // physical band
+    const by = 90, bw = 44;
+    if (!this.skin && !this.r3) { ctx.fillStyle = '#e9e7df'; ctx.fillRect(G.pl - 50, by + 22, w - G.pl - G.pr + 80, 6);
+    ctx.fillStyle = '#868e96'; ctx.fillRect(G.pl - 56, by - 50, 8, 78); }
+    ctx.save(); ctx.strokeStyle = '#ced4da'; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(G.X(0), by - 56); ctx.lineTo(G.X(0), by + 30); ctx.stroke(); ctx.restore();
+    text(ctx, 'x = 0', G.X(0), by - 64, C.muted, 11, 'center', 500);
+    if (this.r3) {} else if (this.skin) {
+      const fx0 = G.X(0); ctx.strokeStyle = '#8d6e3f'; ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(fx0, by + 55); ctx.lineTo(fx0, by + 10); ctx.lineTo(fx0 - 4, by - 26); ctx.moveTo(fx0, by + 10); ctx.lineTo(fx0 + 4, by + 30); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(fx0, by + 10); ctx.lineTo(fx0 - 18, by - 30); ctx.moveTo(fx0, by + 10); ctx.lineTo(fx0 + 18, by - 30); ctx.stroke();
+      const px = G.X(xe); ctx.strokeStyle = '#c92a2a'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(fx0 - 18, by - 30); ctx.lineTo(px, by); ctx.lineTo(fx0 + 18, by - 30); ctx.stroke();
+      ctx.fillStyle = '#5c3a1e'; ctx.fillRect(px - 4, by - 9, 12, 18); ballSprite(ctx, px, by, 8, '#ced4da', '#495057');
+    } else {
+    if (this.mode === 'spring') spring(ctx, G.pl - 48, by, G.X(xe) - bw / 2, by, 12, 9);
+    ctx.fillStyle = '#5c7cfa'; ctx.beginPath(); ctx.roundRect(G.X(xe) - bw / 2, by - bw / 2, bw, bw, 5); ctx.fill(); }
+    const Fx = this.f(xe), fl = Fx / G.fm * 90;
+    if (Math.abs(fl) > 3) { arrow(ctx, G.X(xe), by - 34, G.X(xe) + fl, by - 34, C.F, 3.5); text(ctx, `F = ${fx(Fx, 1)} N`, G.X(xe) + fl / 2, by - 50, C.F, 12.5, 'center'); }
+    // graph axes
+    ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.font = '11px system-ui,sans-serif'; ctx.fillStyle = C.muted;
+    for (let x = Math.ceil(this.xmin * 2) / 2; x <= this.xmax + 1e-9; x += 0.5) { ctx.beginPath(); ctx.moveTo(G.X(x), G.top); ctx.lineTo(G.X(x), G.bot); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(x.toFixed(1), G.X(x), G.bot + 6); }
+    const st = niceStep(G.fm / 3); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let F = -Math.floor(G.fm / st) * st; F <= G.fm; F += st) { const y = G.Y(F); if (y < G.top - 2 || y > G.bot + 2) continue; ctx.beginPath(); ctx.moveTo(G.pl, y); ctx.lineTo(w - G.pr, y); ctx.stroke(); ctx.fillText(+F.toFixed(2), G.pl - 6, y); }
+    ctx.strokeStyle = C.axis; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(G.pl, G.y0); ctx.lineTo(w - G.pr, G.y0); ctx.stroke();
+    text(ctx, 'F (N)', G.pl - 8, G.top - 12, C.ink, 12, 'right'); text(ctx, 'x (m)', w - G.pr, G.bot + 22, C.ink, 12, 'right');
+    // shading
+    const dir = Math.sign(xe - this.x1), n = 160;
+    if (dir !== 0) for (let i = 0; i < n; i++) {
+      const a = this.x1 + (xe - this.x1) * i / n, b = this.x1 + (xe - this.x1) * (i + 1) / n, Fm = this.f((a + b) / 2);
+      ctx.fillStyle = Fm * dir >= 0 ? 'rgba(47,158,68,.28)' : 'rgba(224,49,49,.25)';
+      ctx.beginPath(); ctx.moveTo(G.X(a), G.y0); ctx.lineTo(G.X(a), G.Y(this.f(a))); ctx.lineTo(G.X(b), G.Y(this.f(b))); ctx.lineTo(G.X(b), G.y0); ctx.closePath(); ctx.fill();
+    }
+    if (this.riem && this.x2 !== this.x1) {
+      const dx = (this.x2 - this.x1) / this.N; ctx.strokeStyle = '#495057'; ctx.lineWidth = 1.2;
+      for (let i = 0; i < this.N; i++) { const a = this.x1 + i * dx, Fm = this.f(a + dx / 2); ctx.strokeRect(Math.min(G.X(a), G.X(a + dx)), Math.min(G.y0, G.Y(Fm)), Math.abs(G.X(a + dx) - G.X(a)), Math.abs(G.Y(Fm) - G.y0)); }
+    }
+    ctx.strokeStyle = C.F; ctx.lineWidth = 3; ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const x = this.xmin + (this.xmax - this.xmin) * i / 200; i ? ctx.lineTo(G.X(x), G.Y(this.f(x))) : ctx.moveTo(G.X(x), G.Y(this.f(x))); } ctx.stroke();
+    // markers
+    [[this.x1, 'x₁', '#868e96'], [this.x2, 'x₂', C.ink]].forEach(([x, l, c]) => {
+      ctx.save(); ctx.strokeStyle = c; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(G.X(x), G.top); ctx.lineTo(G.X(x), G.bot); ctx.stroke(); ctx.restore();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.roundRect(G.X(x) - 16, G.top - 2, 32, 22, 6); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = '700 13px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(l, G.X(x), G.top + 9);
+    });
+    const Wn = this.exact(this.x1, xe);
+    badge(ctx, `W = ∫ F dx = ${fx(Wn, 3)} J`, 12, 12, Wn >= 0);
+  },
+  table() {
+    const r = (a, b) => `<tr><td>${a}</td><td>${b}</td></tr>`;
+    $('tw2').innerHTML = r('x₁, x₂', `${fx(this.x1)} m → ${fx(this.x2)} m`) + r(L('Fórmula', 'Formula'), this.formula())
+      + `<tr class="sum"><td>${L('W exacto (área)', 'Exact W (area)')}</td><td>${fx(this.exact(this.x1, this.x2), 3)} J</td></tr>`
+      + (this.riem ? r(L(`Suma de Riemann (N = ${this.N})`, `Riemann sum (N = ${this.N})`), fx(this.riemann(), 3) + ' J') : '');
+  },
+  fmt(v) { return this.mode === 'spring' ? `k = ${v} N/m` : this.mode === 'const' ? `F₀ = ${(v / 2).toFixed(1)} N` : `b = ${(v / 2).toFixed(1)}`; },
+  init() {
+    const cv = $('cw2');
+    cv.addEventListener('pointerdown', e => {
+      const p = ptr(e, cv), G = this.geo(), d1 = Math.abs(G.X(this.x1) - p.x), d2 = Math.abs(G.X(this.x2) - p.x);
+      this.drag = d2 < 22 && d2 <= d1 ? 'x2' : d1 < 22 ? 'x1' : null;
+      if (this.drag) { cv.setPointerCapture(e.pointerId); this.anim = null; }
+    });
+    cv.addEventListener('pointermove', e => {
+      const p = ptr(e, cv), G = this.geo();
+      if (!this.drag) { cv.style.cursor = (Math.abs(G.X(this.x1) - p.x) < 22 || Math.abs(G.X(this.x2) - p.x) < 22) ? 'ew-resize' : 'default'; return; }
+      this[this.drag] = clamp(snapv(G.Xi(p.x), 0.05), this.xmin, this.xmax);
+    });
+    const up = () => this.drag = null; cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    document.querySelectorAll('input[name=fw2]').forEach(r => r.onchange = () => { this.mode = r.value; $('ow2k').textContent = this.fmt(this.p); if (this.mode === 'const') { this.x1 = -1; this.x2 = 1; } else { this.x1 = 0; this.x2 = 1; } });
+    bindRange('rw2k', 'ow2k', v => this.fmt(v), v => this.p = v);
+    bindRange('rw2n', 'ow2n', v => v, v => this.N = v);
+    $('kw2r').onchange = e => this.riem = e.target.checked;
+    $('bw2run').onclick = () => this.anim = 0;
+  }
+};
+
+/* ======================= W3: work-energy theorem ======================= */
+const w3 = {
+  g: setupCanvas($('cw3')), F: 12, m: 2, mu: 0.2, v0: 1,
+  x: 1, v: 1, WF: 0, Wf: 0, run: false, end: false,
+  reset() { this.x = 1; this.v = this.v0; this.WF = 0; this.Wf = 0; this.run = false; this.end = false; this.btn(); },
+  fr() { return this.mu * this.m * 9.8; },
+  step(dt) {
+    if (!this.run) return;
+    const n = 10, h = dt / n, fk = this.fr();
+    for (let i = 0; i < n; i++) {
+      let f;
+      if (Math.abs(this.v) < 1e-9) { if (Math.abs(this.F) <= fk) { this.v = 0; continue; } f = -Math.sign(this.F) * fk; }
+      else f = -Math.sign(this.v) * fk;
+      const a = (this.F + f) / this.m, nv = this.v + a * h;
+      const v1 = (this.v !== 0 && Math.sign(nv) !== Math.sign(this.v)) ? 0 : nv;
+      const dx = (this.v + v1) / 2 * h;
+      this.x += dx; this.WF += this.F * dx; this.Wf += -fk * Math.abs(dx); this.v = v1;
+      if (this.x > 19.5 || this.x < 0.5) { this.run = false; this.end = true; this.btn(); break; }
+    }
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const ty = h * 0.42, X = x => 30 + x / 20 * (w - 60);
+    if (this.r3) {} else if (this.skin) { ctx.save(); ctx.beginPath(); ctx.rect(0, 0, w, ty + 36); ctx.clip(); scenery(ctx, w, ty + 36, ty, 'indoor'); ctx.restore(); text(ctx, L('pasillo del supermercado', 'supermarket aisle'), w - 12, 20, '#7f5539', 12, 'right', 650); }
+    ctx.fillStyle = '#e9e7df'; ctx.fillRect(0, ty, w, this.skin || this.r3 ? 0 : 10);
+    ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif'; ctx.textAlign = 'center';
+    for (let x = 0; x <= 20; x += 2) { ctx.fillRect(X(x) - .5, ty + 10, 1, 5); ctx.fillText(x + ' m', X(x), ty + 26); }
+    const bx = X(this.x), bs = 46;
+    if (this.r3) {} else if (this.skin) {
+      shadow(ctx, bx, ty, 70); if (this.F > 0.5) person(ctx, bx - 58, ty, 120, {facing: 1, lean: 0.25, arm: -0.25, col: '#ae3ec9', pants: '#343a40', armLen: 32});
+      ctx.strokeStyle = '#868e96'; ctx.lineWidth = 2.5; ctx.fillStyle = 'rgba(173,181,189,.25)';
+      ctx.beginPath(); ctx.moveTo(bx - 28, ty - 44); ctx.lineTo(bx + 30, ty - 44); ctx.lineTo(bx + 22, ty - 14); ctx.lineTo(bx - 20, ty - 14); ctx.closePath(); ctx.fill(); ctx.stroke();
+      for (let k = 1; k < 5; k++) { const xx = bx - 28 + k * 11.6; ctx.beginPath(); ctx.moveTo(xx, ty - 44); ctx.lineTo(xx - 1.5 * (k - 2.5), ty - 14); ctx.stroke(); }
+      ctx.beginPath(); ctx.moveTo(bx - 28, ty - 44); ctx.lineTo(bx - 40, ty - 54); ctx.stroke(); ctx.fillStyle = '#212529'; [bx - 16, bx + 16].forEach(wx => { ctx.beginPath(); ctx.arc(wx, ty - 6, 5, 0, 7); ctx.fill(); });
+      text(ctx, this.m + ' kg', bx, ty - 60, C.ink, 12, 'center', 700);
+    } else {
+    ctx.fillStyle = '#5c7cfa'; ctx.beginPath(); ctx.roundRect(bx - bs / 2, ty - bs, bs, bs, 5); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = '600 12px system-ui,sans-serif'; ctx.textBaseline = 'middle'; ctx.fillText(this.m + ' kg', bx, ty - bs / 2); }
+    const fs = 3, fk = this.fr();
+    let f = 0; if (Math.abs(this.v) > 1e-9) f = -Math.sign(this.v) * fk; else if (Math.abs(this.F) > fk) f = -Math.sign(this.F) * fk; else f = -this.F;
+    if (Math.abs(this.F) > 0.01) { arrow(ctx, bx, ty - bs / 2, bx + this.F * fs, ty - bs / 2, C.F, 4); text(ctx, 'F', bx + this.F * fs + Math.sign(this.F) * 12, ty - bs / 2, C.F, 14, 'center', 700); }
+    if (Math.abs(f) > 0.01) { arrow(ctx, bx, ty - 4, bx + f * fs, ty - 4, C.fr, 4); text(ctx, 'f', bx + f * fs + Math.sign(f) * 10, ty + 2, C.fr, 14, 'center', 700); }
+    if (Math.abs(this.v) > 0.01) { arrow(ctx, bx, ty - bs - 16, bx + this.v * 18, ty - bs - 16, C.v, 3.5); text(ctx, `v = ${fx(this.v)} m/s`, bx + this.v * 9, ty - bs - 32, C.v, 13, 'center'); }
+    const Ki = .5 * this.m * this.v0 ** 2, K = .5 * this.m * this.v ** 2, Wn = this.WF + this.Wf;
+    const vm = Math.max(20, Math.abs(this.WF), Math.abs(this.Wf), Math.abs(Wn), Math.abs(K - Ki), K);
+    bars(ctx, 20, ty + 46, w - 40, h - ty - 58, [
+      {label: 'W_F', value: this.WF, col: C.F}, {label: 'W_fricción', value: this.Wf, col: C.fr},
+      {label: 'W_neto', value: Wn, col: C.R}, {label: 'ΔK', value: K - Ki, col: C.v}, {label: 'K', value: K, col: '#74c0fc'}
+    ], {max: vm * 1.05, neg: true, title: L('Energía (J) — W_neto = ΔK', 'Energy (J) — W_net = ΔK')});
+    badge(ctx, `W_neto = ${fx(Wn, 1)} J   ΔK = ${fx(K - Ki, 1)} J`, 12, 12, true);
+    if (this.end) text(ctx, L('Fin de la pista — Reiniciar', 'End of track — Reset'), w - 14, 24, C.muted, 13, 'right');
+    else if (this.run && this.v === 0) text(ctx, L('Detenido: |F| ≤ fricción', 'Stopped: |F| ≤ friction'), w - 14, 24, C.muted, 13, 'right');
+  },
+  table() {
+    const Ki = .5 * this.m * this.v0 ** 2, K = .5 * this.m * this.v ** 2, r = (a, b, u = 'J') => `<tr><td>${a}</td><td>${b}</td><td>${u}</td></tr>`;
+    $('tw3').innerHTML = r(L('posición x', 'position x'), fx(this.x), 'm') + r('v', fx(this.v), 'm/s') + r('Kᵢ = ½mvᵢ²', fx(Ki, 1)) + r('K = ½mv²', fx(K, 1))
+      + r('W_F = F Δx', fx(this.WF, 1)) + r('W_f = −μₖ m g s', fx(this.Wf, 1)) + `<tr class="sum"><td>W_neto</td><td>${fx(this.WF + this.Wf, 1)}</td><td>J</td></tr>` + `<tr class="sum"><td>ΔK</td><td>${fx(K - Ki, 1)}</td><td>J</td></tr>`;
+  },
+  btn() { setTxt($('bw3run'), this.run ? 'Pausa' : 'Iniciar', this.run ? 'Pause' : 'Start'); },
+  init() {
+    bindRange('rw3F', 'ow3F', v => v + ' N', v => this.F = v);
+    bindRange('rw3m', 'ow3m', v => v.toFixed(1) + ' kg', v => { this.m = v; if (!this.run && this.WF === 0) this.reset(); });
+    bindRange('rw3mu', 'ow3mu', v => v.toFixed(2), v => this.mu = v);
+    bindRange('rw3v', 'ow3v', v => v.toFixed(1) + ' m/s', v => { this.v0 = v; if (!this.run) this.reset(); });
+    $('bw3run').onclick = () => { if (this.end) this.reset(); this.run = !this.run; this.btn(); };
+    $('bw3reset').onclick = () => this.reset();
+    this.reset();
+  }
+};
+
+/* ======================= W4: power ======================= */
+const w4 = {
+  g: setupCanvas($('cw4')), gg: setupCanvas($('gw4')),
+  mode: 'P', P: 60, F: 3000, m: 1200, air: true, c: 0.4,
+  x: 0, v: 0, t: 0, Ein: 0, Eair: 0, run: false, hist: [], ht: 0,
+  Fmax() { return 0.8 * this.m * 9.8; },
+  Feng() { return this.mode === 'P' ? Math.min(this.P * 1000 / Math.max(this.v, 0.01), this.Fmax()) : Math.min(this.F, this.Fmax()); },
+  Fair() { return this.air ? this.c * this.v * this.v : 0; },
+  reset() { this.x = 0; this.v = 0; this.t = 0; this.Ein = 0; this.Eair = 0; this.hist = [[0, 0, 0]]; this.run = false; this.btn(); },
+  step(dt) {
+    if (!this.run) return;
+    const n = 10, h = dt / n;
+    for (let i = 0; i < n; i++) {
+      const Fe = this.Feng(), Fa = this.Fair(), a = (Fe - Fa) / this.m;
+      this.Ein += Fe * this.v * h; this.Eair += Fa * this.v * h;
+      this.v += a * h; this.x += this.v * h; this.t += h;
+    }
+    this.ht += dt; if (this.ht > 0.1) { this.ht = 0; this.hist.push([this.t, this.v, this.Feng() * this.v / 1000]); }
+    if (this.t >= 30) { this.run = false; this.btn(); }
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const sp = 20, ry = h * 0.66, cx = w * 0.3;
+    const L_ = 4.5 * sp, H_ = 1.3 * sp, x0 = cx - L_ / 2, y0 = ry - H_ - 8;
+    if (!this.r3) {
+    ctx.fillStyle = '#dee2e6'; ctx.fillRect(0, 0, w, ry); ctx.fillStyle = '#eef3f8'; ctx.fillRect(0, 0, w, ry);
+    ctx.fillStyle = '#495057'; ctx.fillRect(0, ry, w, 34); ctx.fillStyle = '#e9e7df'; ctx.fillRect(0, ry + 34, w, h - ry - 34);
+    // posts every 10 m
+    const first = Math.floor((this.x - cx / sp) / 10) * 10;
+    for (let d = first; d < this.x + (w - cx) / sp + 10; d += 10) {
+      const px = cx + (d - this.x) * sp;
+      ctx.fillStyle = '#fff'; ctx.fillRect(px - 12, ry + 15, 24, 4);
+      if (d % 50 === 0) { ctx.fillStyle = '#868e96'; ctx.fillRect(px - 2, ry - 50, 4, 50); text(ctx, d + ' m', px, ry - 60, C.muted, 11, 'center', 500); }
+    }
+    // car
+    const L_ = 4.5 * sp, H_ = 1.3 * sp, x0 = cx - L_ / 2, y0 = ry - H_ - 8;
+    ctx.fillStyle = '#e03131'; ctx.beginPath(); ctx.roundRect(x0, y0, L_, H_, 6); ctx.fill();
+    ctx.fillStyle = '#c92a2a'; ctx.beginPath(); ctx.moveTo(x0 + L_ * .25, y0); ctx.lineTo(x0 + L_ * .35, y0 - H_ * .7); ctx.lineTo(x0 + L_ * .7, y0 - H_ * .7); ctx.lineTo(x0 + L_ * .8, y0); ctx.fill();
+    ctx.fillStyle = '#bde0fe'; ctx.fillRect(x0 + L_ * .38, y0 - H_ * .55, L_ * .14, H_ * .45); ctx.fillRect(x0 + L_ * .55, y0 - H_ * .55, L_ * .12, H_ * .45);
+    const wr = 0.35 * sp, ang = this.x / 0.35;
+    [x0 + L_ * .2, x0 + L_ * .8].forEach(wx => { ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.arc(wx, ry - wr, wr, 0, 7); ctx.fill(); ctx.strokeStyle = '#adb5bd'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(wx, ry - wr); ctx.lineTo(wx + Math.cos(ang) * wr, ry - wr + Math.sin(ang) * wr); ctx.stroke(); });
+
+    }
+    const fs = 0.03, Fe = this.Feng(), Fa = this.Fair(), fy = y0 - H_ - 14;
+    arrow(ctx, cx, fy, cx + Fe * fs, fy, C.F, 4); text(ctx, L(`F motor = ${fx(Fe, 0)} N`, `F engine = ${fx(Fe, 0)} N`), cx + Fe * fs + 8, fy, C.F, 13, 'left');
+    if (Fa > 1) { arrow(ctx, cx - L_ / 2, fy + 18, cx - L_ / 2 - Fa * fs, fy + 18, C.fr, 4); text(ctx, L(`F aire = ${fx(Fa, 0)} N`, `F air = ${fx(Fa, 0)} N`), cx - L_ / 2 - Fa * fs - 8, fy + 18, C.fr, 13, 'right'); }
+    const P = Fe * this.v;
+    text(ctx, `${fx(this.v * 3.6, 0)} km/h`, w - 20, 34, C.ink, 30, 'right', 750);
+    text(ctx, `P = F·v = ${fx(P / 1000, 1)} kW`, w - 20, 70, C.R, 18, 'right', 700);
+    text(ctx, `t = ${this.t.toFixed(1)} s`, 14, 22, C.ink, 13, 'left');
+    if (this.mode === 'P' && this.air) text(ctx, L(`v máx teórica: (P/c)^(1/3) = ${fx(Math.cbrt(this.P * 1000 / this.c) * 3.6, 0)} km/h`, `theoretical top speed: (P/c)^(1/3) = ${fx(Math.cbrt(this.P * 1000 / this.c) * 3.6, 0)} km/h`), 14, 44, C.muted, 12.5, 'left', 600);
+    plot(this.gg, [
+      {pts: this.hist.map(p => [p[0], p[1]]), col: C.v, label: 'v (m/s)'},
+      {pts: this.hist.map(p => [p[0], p[2]]), col: C.R, label: 'P (kW)'}
+    ], {xmin: 0, xmax: 30, title: L('v(t) y P(t)', 'v(t) and P(t)'), xlab: 't (s)', minSpan: 20});
+  },
+  table() {
+    const Fe = this.Feng(), Fa = this.Fair(), K = .5 * this.m * this.v ** 2, r = (a, b, u) => `<tr><td>${a}</td><td>${b}</td><td>${u}</td></tr>`;
+    $('tw4').innerHTML = r('v', `${fx(this.v, 1)} (${fx(this.v * 3.6, 0)} km/h)`, 'm/s') + r(L('F motor', 'F engine'), fx(Fe, 0), 'N') + r(L('F aire', 'F air'), fx(Fa, 0), 'N')
+      + r('a', fx((Fe - Fa) / this.m), 'm/s²') + `<tr class="sum"><td>P = F v</td><td>${fx(Fe * this.v / 1000, 1)}</td><td>kW</td></tr>`
+      + r(L('E entregada ∫P dt', 'E delivered ∫P dt'), fx(this.Ein / 1000, 1), 'kJ') + r('K = ½mv²', fx(K / 1000, 1), 'kJ') + r(L('E perdida (aire)', 'E lost (air)'), fx(this.Eair / 1000, 1), 'kJ');
+  },
+  btn() { setTxt($('bw4run'), this.run ? 'Pausa' : (this.t > 0 ? 'Continuar' : 'Arrancar'), this.run ? 'Pause' : (this.t > 0 ? 'Resume' : 'Go')); },
+  init() {
+    document.querySelectorAll('input[name=mw4]').forEach(r => r.onchange = () => { this.mode = r.value; this.reset(); });
+    bindRange('rw4P', 'ow4P', v => v + ' kW', v => this.P = v);
+    bindRange('rw4F', 'ow4F', v => v + ' N', v => this.F = v);
+    bindRange('rw4m', 'ow4m', v => v + ' kg', v => this.m = v);
+    $('kw4air').onchange = e => this.air = e.target.checked;
+    $('bw4run').onclick = () => { if (this.t >= 30) this.reset(); this.run = !this.run; this.btn(); };
+    $('bw4reset').onclick = () => this.reset();
+    this.reset();
+  }
+};
+
+/* ======================= W5: conservative forces ======================= */
+const w5 = {
+  g: setupCanvas($('cw5')), field: 'grav', paths: [], drawing: null,
+  A: {x: -4, y: -2}, B: {x: 4, y: 2}, cols: ['#1c7ed6', '#ae3ec9', '#e8590c', '#0c8599'],
+  geo() { const {w, h} = this.g, s = Math.min(w / 13.5, h / 9.4); return {s, cx: w / 2, cy: h / 2}; },
+  F(p) { if (this.field === 'grav') return {x: 0, y: -9.8}; if (this.field === 'spring') return mul(p, -2); if (this.field === 'vortex') return {x: -1.5 * p.y, y: 1.5 * p.x}; return {x: 0, y: 0}; },
+  U(p) { if (this.field === 'grav') return 9.8 * p.y; if (this.field === 'spring') return dot(p, p); return null; },
+  segW(a, b) { const d = sub(b, a); if (this.field === 'fric') return -3 * len(d); return dot(this.F(mul(add(a, b), .5)), d); },
+  W(pts) { let s = 0; for (let i = 1; i < pts.length; i++) s += this.segW(pts[i - 1], pts[i]); return s; },
+  plen(pts) { let s = 0; for (let i = 1; i < pts.length; i++) s += len(sub(pts[i], pts[i - 1])); return s; },
+  dense(corners) { const out = [corners[0]]; for (let i = 1; i < corners.length; i++) { const a = corners[i - 1], b = corners[i], n = Math.max(1, Math.ceil(len(sub(b, a)) / 0.1)); for (let k = 1; k <= n; k++) out.push(add(a, mul(sub(b, a), k / n))); } return out; },
+  addPath(pts, name) { this.paths.push({pts, name, col: this.cols[this.paths.length % 4]}); if (this.paths.length > 4) { this.paths.shift(); this.paths.forEach((p, i) => p.col = this.cols[i]); } },
+  preset(k) {
+    const A = this.A, B = this.B;
+    if (k === 'straight') this.addPath(this.dense([A, B]), L('Recto', 'Straight'));
+    if (k === 'step') this.addPath(this.dense([A, {x: 4, y: -2}, B]), L('Escalón', 'Step'));
+    if (k === 'arc') { const c = {x: -5, y: 5}, pts = []; for (let i = 0; i <= 80; i++) { const t = i / 80, u = 1 - t; pts.push({x: u * u * A.x + 2 * u * t * c.x + t * t * B.x, y: u * u * A.y + 2 * u * t * c.y + t * t * B.y}); } this.addPath(pts, L('Curvo', 'Curved')); }
+    if (k === 'loop') this.addPath(this.dense([A, {x: 4, y: -2}, B, {x: -4, y: 2}, A]), L('Lazo cerrado', 'Closed loop'));
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const {s, cx, cy} = this.geo(), S = p => [cx + p.x * s, cy - p.y * s], Wd = p => ({x: (p.x - cx) / s, y: (cy - p.y) / s});
+    // U shading
+    if (this.U({x: 0, y: 0}) !== null) {
+      const cell = 14, umin = this.field === 'grav' ? -45 : 0, umax = this.field === 'grav' ? 45 : 50;
+      for (let px = 0; px < w; px += cell) for (let py = 0; py < h; py += cell) {
+        const u = clamp((this.U(Wd({x: px + cell / 2, y: py + cell / 2})) - umin) / (umax - umin), 0, 1);
+        ctx.fillStyle = `hsl(${210 - 170 * u},70%,${95 - 6 * u}%)`; ctx.fillRect(px, py, cell + 1, cell + 1);
+      }
+      text(ctx, L('fondo: U (azul bajo → ámbar alto)', 'background: U (blue low → amber high)'), 12, h - 16, C.muted, 11.5, 'left', 500);
+    } else grid(ctx, w, h, cx, cy, s, false);
+    // field arrows
+    if (this.field !== 'fric') {
+      for (let x = -6; x <= 6; x++) for (let y = -4; y <= 4; y++) {
+        const F = this.F({x, y}), m = len(F); if (m < 1e-6) continue;
+        const ln = Math.min(0.42, 0.06 * m) * s, u = mul(F, 1 / m), [px, py] = S({x, y});
+        arrow(ctx, px - u.x * ln / 2, py + u.y * ln / 2, px + u.x * ln / 2, py - u.y * ln / 2, '#868e96', 1.5, null, .7);
+      }
+    } else text(ctx, L('La fricción no es un campo: siempre apunta contra el movimiento (3 N).', 'Friction is not a field: it always points against the motion (3 N).'), w / 2, 50, C.muted, 13, 'center', 600);
+    // paths
+    const all = this.drawing ? [...this.paths, {pts: this.drawing, col: '#495057'}] : this.paths;
+    all.forEach((p, j) => {
+      const last = j === all.length - 1;
+      if (last) for (let i = 1; i < p.pts.length; i++) {
+        const [x0, y0] = S(p.pts[i - 1]), [x1, y1] = S(p.pts[i]), sw = this.segW(p.pts[i - 1], p.pts[i]);
+        ctx.strokeStyle = Math.abs(sw) < 1e-9 ? '#adb5bd' : sw > 0 ? 'rgba(47,158,68,.75)' : 'rgba(224,49,49,.7)'; ctx.lineWidth = 8; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+      }
+      ctx.strokeStyle = p.col; ctx.lineWidth = last ? 2 : 3; ctx.beginPath(); p.pts.forEach((q, i) => { const [x, y] = S(q); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.stroke();
+      if (p.pts.length > 3) { const n = p.pts.length, [ax, ay] = S(p.pts[n - 4]), [bx, by] = S(p.pts[n - 1]); arrow(ctx, ax, ay, bx, by, p.col, 3); }
+    });
+    if (this.r3) {} else if (this.skin) {
+      [[this.A, L('planta baja', 'ground floor')], [this.B, L('piso de arriba', 'upper floor')]].forEach(([p, l]) => { const [, y] = S(p); ctx.fillStyle = 'rgba(134,142,150,.55)'; ctx.fillRect(0, y + 9, w, 6); text(ctx, l, w - 10, y + 26, C.ink, 12, 'right', 650); });
+      const bag = (p, a) => { const [x, y] = S(p); ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = '#e8590c'; ctx.beginPath(); ctx.roundRect(x - 13, y - 34, 26, 32, 7); ctx.fill(); ctx.fillStyle = '#d9480f'; ctx.fillRect(x - 9, y - 18, 18, 10); ctx.strokeStyle = '#d9480f'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x, y - 34, 6, Math.PI, 0); ctx.stroke(); ctx.restore(); };
+      bag(this.A, 0.35); bag(this.B, 1);
+    }
+    [[this.A, 'A'], [this.B, 'B']].forEach(([p, l]) => { const [x, y] = S(p); ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(x, y, 7, 0, 7); ctx.fill(); text(ctx, l, x - 14, y - 14, C.ink, 16, 'center', 750); });
+    if (this.paths.length) { const p = this.paths[this.paths.length - 1]; badge(ctx, `${p.name}: W = ${fx(this.W(p.pts), 2)} J`, 12, 12, this.W(p.pts) >= -1e-9); }
+    else text(ctx, L('Elige un camino o dibuja uno', 'Pick a path or draw one'), 14, 24, C.muted, 13, 'left');
+  },
+  table() {
+    const cons = this.U({x: 0, y: 0}) !== null;
+    const rows = this.paths.map(p => {
+      const a = p.pts[0], b = p.pts[p.pts.length - 1];
+      return `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${p.col};margin-right:6px"></span>${p.name}</td><td>${fx(this.plen(p.pts), 1)}</td><td><b>${fx(this.W(p.pts), 2)}</b></td>${cons ? `<td>${fx(-(this.U(b) - this.U(a)), 2)}</td>` : ''}</tr>`;
+    }).join('');
+    $('tw5').innerHTML = `<tr><th>${L('camino', 'path')}</th><th>${L('longitud (m)', 'length (m)')}</th><th>W (J)</th>${cons ? '<th>−ΔU (J)</th>' : ''}</tr>` + (rows || `<tr><td colspan="4" class="hint">${L('Sin caminos todavía', 'No paths yet')}</td></tr>`)
+      + `<tr><td colspan="4" class="hint" style="text-align:left;padding-top:8px">${cons ? L('Conservativa: W solo depende de A y B.', 'Conservative: W depends only on A and B.') : L('No conservativa: W depende del camino.', 'Non-conservative: W depends on the path.')}</td></tr>`;
+  },
+  init() {
+    const cv = $('cw5');
+    cv.addEventListener('pointerdown', e => { const p = ptr(e, cv), {s, cx, cy} = this.geo(); this.drawing = [{x: (p.x - cx) / s, y: (cy - p.y) / s}]; cv.setPointerCapture(e.pointerId); });
+    cv.addEventListener('pointermove', e => {
+      if (!this.drawing) { cv.style.cursor = 'crosshair'; return; }
+      const p = ptr(e, cv), {s, cx, cy} = this.geo(), q = {x: (p.x - cx) / s, y: (cy - p.y) / s};
+      if (len(sub(q, this.drawing[this.drawing.length - 1])) > 0.08) this.drawing.push(q);
+    });
+    const up = () => { if (this.drawing && this.drawing.length > 3) this.addPath(this.drawing, L('Dibujado', 'Drawn')); this.drawing = null; };
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', () => this.drawing = null);
+    document.querySelectorAll('input[name=fw5]').forEach(r => r.onchange = () => this.field = r.value);
+    document.querySelectorAll('#w5 [data-path]').forEach(b => b.onclick = () => this.preset(b.dataset.path));
+    $('bw5clr').onclick = () => this.paths = [];
+    this.preset('straight'); this.preset('step'); this.preset('arc');
+  }
+};
+
+/* ======================= W6: energy conservation track ======================= */
+const w6 = {
+  g: setupCanvas($('cw6')), shapes: [[5.5, 1.2, 3.2, 0.6, 2.4, 0.8, 4.5], [6, 0.5, 0.5, 4.5, 0.5, 0.5, 5], [6.2, 2, 0.4, 2.8, 1.5, 0.3, 3]], si: 0,
+  ys: null, mu: 0, m: 1, showE: true, X: 12,
+  x: 0.2, v: 0, Eth: 0, E0: 0, run: false, drag: null,
+  dx() { return this.X / (this.ys.length - 1); },
+  yAt(x) {
+    const n = this.ys.length, d = this.dx(), xi = clamp(x, 0, this.X), i = Math.min(n - 2, Math.floor(xi / d)), t = (xi - i * d) / d;
+    const Y = k => this.ys[clamp(k, 0, n - 1)];
+    const m0 = (i === 0 ? Y(1) - Y(0) : (Y(i + 1) - Y(i - 1)) / 2), m1 = (i + 1 === n - 1 ? Y(n - 1) - Y(n - 2) : (Y(i + 2) - Y(i)) / 2);
+    const t2 = t * t, t3 = t2 * t, h00 = 2 * t3 - 3 * t2 + 1, h10 = t3 - 2 * t2 + t, h01 = -2 * t3 + 3 * t2, h11 = t3 - t2;
+    const y = h00 * Y(i) + h10 * m0 + h01 * Y(i + 1) + h11 * m1;
+    const dy = ((6 * t2 - 6 * t) * Y(i) + (3 * t2 - 4 * t + 1) * m0 + (-6 * t2 + 6 * t) * Y(i + 1) + (3 * t2 - 2 * t) * m1) / d;
+    return {y, dy};
+  },
+  K() { return .5 * this.m * this.v * this.v; }, Ug() { return this.m * 9.8 * this.yAt(this.x).y; },
+  place(x) { this.x = clamp(x, 0, this.X); this.v = 0; this.Eth = 0; this.E0 = this.Ug(); },
+  step(dt) {
+    if (!this.run) return;
+    const n = 30, h = dt / n, g = 9.8;
+    for (let i = 0; i < n; i++) {
+      const {dy} = this.yAt(this.x), c = 1 / Math.sqrt(1 + dy * dy), sn = dy * c;
+      let a;
+      if (Math.abs(this.v) < 0.03 && Math.abs(g * sn) <= this.mu * g * c) { this.v = 0; continue; }
+      a = -g * sn - (this.v !== 0 ? Math.sign(this.v) : Math.sign(-sn)) * this.mu * g * c;
+      const v0 = this.v; this.v += a * h;
+      if (this.mu > 0 && v0 !== 0 && Math.sign(this.v) !== Math.sign(v0) && Math.abs(g * sn) <= this.mu * g * c) this.v = 0;
+      this.Eth += this.mu * this.m * g * c * Math.abs(this.v) * h;
+      this.x += this.v * c * h;
+      if (this.x < 0) { this.x = 0; this.v = Math.abs(this.v); } if (this.x > this.X) { this.x = this.X; this.v = -Math.abs(this.v); }
+      if (this.mu === 0) { const Kt = this.E0 - this.Ug(); if (Kt > 0.02 * this.E0 && this.v !== 0) this.v = Math.sign(this.v) * Math.sqrt(2 * Kt / this.m); }
+    }
+  },
+  geo() { const {w, h} = this.g, bw = Math.min(250, w * 0.3), s = Math.min((w - bw - 60) / this.X, (h - 70) / 7.2); return {s, ox: 30, oy: h - 34, bw}; },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const {s, ox, oy, bw} = this.geo(), S = (x, y) => [ox + x * s, oy - y * s];
+    if (this.r3) {} else if (this.skin) { ctx.save(); ctx.beginPath(); ctx.rect(0, 0, w - bw - 20, h); ctx.clip(); scenery(ctx, w - bw - 20, h, oy, 'park'); ctx.restore(); } else { ctx.fillStyle = '#eef3f8'; ctx.fillRect(0, 0, w - bw - 20, oy); }
+    ctx.strokeStyle = '#dde3ea'; ctx.lineWidth = 1;
+    for (let y = 0; y <= 7; y++) { const [, py] = S(0, y); ctx.beginPath(); ctx.moveTo(ox, py); ctx.lineTo(ox + this.X * s, py); ctx.stroke(); text(ctx, y + ' m', ox + 2, py - 8, C.muted, 10.5, 'left', 500); }
+    // track
+    if (!this.r3) { ctx.beginPath(); const [sx, sy] = S(0, this.yAt(0).y); ctx.moveTo(sx, oy); ctx.lineTo(sx, sy);
+    for (let i = 0; i <= 240; i++) { const x = this.X * i / 240, [px, py] = S(x, this.yAt(x).y); ctx.lineTo(px, py); }
+    ctx.lineTo(ox + this.X * s, oy); ctx.closePath(); ctx.fillStyle = '#d8d4c7'; ctx.fill();
+    ctx.beginPath(); for (let i = 0; i <= 240; i++) { const x = this.X * i / 240, [px, py] = S(x, this.yAt(x).y); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+    ctx.strokeStyle = '#6c6657'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = '#c9c4b5'; ctx.fillRect(0, oy, w - bw - 20, h - oy); }
+    // E line
+    const Em = this.K() + this.Ug();
+    if (this.showE) {
+      const hE = Em / (this.m * 9.8), [, ey] = S(0, hE);
+      ctx.save(); ctx.strokeStyle = C.ink; ctx.setLineDash([6, 5]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(ox, ey); ctx.lineTo(ox + this.X * s, ey); ctx.stroke(); ctx.restore();
+      text(ctx, L('E mecánica / mg', 'mechanical E / mg'), ox + this.X * s - 4, ey - 10, C.ink, 11.5, 'right', 600);
+      // turning points
+      for (let i = 0; i < 600; i++) { const x0 = this.X * i / 600, x1 = this.X * (i + 1) / 600, a = this.yAt(x0).y - hE, b = this.yAt(x1).y - hE; if (a * b < 0) { const xr = x0 + (x1 - x0) * a / (a - b), [px, py] = S(xr, hE); ctx.fillStyle = '#e8590c'; ctx.beginPath(); ctx.arc(px, py, 4, 0, 7); ctx.fill(); } }
+    }
+    // handles
+    const d = this.dx(); this.ys.forEach((y, i) => { const [px, py] = S(i * d, y); handle(ctx, px, py, '#6c6657'); });
+    // ball
+    const {y, dy} = this.yAt(this.x), nrm = {x: -dy, y: 1}, nl = len(nrm), r = 11;
+    const [bx, by] = S(this.x, y); const cxb = bx + nrm.x / nl * r, cyb = by - nrm.y / nl * r;
+    if (this.r3) {} else if (this.skin) { const ang = Math.atan(dy); ctx.save(); ctx.translate(cxb, cyb - 4); ctx.rotate(-ang); ctx.fillStyle = '#e03131'; ctx.beginPath(); ctx.roundRect(-20, -14, 40, 18, 5); ctx.fill(); ctx.fillStyle = '#ffd43b'; ctx.fillRect(-14, -20, 28, 6); ctx.fillStyle = '#f1c27d'; ctx.beginPath(); ctx.arc(-6, -24, 5, 0, 7); ctx.arc(8, -24, 5, 0, 7); ctx.fill(); ctx.fillStyle = '#212529'; [-12, 12].forEach(wx => { ctx.beginPath(); ctx.arc(wx, 6, 5, 0, 7); ctx.fill(); }); ctx.restore(); }
+    else { ctx.fillStyle = '#1c7ed6'; ctx.beginPath(); ctx.arc(cxb, cyb, r, 0, 7); ctx.fill(); }
+    // bars
+    const K = this.K(), U = this.Ug(), tot = K + U + this.Eth;
+    bars(ctx, w - bw - 10, 14, bw, h - 28, [
+      {label: 'K', value: K, col: C.v}, {label: 'U', value: U, col: C.a}, {label: L('E térm', 'E therm'), value: this.Eth, col: C.fr}, {label: 'Total', value: tot, col: C.ink}
+    ], {max: Math.max(this.E0, tot, 1) * 1.08, title: L('Energía (J)', 'Energy (J)')});
+    if (!this.run) text(ctx, L('EN PAUSA — arrastra la bola', 'PAUSED — drag the ball'), 14, 22, C.muted, 13, 'left');
+  },
+  table() {
+    const K = this.K(), U = this.Ug(), r = (a, b, u = 'J') => `<tr><td>${a}</td><td>${b}</td><td>${u}</td></tr>`;
+    $('tw6').innerHTML = r(L('altura y', 'height y'), fx(this.yAt(this.x).y), 'm') + r(L('rapidez', 'speed'), fx(Math.abs(this.v)), 'm/s') + r('K = ½mv²', fx(K)) + r('U = mgy', fx(U))
+      + r('E = K + U', fx(K + U)) + r(L('E térmica', 'thermal E'), fx(this.Eth)) + `<tr class="sum"><td>K + U + E<sub>térm</sub></td><td>${fx(K + U + this.Eth)}</td><td>J</td></tr>`;
+  },
+  btn() { setTxt($('bw6run'), this.run ? 'Pausa' : 'Soltar', this.run ? 'Pause' : 'Release'); },
+  hit(p) {
+    const {s, ox, oy} = this.geo(), d = this.dx();
+    for (let i = 0; i < this.ys.length; i++) if (Math.hypot(ox + i * d * s - p.x, oy - this.ys[i] * s - p.y) < 14) return {k: 'pt', i};
+    const y = this.yAt(this.x).y; if (!this.run && Math.hypot(ox + this.x * s - p.x, oy - y * s - 11 - p.y) < 22) return {k: 'ball'};
+    return null;
+  },
+  init() {
+    this.ys = this.shapes[0].slice(); this.place(0.2);
+    const cv = $('cw6');
+    cv.addEventListener('pointerdown', e => { const p = ptr(e, cv); this.drag = this.hit(p); if (this.drag) cv.setPointerCapture(e.pointerId); });
+    cv.addEventListener('pointermove', e => {
+      const p = ptr(e, cv), {s, ox, oy} = this.geo();
+      if (!this.drag) { cv.style.cursor = this.hit(p) ? 'grab' : 'default'; return; }
+      if (this.drag.k === 'pt') { this.ys[this.drag.i] = clamp((oy - p.y) / s, 0.2, 6.8); this.run = false; this.btn(); this.place(this.x); }
+      else this.place((p.x - ox) / s);
+    });
+    const up = () => this.drag = null; cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    bindRange('rw6mu', 'ow6mu', v => v.toFixed(2), v => this.mu = v);
+    bindRange('rw6m', 'ow6m', v => v.toFixed(1) + ' kg', v => { const r = v / this.m; this.m = v; this.E0 *= r; this.Eth *= r; });
+    $('kw6E').onchange = e => this.showE = e.target.checked;
+    $('bw6run').onclick = () => { this.run = !this.run; this.btn(); };
+    $('bw6reset').onclick = () => { this.run = false; this.place(0.2); this.btn(); };
+    $('bw6shape').onclick = () => { this.si = (this.si + 1) % this.shapes.length; this.ys = this.shapes[this.si].slice(); this.run = false; this.place(0.2); this.btn(); };
+    this.btn();
+  }
+};
+
+/* ======================= W7: potential energy curves ======================= */
+const w7 = {
+  g: setupCanvas($('cw7')), type: 'spring', m: 1,
+  x: 1.5, v: 0, E: 0, run: false, drag: null, esc: false,
+  P: {spring: {a: -2.2, b: 2.2, U: x => 5 * x * x, dU: x => 10 * x, umin: -2, umax: 26, x0: 1.5},
+      well: {a: -2.3, b: 2.3, U: x => x ** 4 - 4 * x * x, dU: x => 4 * x ** 3 - 8 * x, umin: -5, umax: 10, x0: 1.9},
+      mol: {a: 0.82, b: 3.2, U: x => 5 * (Math.pow(1 / x, 12) - 2 * Math.pow(1 / x, 6)), dU: x => 5 * (-12 * Math.pow(x, -13) + 12 * Math.pow(x, -7)), umin: -6, umax: 4, x0: 0.92}},
+  p() { return this.P[this.type]; },
+  setType(t) { this.type = t; this.place(this.p().x0); },
+  place(x) { const p = this.p(); this.x = clamp(x, p.a, p.b); this.v = 0; this.E = p.U(this.x); this.esc = false; },
+  geo() {
+    const {w, h} = this.g, p = this.p(), pl = 60, pr = 20, top = 34, mid = h * 0.66, bot = h - 30;
+    const X = x => pl + (x - p.a) / (p.b - p.a) * (w - pl - pr), Xi = px => p.a + (px - pl) / (w - pl - pr) * (p.b - p.a);
+    const Y = u => top + (p.umax - clamp(u, p.umin - 50, p.umax + 50)) / (p.umax - p.umin) * (mid - top), Yi = py => p.umax - (py - top) / (mid - top) * (p.umax - p.umin);
+    let fm = 1; for (let i = 0; i <= 200; i++) fm = Math.max(fm, Math.min(60, Math.abs(p.dU(p.a + (p.b - p.a) * i / 200))));
+    const f0 = (mid + 26 + bot) / 2, FY = F => f0 - clamp(F, -fm, fm) / fm * (bot - mid - 30) / 2;
+    return {X, Xi, Y, Yi, FY, pl, pr, top, mid, bot, f0, fm};
+  },
+  step(dt) {
+    if (!this.run || this.esc) return;
+    const p = this.p(), n = 40, h = dt / n;
+    for (let i = 0; i < n; i++) {
+      this.v += -p.dU(this.x) / this.m * h; this.x += this.v * h;
+      if (this.x < p.a) { this.x = p.a; this.v = Math.abs(this.v); } 
+      if (this.x > p.b) { if (this.type === 'mol') { this.esc = true; this.x = p.b; break; } this.x = p.b; this.v = -Math.abs(this.v); }
+    }
+    const K = this.E - p.U(this.x); if (K > 0.05 && this.v !== 0) this.v = Math.sign(this.v) * Math.sqrt(2 * K / this.m);
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const p = this.p(), G = this.geo(), N = 400, xs = i => p.a + (p.b - p.a) * i / N;
+    // forbidden region
+    ctx.fillStyle = 'rgba(134,142,150,.12)';
+    for (let i = 0; i < N; i++) if (p.U(xs(i + .5)) > this.E) ctx.fillRect(G.X(xs(i)), G.top, G.X(xs(i + 1)) - G.X(xs(i)) + .5, G.bot - G.top);
+    // axes
+    ctx.strokeStyle = C.axis; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(G.pl, G.Y(0)); ctx.lineTo(w - G.pr, G.Y(0)); ctx.moveTo(G.pl, G.f0); ctx.lineTo(w - G.pr, G.f0); ctx.stroke();
+    text(ctx, 'U (J)', G.pl - 8, G.top - 14, C.a, 12, 'right'); text(ctx, 'F (N)', G.pl - 8, G.mid + 22, C.F, 12, 'right'); text(ctx, 'x (m)', w - G.pr, G.bot + 16, C.ink, 12, 'right');
+    ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif'; ctx.textAlign = 'center';
+    const st = niceStep((p.b - p.a) / 8); for (let x = Math.ceil(p.a / st) * st; x <= p.b; x += st) ctx.fillText(+x.toFixed(2), G.X(x), G.bot + 14);
+    ctx.textAlign = 'right'; const su = niceStep((p.umax - p.umin) / 5); for (let u = Math.ceil(p.umin / su) * su; u <= p.umax; u += su) ctx.fillText(+u.toFixed(1), G.pl - 6, G.Y(u) + 4);
+    // U curve (clipped)
+    ctx.save(); ctx.beginPath(); ctx.rect(G.pl, G.top - 4, w, G.mid - G.top + 8); ctx.clip();
+    ctx.strokeStyle = C.a; ctx.lineWidth = 3; ctx.beginPath(); for (let i = 0; i <= N; i++) { const x = xs(i); i ? ctx.lineTo(G.X(x), G.Y(p.U(x))) : ctx.moveTo(G.X(x), G.Y(p.U(x))); } ctx.stroke();
+    ctx.restore();
+    // F curve
+    ctx.strokeStyle = C.F; ctx.lineWidth = 2.5; ctx.beginPath(); for (let i = 0; i <= N; i++) { const x = xs(i); i ? ctx.lineTo(G.X(x), G.FY(-p.dU(x))) : ctx.moveTo(G.X(x), G.FY(-p.dU(x))); } ctx.stroke();
+    // equilibria
+    for (let i = 0; i < N; i++) {
+      const a = -p.dU(xs(i)), b = -p.dU(xs(i + 1));
+      if (a * b < 0 || (a === 0 && b !== 0)) { const xr = xs(i) + (xs(i + 1) - xs(i)) * a / (a - b), stable = a > 0 || (a === 0 && b < 0); ctx.save(); ctx.strokeStyle = '#adb5bd'; ctx.setLineDash([3, 4]); ctx.beginPath(); ctx.moveTo(G.X(xr), G.Y(p.U(xr))); ctx.lineTo(G.X(xr), G.f0); ctx.stroke(); ctx.restore();
+        text(ctx, stable ? L('estable', 'stable') : L('inestable', 'unstable'), G.X(xr), G.Y(p.U(xr)) + (stable ? 18 : -16), stable ? '#2b8a3e' : '#c92a2a', 12, 'center', 700); }
+    }
+    // E line + turning points
+    const ey = G.Y(this.E);
+    ctx.save(); ctx.strokeStyle = C.ink; ctx.setLineDash([7, 5]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(G.pl, ey); ctx.lineTo(w - G.pr, ey); ctx.stroke(); ctx.restore();
+    text(ctx, `E = ${fx(this.E, 2)} J`, w - G.pr - 4, ey - 12, C.ink, 13, 'right', 700);
+    for (let i = 0; i < N; i++) { const a = p.U(xs(i)) - this.E, b = p.U(xs(i + 1)) - this.E; if (a * b < 0) { const xr = xs(i) + (xs(i + 1) - xs(i)) * a / (a - b); ctx.fillStyle = '#e8590c'; ctx.beginPath(); ctx.arc(G.X(xr), ey, 5, 0, 7); ctx.fill(); } }
+    // ball, K and U bars
+    const U = p.U(this.x), bx = G.X(this.x), by = G.Y(U);
+    ctx.strokeStyle = C.v; ctx.lineWidth = 6; ctx.globalAlpha = .7; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx, ey); ctx.stroke(); ctx.globalAlpha = 1;
+    if (ey < by - 14) text(ctx, 'K', bx + 12, (by + ey) / 2, C.v, 13, 'left', 700);
+    ctx.fillStyle = '#1d2329'; ctx.beginPath(); ctx.arc(bx, by - 9, 9, 0, 7); ctx.fill();
+    if (this.skin) { const ix = w - 150, iy = G.top + 6; ctx.fillStyle = '#fff'; ctx.strokeStyle = '#ced4da'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(ix, iy, 130, 110, 10); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#f1f3f5'; ctx.beginPath(); ctx.roundRect(ix + 40, iy + 22, 50, 70, 6); ctx.fill(); ctx.strokeStyle = '#adb5bd'; ctx.stroke();
+      const lv = clamp(this.x / Math.SQRT2, -1.2, 1.2) * 0.45; ctx.save(); ctx.translate(ix + 65, iy + 57); ctx.rotate(lv); ctx.fillStyle = this.x > 0 ? '#2f9e44' : '#e03131'; ctx.beginPath(); ctx.roundRect(-14, -30, 28, 60, 6); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.fillRect(-10, this.x > 0 ? -26 : 4, 20, 22); ctx.restore();
+      text(ctx, this.x > 0 ? L('ENCENDIDO', 'ON') : L('APAGADO', 'OFF'), ix + 65, iy + 102, this.x > 0 ? '#2b8a3e' : '#c92a2a', 11.5, 'center', 750); }
+    const F = -p.dU(this.x), fl = clamp(F / G.fm, -1, 1) * 90;
+    if (Math.abs(fl) > 3) { arrow(ctx, bx, by - 9, bx + fl, by - 9, C.F, 3.5); }
+    ctx.fillStyle = C.F; ctx.beginPath(); ctx.arc(bx, G.FY(F), 5, 0, 7); ctx.fill();
+    if (this.esc) badge(ctx, L('E > 0: la partícula escapa (no ligada)', 'E > 0: the particle escapes (unbound)'), 12, 8, false);
+    else if (!this.run) text(ctx, L('EN PAUSA — arrastra la bola o la línea E', 'PAUSED — drag the ball or the E line'), 14, 16, C.muted, 12.5, 'left');
+  },
+  table() {
+    const p = this.p(), U = p.U(this.x), r = (a, b, u) => `<tr><td>${a}</td><td>${b}</td><td>${u}</td></tr>`;
+    $('tw7').innerHTML = r('x', fx(this.x, 3), 'm') + r('U(x)', fx(U), 'J') + r('K = E − U', fx(this.E - U), 'J') + `<tr class="sum"><td>E</td><td>${fx(this.E)}</td><td>J</td></tr>` + r('F = −dU/dx', fx(-p.dU(this.x)), 'N') + r('v', fx(this.v), 'm/s');
+  },
+  btn() { setTxt($('bw7run'), this.run ? 'Pausa' : 'Soltar', this.run ? 'Pause' : 'Release'); },
+  init() {
+    const cv = $('cw7');
+    cv.addEventListener('pointerdown', e => {
+      const q = ptr(e, cv), G = this.geo(), p = this.p(), bx = G.X(this.x), by = G.Y(p.U(this.x)) - 9;
+      if (Math.hypot(bx - q.x, by - q.y) < 20) this.drag = 'ball'; else if (Math.abs(G.Y(this.E) - q.y) < 10) this.drag = 'E'; else this.drag = null;
+      if (this.drag) { this.run = false; this.btn(); cv.setPointerCapture(e.pointerId); }
+    });
+    cv.addEventListener('pointermove', e => {
+      const q = ptr(e, cv), G = this.geo(), p = this.p();
+      if (!this.drag) { cv.style.cursor = Math.hypot(G.X(this.x) - q.x, G.Y(p.U(this.x)) - 9 - q.y) < 20 ? 'grab' : Math.abs(G.Y(this.E) - q.y) < 10 ? 'ns-resize' : 'default'; return; }
+      if (this.drag === 'ball') this.place(G.Xi(q.x));
+      else { this.E = Math.max(p.U(this.x), clamp(G.Yi(q.y), p.umin, p.umax)); this.v = Math.sqrt(2 * (this.E - p.U(this.x)) / this.m); this.esc = false; }
+    });
+    const up = () => this.drag = null; cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    document.querySelectorAll('input[name=uw7]').forEach(r => r.onchange = () => { this.run = false; this.btn(); this.setType(r.value); });
+    $('bw7run').onclick = () => { if (this.esc) this.place(this.p().x0); this.run = !this.run; this.btn(); };
+    this.setType('spring'); this.btn();
+  }
+};
+
+/* ---------- 3D views · Theme 2 ---------- */
+if (G3.ok) {
+const {M, mesh, rbox, cyl, sph, tube, setTube, mannequin, carModel, tex} = G3;
+function wagonModel() {
+  const g = new THREE.Group(), red = M.plastic(0xd9302b, 0.3);
+  const tub = mesh(rbox(0.7, 0.2, 0.42, 0.03), red); tub.position.y = 0.2; g.add(tub);
+  const inner = mesh(new THREE.BoxGeometry(0.62, 0.02, 0.34), M.matte(0x7a1c18)); inner.position.y = 0.3; g.add(inner);
+  [[0.24, 0.2], [0.24, -0.2], [-0.24, 0.2], [-0.24, -0.2]].forEach(([x, z]) => { const w = cyl(0.09, 0.09, 0.05, M.rubber(), 24); w.rotation.x = Math.PI / 2; w.position.set(x, 0.09, z); g.add(w); const h = cyl(0.035, 0.035, 0.055, M.chrome(), 12); h.rotation.x = Math.PI / 2; h.position.copy(w.position); g.add(h); });
+  const toy = mesh(rbox(0.16, 0.16, 0.16, 0.03), M.plastic(0x1c7ed6)); toy.position.set(0.12, 0.38, 0); g.add(toy);
+  const ball = sph(0.08, M.plastic(0xfcc419)); ball.position.set(-0.12, 0.38, 0.05); g.add(ball);
+  return g;
+}
+
+VIEWS.w1 = {   // child pulling a wagon
+  build(v, sc) {
+    const {oy} = sc.geo(); v.back('sky', 40); v.floor('grass', oy + 18, {rep: 2}); v.lights({key: 700, amb: 0.3, hemi: 0.6});
+    v.o.wag = v.add(wagonModel()); v.o.ghost = v.add(wagonModel());
+    v.o.ghost.traverse(o => { if (o.material) { o.material = o.material.clone(); o.material.transparent = true; o.material.opacity = 0.25; } });
+    v.o.kid = mannequin({shirt: 0xf59f00, pants: 0x1864ab}); v.add(v.o.kid.group);
+    v.o.rope = v.add(tube([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)], 0.01, M.matte(0x495057)));
+  },
+  sync(v, sc) {
+    const {s, ox, oy} = sc.geo(), g0 = oy + 18;
+    v.o.wag.scale.setScalar(0.95); v.o.wag.position.copy(v.P(ox, g0, 0));
+    v.o.ghost.scale.setScalar(0.95); v.o.ghost.position.copy(v.P(ox + sc.d.x * s, g0 - sc.d.y * s, 0));
+    const ang = Math.atan2(sc.F.y, sc.F.x), show = len(sc.F) > 0.1 && Math.cos(ang) > 0.05; v.o.kid.group.visible = v.o.rope.visible = show;
+    if (!show) return;
+    const H = 1.25, handH = (0.79 - 0.37 * Math.cos(Math.PI / 2 - ang + 0.15)) * H * 100, ax = ox + 34, ay = g0 - 26, dy = handH - 26;
+    const dx = ang > 0.05 ? clamp(dy / Math.tan(ang), 60, 260) : 160;
+    const k = v.o.kid; k.group.scale.setScalar(H); k.group.position.copy(v.P(ax + dx + 8, g0, 0)); k.group.rotation.y = Math.PI;
+    k.pose({lean: -0.15, armL: Math.PI / 2 - ang + 0.15, armR: Math.PI / 2 - ang + 0.25, stride: 0.2});
+    setTube(v.o.rope, [v.P(ax, ay, 0), v.P(ax + dx, g0 - handH, 0.12)], 0.01, 4);
+  }
+};
+
+VIEWS.w2 = {   // slingshot
+  build(v, sc) {
+    v.back('studio'); v.lights({key: 500});
+    const wood = M.wood('#7a4e24'), f = new THREE.Group();
+    const stem = cyl(0.05, 0.06, 0.6, wood); stem.position.y = -0.4; f.add(stem);
+    [-1, 1].forEach(k => { const arm = cyl(0.04, 0.05, 0.42, wood); arm.position.set(0, 0.07, k * 0.0); arm.position.x = k * 0.1; arm.rotation.z = -k * 0.42; f.add(arm); });
+    v.o.fork = v.add(f);
+    v.o.b1 = v.add(tube([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)], 0.018, M.matte(0xc92a2a, 0.6))); v.o.b2 = v.add(tube([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)], 0.018, M.matte(0xc92a2a, 0.6)));
+    v.o.pouch = v.add(mesh(rbox(0.12, 0.2, 0.08, 0.03), M.matte(0x5c3a1e, 0.8)));
+    v.o.peb = v.add(mesh(new THREE.DodecahedronGeometry(0.08, 1), M.matte(0x7d8288, 0.6)));
+  },
+  sync(v, sc) {
+    const G = sc.geo(), by = 90, fx0 = G.X(0), px = G.X(sc.xe());
+    v.o.fork.position.copy(v.P(fx0, by + 10, -0.15));
+    const t1 = v.P(fx0 - 18, by - 22, -0.15), t2 = v.P(fx0 + 18, by - 22, -0.15), p = v.P(px, by, 0);
+    setTube(v.o.b1, [t1, p], 0.018, 3); setTube(v.o.b2, [t2, p], 0.018, 3);
+    v.o.pouch.position.copy(p); v.o.peb.position.copy(p).add(new THREE.Vector3(0.03, 0, 0.04));
+  }
+};
+
+VIEWS.w4 = {   // compact car with constant power
+  build(v, sc) {
+    const ry = v.H * 0.66; v.ry = ry; v.back('city', 40); v.floor('asphalt', ry, {rep: 3, rough: 0.7}); v.lights({key: 700, amb: 0.3, hemi: 0.5});
+    const dt = tex('dashes', 512, 512, G3.FLOORS.dashes, [30, 1]); dt.wrapT = THREE.ClampToEdgeWrapping;
+    const dash = new THREE.Mesh(new THREE.PlaneGeometry(120, 0.25), new THREE.MeshStandardMaterial({map: dt, transparent: true, roughness: 0.6})); dash.rotation.x = -Math.PI / 2; dash.position.set(v.W / 200, -ry / 100 + 0.004, 1.2); v.add(dash); v.o.dash = dash;
+    const curb = mesh(new THREE.BoxGeometry(120, 0.12, 0.4), M.matte(0xadb5bd, 0.8)); curb.position.set(v.W / 200, -ry / 100 + 0.06, -2.5); v.add(curb);
+    v.o.lamps = []; for (let i = 0; i < 8; i++) { const l = new THREE.Group(); const pole = cyl(0.03, 0.04, 2.6, M.metal(0x495057)); pole.position.y = 1.3; l.add(pole); const head = mesh(rbox(0.4, 0.08, 0.16, 0.03), M.metal(0x343a40)); head.position.set(0.18, 2.6, 0); l.add(head); const bulb = mesh(new THREE.BoxGeometry(0.3, 0.02, 0.1), M.glow(0xfff3bf, 1.2)); bulb.position.set(0.2, 2.55, 0); l.add(bulb); l.position.z = -2.2; v.add(l); v.o.lamps.push(l); }
+    v.o.car = v.add(carModel(0xe03131));
+  },
+  sync(v, sc) {
+    const sp = 20, cx = v.W * 0.3, ry = v.ry; v.o.car.scale.setScalar(4.5 * sp / 100 * 1.05); v.o.car.position.copy(v.P(cx, ry, 0.2));
+    v.o.car.userData.wheels.forEach(w => w.rotation.z = -sc.x / 0.35);
+    const shift = sc.x * sp / 100; if (v.floorMesh) v.floorMesh.material.map.offset.x = shift / 3; v.o.dash.material.map.offset.x = shift / 4;
+    v.o.lamps.forEach((l, i) => { const span = 12; let x = ((i * 3 - shift) % (8 * 3) + 8 * 3) % (8 * 3) - span / 2 + v.W / 200; l.position.x = x; l.position.y = -ry / 100; });
+  }
+};
+
+VIEWS.w3 = {   // shopping cart
+  build(v, sc) {
+    const ty = v.H * 0.42; v.ty = ty; v.back('studio'); v.floor('tile', ty, {rep: 1.2, reflect: true, rough: 0.3}); v.lights({key: 600});
+    const sw = v.wall(0, -2.2, {map: tex('shelves', 512, 512, G3.FLOORS.shelves, [18, 5])}); sw.position.y = -ty / 100 + 20; sw.scale.y = 1;
+    const c = new THREE.Group(), wire = new THREE.MeshStandardMaterial({color: 0xced4da, metalness: 1, roughness: 0.25, wireframe: true});
+    const basket = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.32, 0.4, 8, 5, 6), wire); basket.position.y = 0.36; c.add(basket);
+    const frame = M.chrome(); const h = cyl(0.015, 0.015, 0.45, frame); h.rotation.x = Math.PI / 2; h.position.set(-0.38, 0.6, 0); c.add(h);
+    [[-0.3, 0.6], [0.3, 0.2]].forEach(() => {}); const leg1 = cyl(0.012, 0.012, 0.2, frame); leg1.position.set(-0.26, 0.1, 0.17); c.add(leg1); const leg2 = leg1.clone(); leg2.position.z = -0.17; c.add(leg2); const leg3 = leg1.clone(); leg3.position.x = 0.26; c.add(leg3); const leg4 = leg3.clone(); leg4.position.z = -0.17; c.add(leg4);
+    [[-0.26, 0.17], [-0.26, -0.17], [0.26, 0.17], [0.26, -0.17]].forEach(([x, z]) => { const w = cyl(0.035, 0.035, 0.025, M.rubber(), 16); w.rotation.x = Math.PI / 2; w.position.set(x, 0.035, z); c.add(w); });
+    const goods = mesh(rbox(0.18, 0.2, 0.16, 0.02), M.plastic(0xf59f00)); goods.position.set(0.08, 0.32, 0.04); c.add(goods); const g2 = mesh(cyl(0.05, 0.05, 0.22, M.plastic(0x2f9e44)).geometry, M.plastic(0x2f9e44)); g2.position.set(-0.12, 0.33, -0.05); c.add(g2);
+    v.o.cart = v.add(c); v.o.man = mannequin({shirt: 0xae3ec9, pants: 0x343a40}); v.add(v.o.man.group);
+  },
+  sync(v, sc) {
+    const w = v.W, X = x => 30 + x / 20 * (w - 60), bx = X(sc.x);
+    v.o.cart.scale.setScalar(1.3); v.o.cart.position.copy(v.P(bx, v.ty, 0));
+    const show = sc.F > 0.5; v.o.man.group.visible = show;
+    if (show) { v.o.man.group.scale.setScalar(1.2); v.o.man.group.position.copy(v.P(bx - 82, v.ty, 0)); v.o.man.pose({lean: 0.25, armL: 1.45, armR: 1.35, stride: 0.25}); }
+  }
+};
+
+VIEWS.w6 = {   // roller coaster
+  build(v, sc) {
+    const {oy} = sc.geo(); v.back('sky', 40); v.floor('grass', oy, {rep: 2}); v.lights({key: 700, amb: 0.3, hemi: 0.6});
+    v.o.track = v.add(new THREE.Group()); v.trackKey = '';
+    const car = new THREE.Group(); car.add(mesh(rbox(0.42, 0.18, 0.36, 0.05), M.plastic(0xe03131)));
+    const seat = mesh(rbox(0.3, 0.08, 0.3, 0.03), M.plastic(0xfcc419)); seat.position.y = 0.12; car.add(seat);
+    [-0.07, 0.09].forEach(x => { const r = mannequin({shirt: x > 0 ? 0x1c7ed6 : 0x2f9e44}); r.group.scale.setScalar(0.32); r.group.position.set(x, -0.02, 0); r.pose({sit: true, armL: 2.6, armR: 2.8}); car.add(r.group); });
+    [-0.14, 0.14].forEach(x => { const w = cyl(0.045, 0.045, 0.4, M.metal(0x343a40), 16); w.rotation.x = Math.PI / 2; w.position.set(x, -0.1, 0); car.add(w); });
+    v.o.car = v.add(car);
+  },
+  sync(v, sc) {
+    const {s, ox, oy} = sc.geo(), key = sc.ys.join(',');
+    if (key !== v.trackKey) { v.trackKey = key; const T = v.o.track; T.clear(); const rail = M.chrome(), sup = M.metal(0x495057, 0.5);
+      [-0.16, 0.16].forEach(z => { const pts = []; for (let i = 0; i <= 120; i++) { const x = sc.X * i / 120; pts.push(v.P(ox + x * s, oy - sc.yAt(x).y * s - 3, z)); } T.add(tube(pts, 0.022, rail, 360)); });
+      for (let x = 0.25; x < sc.X; x += 0.5) { const y = sc.yAt(x).y, top = v.P(ox + x * s, oy - y * s - 6, 0), h = top.y + oy / 100; const c = cyl(0.03, 0.03, h, sup, 10); c.position.set(top.x, top.y - h / 2, -0.0); T.add(c); const tie = mesh(new THREE.BoxGeometry(0.04, 0.03, 0.4), M.wood('#5c3a1e')); tie.position.copy(top); T.add(tie); }
+    }
+    const {y, dy} = sc.yAt(sc.x), ang = Math.atan(dy), n = {x: -Math.sin(ang), y: Math.cos(ang)};
+    const base = v.P(ox + sc.x * s, oy - y * s - 3, 0); v.o.car.position.set(base.x + n.x * 0.16, base.y + n.y * 0.16, 0); v.o.car.rotation.z = ang;
+  }
+};
+}
+
+const PROB = {
+  w1: {title: ['Jalar un carrito con una cuerda', 'Pulling a wagon with a rope'],
+    text: ['Un niño jala su carrito con una cuerda inclinada: la fuerza es de 5 N a 37° sobre la horizontal (Fₓ = 4 N, F_y = 3 N). El carrito avanza 8 m por el suelo.', 'A child pulls a wagon with a slanted rope: the force is 5 N at 37° above horizontal (Fₓ = 4 N, F_y = 3 N). The wagon moves 8 m along the ground.'],
+    q: ['¿Cuánto trabajo hace el niño? ¿Qué parte de la fuerza «se desperdicia»?', 'How much work does the child do? Which part of the force is «wasted»?'],
+    steps: [['W = F · d = Fₓdₓ + F_yd_y = 4 × 8 + 3 × 0.', 'W = F · d = Fₓdₓ + F_yd_y = 4 × 8 + 3 × 0.'],
+      ['Equivalente: W = F d cos φ = 5 × 8 × cos 37° = 5 × 8 × 0.8.', 'Equivalent: W = F d cos φ = 5 × 8 × cos 37° = 5 × 8 × 0.8.'],
+      ['La componente vertical (3 N) es perpendicular al desplazamiento: no hace trabajo (aunque sí reduce la normal y la fricción).', 'The vertical component (3 N) is perpendicular to the displacement: it does no work (though it does reduce the normal force and friction).']],
+    ans: ['W = 32 J. Solo la componente de 4 N a lo largo del camino hace trabajo.', 'W = 32 J. Only the 4 N component along the path does work.'],
+    load() { w1.F = {x: 4, y: 3}; w1.d = {x: 8, y: 0}; setChk('kw1p', true); }},
+  w2: {title: ['Resortera (tirachinas)', 'Slingshot'],
+    text: ['Las ligas de una resortera se comportan como un resorte de k = 40 N/m. Se estiran 0.5 m y se suelta una piedrita de 50 g.', 'A slingshot\'s bands behave like a spring with k = 40 N/m. They are stretched 0.5 m and a 50 g pebble is released.'],
+    q: ['¿Cuánto trabajo hace la liga sobre la piedra al regresar a x = 0? ¿Con qué rapidez sale?', 'How much work do the bands do on the pebble returning to x = 0? How fast does it leave?'],
+    steps: [['W = ∫ F dx con F = −k x, de x₁ = 0.5 m a x₂ = 0: W = −½ k (x₂² − x₁²) = ½ × 40 × 0.25.', 'W = ∫ F dx with F = −k x, from x₁ = 0.5 m to x₂ = 0: W = −½ k (x₂² − x₁²) = ½ × 40 × 0.25.'],
+      ['Es el área del triángulo bajo la recta F(x) entre 0 y 0.5 m (verde en la gráfica, porque F y dx tienen el mismo signo).', 'It is the triangle area under the F(x) line between 0 and 0.5 m (green on the graph, since F and dx share the same sign).'],
+      ['Teorema trabajo–energía: ½ m v² = 5 J ⇒ v = √(2 × 5 / 0.05).', 'Work–energy theorem: ½ m v² = 5 J ⇒ v = √(2 × 5 / 0.05).']],
+    ans: ['W = 5 J; la piedra sale a ≈ 14 m/s (≈ 51 km/h).', 'W = 5 J; the pebble leaves at ≈ 14 m/s (≈ 51 km/h).'],
+    load() { setRad('fw2', 'spring'); setR('rw2k', 40); w2.x1 = 0.5; w2.x2 = 0; w2.anim = 0; }},
+  w4: {title: ['Velocidad máxima de un auto compacto', 'Top speed of a compact car'],
+    text: ['Un auto de 1200 kg tiene un motor de 75 kW (≈ 100 hp). La resistencia del aire es F = c v² con c = 0.4 kg/m.', 'A 1200 kg car has a 75 kW engine (≈ 100 hp). Air resistance is F = c v² with c = 0.4 kg/m.'],
+    q: ['¿Cuál es su velocidad máxima en carretera plana? ¿Cuánto tarda en llegar a 100 km/h?', 'What is its top speed on a flat road? How long does it take to reach 100 km/h?'],
+    steps: [['A máxima velocidad la aceleración es cero: F_motor = F_aire. Con P = F v: P / v = c v².', 'At top speed acceleration is zero: F_engine = F_air. With P = F v: P / v = c v².'],
+      ['v_máx = (P / c)^(1/3) = (75 000 / 0.4)^(1/3) ≈ 57 m/s.', 'v_max = (P / c)^(1/3) = (75 000 / 0.4)^(1/3) ≈ 57 m/s.'],
+      ['El tiempo a 100 km/h no tiene fórmula sencilla (F = P/v cambia): léelo en la simulación cuando el velocímetro marque 100.', 'The time to 100 km/h has no simple formula (F = P/v keeps changing): read it in the simulation when the speedometer shows 100.']],
+    ans: ['v_máx ≈ 57 m/s ≈ 206 km/h (en la práctica menos, por fricción de llantas). 0–100 km/h ≈ 8–9 s en la simulación.', 'v_max ≈ 57 m/s ≈ 206 km/h (less in practice, due to tire friction). 0–100 km/h ≈ 8–9 s in the simulation.'],
+    load() { setRad('mw4', 'P'); setR('rw4P', 75); setR('rw4m', 1200); setChk('kw4air', true); w4.reset(); w4.run = true; w4.btn(); }},
+  w3: {title: ['Carrito de supermercado', 'Shopping cart'],
+    text: ['Empujas un carrito de supermercado de 10 kg, que parte del reposo, con una fuerza horizontal de 25 N durante 10 m. La fricción equivale a μₖ = 0.1.', 'You push a 10 kg shopping cart from rest with a horizontal 25 N force over 10 m. Friction is equivalent to μₖ = 0.1.'],
+    q: ['¿Con qué rapidez va el carrito después de los 10 m?', 'How fast is the cart going after the 10 m?'],
+    steps: [['Trabajo de tu fuerza: W_F = 25 × 10 = 250 J.', 'Work of your force: W_F = 25 × 10 = 250 J.'],
+      ['Trabajo de la fricción: W_f = −μₖ m g d = −0.1 × 10 × 9.8 × 10 = −98 J.', 'Work of friction: W_f = −μₖ m g d = −0.1 × 10 × 9.8 × 10 = −98 J.'],
+      ['W_neto = 152 J = ΔK = ½ × 10 × v² ⇒ v = √(30.4).', 'W_net = 152 J = ΔK = ½ × 10 × v² ⇒ v = √(30.4).'],
+      ['En la simulación, el carrito sale de x = 1 m: revisa la lectura cuando pase por x = 11 m.', 'In the simulation the cart starts at x = 1 m: check the reading when it passes x = 11 m.']],
+    ans: ['v ≈ 5.5 m/s.', 'v ≈ 5.5 m/s.'],
+    load() { setR('rw3F', 25); setR('rw3m', 10); setR('rw3mu', 0.1); setR('rw3v', 0); w3.reset(); w3.run = true; w3.btn(); }},
+  w5: {title: ['Subir una mochila al estante', 'Lifting a backpack onto a shelf'],
+    text: ['Llevas una mochila de 1 kg del punto A al punto B, que está 4 m más arriba (por ejemplo, al piso de arriba). Puedes ir por la escalera recta, por un camino en escalón o dando un rodeo.', 'You carry a 1 kg backpack from point A to point B, 4 m higher (say, to the next floor). You can take the straight stairs, a step-shaped path or a detour.'],
+    q: ['¿Cuánto trabajo hace la gravedad en cada camino? ¿Y si la fuerza fuera fricción?', 'How much work does gravity do on each path? And if the force were friction?'],
+    steps: [['La gravedad es conservativa: W = −ΔU = −m g Δy = −1 × 9.8 × 4.', 'Gravity is conservative: W = −ΔU = −m g Δy = −1 × 9.8 × 4.'],
+      ['Es igual para los tres caminos (compara la tabla): no importa la ruta, solo la altura inicial y final.', 'It is the same for all three paths (check the table): the route doesn\'t matter, only start and end height.'],
+      ['Cambia a «Fricción»: W = −f × (longitud) y el camino más largo pierde más energía.', 'Switch to «Friction»: W = −f × (length) and the longest path loses more energy.']],
+    ans: ['W_gravedad = −39.2 J por cualquier camino. Con fricción, W depende de la longitud del camino.', 'W_gravity = −39.2 J along any path. With friction, W depends on path length.'],
+    load() { setRad('fw5', 'grav'); w5.paths = []; w5.preset('straight'); w5.preset('step'); w5.preset('arc'); }},
+  w7: {title: ['Interruptor biestable (MEMS)', 'Bistable switch (MEMS)'],
+    text: ['Muchos microinterruptores (y el clásico interruptor de luz) tienen dos posiciones estables. Un modelo es el doble pozo U(x) = x⁴ − 4x² (en J, x en m). El interruptor descansa en un mínimo.', 'Many micro-switches (and the classic light switch) have two stable positions. One model is the double well U(x) = x⁴ − 4x² (in J, x in m). The switch rests at a minimum.'],
+    q: ['¿Dónde están las posiciones estables? ¿Cuánta energía mínima hay que darle para cambiarlo de estado?', 'Where are the stable positions? What minimum energy is needed to flip it?'],
+    steps: [['Equilibrio: F = −dU/dx = −(4x³ − 8x) = 0 ⇒ x = 0 o x = ±√2 ≈ ±1.41 m.', 'Equilibrium: F = −dU/dx = −(4x³ − 8x) = 0 ⇒ x = 0 or x = ±√2 ≈ ±1.41 m.'],
+      ['x = ±√2 son mínimos (estables), con U = 4 − 8 = −4 J; x = 0 es un máximo (inestable), U = 0.', 'x = ±√2 are minima (stable), with U = 4 − 8 = −4 J; x = 0 is a maximum (unstable), U = 0.'],
+      ['Para cruzar la barrera, E debe superar U(0): ΔE = 0 − (−4).', 'To cross the barrier, E must exceed U(0): ΔE = 0 − (−4).'],
+      ['Prueba: arrastra la línea de E justo por debajo y justo por encima de 0 J.', 'Try it: drag the E line just below and just above 0 J.']],
+    ans: ['Estables en x = ±1.41 m; se necesitan más de 4 J para cambiar de estado.', 'Stable at x = ±1.41 m; more than 4 J is needed to flip states.'],
+    load() { setRad('uw7', 'well'); w7.place(Math.SQRT2); w7.run = false; w7.btn(); }},
+  w6: {title: ['Montaña rusa', 'Roller coaster'],
+    text: ['Un carro parte del reposo desde una altura de 5.5 m. La parte más baja de la pista está a unos 0.6 m y la siguiente cima a 3.2 m. Ignora la fricción.', 'A car starts from rest at a height of 5.5 m. The lowest part of the track is about 0.6 m and the next hilltop is 3.2 m. Ignore friction.'],
+    q: ['¿Qué rapidez lleva en la parte más baja? ¿Logra pasar la cima de 3.2 m, y con qué rapidez?', 'How fast is it at the lowest point? Does it clear the 3.2 m hill, and how fast?'],
+    steps: [['Conservación: m g h₀ = ½ m v² + m g h ⇒ v = √(2 g (h₀ − h)). La masa se cancela.', 'Conservation: m g h₀ = ½ m v² + m g h ⇒ v = √(2 g (h₀ − h)). Mass cancels.'],
+      ['En h = 0.6 m: v = √(2 × 9.8 × 4.9) ≈ 9.8 m/s.', 'At h = 0.6 m: v = √(2 × 9.8 × 4.9) ≈ 9.8 m/s.'],
+      ['En h = 3.2 m: v = √(2 × 9.8 × 2.3) ≈ 6.7 m/s > 0, así que sí pasa.', 'At h = 3.2 m: v = √(2 × 9.8 × 2.3) ≈ 6.7 m/s > 0, so it clears it.'],
+      ['Agrega fricción (μ = 0.1): parte de la energía se vuelve térmica y ya no sube tan alto.', 'Add friction (μ = 0.1): some energy becomes thermal and it no longer climbs as high.']],
+    ans: ['≈ 9.8 m/s abajo; sí pasa la cima, a ≈ 6.7 m/s.', '≈ 9.8 m/s at the bottom; it clears the hill at ≈ 6.7 m/s.'],
+    load() { w6.si = 0; w6.ys = w6.shapes[0].slice(); setR('rw6mu', 0); w6.place(0); w6.run = true; w6.btn(); }}
+};
+addProblems(PROB, {w1, w2, w4, w3, w5, w7, w6});
+
+addRetos([
+  {tab: 'w3', title: ['Frenado con viento en contra', 'Braking against a headwind'],
+   text: ['Un bloque de 2 kg se desliza a 6 m/s sobre un piso con μₖ = 0.30 (μₛ igual). Además, el viento lo empuja hacia atrás con 4 N.', 'A 2 kg block slides at 6 m/s on a floor with μₖ = 0.30 (same μₛ). The wind also pushes it backwards with 4 N.'],
+   q: ['¿Qué distancia recorre hasta detenerse?', 'How far does it travel before stopping?'], unit: 'm', answer: 3.644, tol: 0.03,
+   hint: ['usa el teorema trabajo–energía: (F_viento + f) d = ½ m v².', 'use the work–energy theorem: (F_wind + f) d = ½ m v².'],
+   steps: [['Fuerzas en contra: 4 N + μₖ m g = 4 + 5.88 = 9.88 N.', 'Opposing forces: 4 N + μₖ m g = 4 + 5.88 = 9.88 N.'], ['W_neto = ΔK ⇒ −9.88 d = 0 − ½ × 2 × 36 = −36 J.', 'W_net = ΔK ⇒ −9.88 d = 0 − ½ × 2 × 36 = −36 J.'], ['d = 36 / 9.88. Después no regresa: 4 N &lt; μₛ m g = 5.88 N.', 'd = 36 / 9.88. Afterwards it doesn\'t slide back: 4 N &lt; μₛ m g = 5.88 N.']],
+   ans: ['d ≈ 3.64 m', 'd ≈ 3.64 m'],
+   setup() { w3.run = false; setR('rw3F', -4); setR('rw3m', 2); setR('rw3mu', 0.3); setR('rw3v', 6); w3.reset(); w3.run = true; w3.btn(); },
+   preview: 350, pause() { w3.run = false; w3.btn(); }, reveal() { w3.run = true; w3.btn(); },
+   done: () => w3.v === 0 && w3.WF !== 0, measured: () => `d = ${fx(w3.x - 1, 2)} m`},
+  {tab: 'w6', title: ['¿Desde qué altura soltarlo?', 'From what height should it be released?'],
+   text: ['En esta montaña rusa sin fricción, la primera cima mide 3.20 m de altura.', 'On this frictionless roller coaster the first hilltop is 3.20 m high.'],
+   q: ['¿Desde qué altura (en reposo) hay que soltar el carro para que pase esa cima a exactamente 4 m/s?', 'From what height (at rest) must the car be released to cross that top at exactly 4 m/s?'], unit: 'm', answer: 4.019, tol: 0.02,
+   hint: ['conserva la energía entre la salida y la cima: m g h₀ = m g h + ½ m v².', 'conserve energy between release and top: m g h₀ = m g h + ½ m v².'],
+   steps: [['m g h₀ = m g (3.20) + ½ m (4)² — la masa se cancela.', 'm g h₀ = m g (3.20) + ½ m (4)² — mass cancels.'], ['h₀ = 3.20 + 16 / (2 × 9.8) = 3.20 + 0.82.', 'h₀ = 3.20 + 16 / (2 × 9.8) = 3.20 + 0.82.']],
+   ans: ['h₀ ≈ 4.02 m', 'h₀ ≈ 4.02 m'],
+   setup() { w6.si = 0; w6.ys = w6.shapes[0].slice(); setR('rw6mu', 0); w6.place(0.1); w6.run = true; w6.btn(); },
+   preview: 1200, pause() { w6.run = false; w6.btn(); },
+   reveal() { let a = 0, b = 1.5; for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (w6.yAt(m).y > 4.019) a = m; else b = m; } this.h0 = w6.yAt(a).y; w6.place(a); w6.run = true; w6.btn(); },
+   done: () => w6.x >= 3.96, measured() { return `v = ${fx(Math.abs(w6.v), 2)} m/s ${L('en la cima, soltado desde', 'at the top, released from')} ${fx(this.h0 || 0, 2)} m`; }}
+]);
+
+startApp({w1, w2, w4, w3, w5, w7, w6});
+}
+</script>
+</body>
+</html>

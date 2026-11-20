@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tema 1 · Dinámica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><style>:root{
+  --bg:#f5f4ef; --panel:#ffffff; --ink:#1d2329; --muted:#5d6873; --line:#e1dfd7;
+  --F:#e03131; --a:#2f9e44; --v:#1c7ed6; --R:#6741d9; --fr:#f08c00;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column}
+header{background:var(--panel);border-bottom:1px solid var(--line);padding:8px 16px 0}
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header h1{font-size:17px;margin:0;font-weight:680;letter-spacing:-.01em}
+header .sub{color:var(--muted);font-size:12.5px}
+.themes{display:flex;gap:4px;margin-left:auto;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.themes a,.themes span.cur{display:inline-block;padding:4px 9px;border-radius:7px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:600}
+.themes a:hover{background:#f1f0ea}
+.themes span.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+nav{display:flex;gap:2px;overflow-x:auto;margin-top:8px;scrollbar-width:thin}
+nav button{font:inherit;font-size:13.5px;border:0;border-bottom:3px solid transparent;background:none;color:var(--muted);padding:8px 12px 7px;cursor:pointer;white-space:nowrap}
+nav button:hover{color:var(--ink)}
+nav button.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:650}
+.btn{font:inherit;font-size:13.5px;border:1px solid var(--line);background:#fff;color:var(--ink);padding:7px 12px;border-radius:8px;cursor:pointer}
+.btn:hover{background:#f1f0ea}
+.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn.primary:hover{background:#363e46}
+#langBtn{font:inherit;font-size:12.5px;padding:4px 9px;border-radius:7px;border:1px solid var(--line);background:#fff;cursor:pointer}
+main{flex:1;min-height:0;position:relative}
+.scene{position:absolute;inset:0;display:none;grid-template-columns:1fr 370px}
+.scene.on{display:grid}
+.stage{display:flex;flex-direction:column;min-width:0;min-height:0;padding:12px;gap:10px}
+.cvwrap{position:relative;flex:1;min-height:240px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.cvwrap.graph{flex:0 0 190px;min-height:150px}
+.cvwrap canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.side{overflow:auto;border-left:1px solid var(--line);background:var(--panel);padding:16px 18px 30px}
+.side h2{font-size:17px;margin:0 0 8px}
+.concept{font-size:14px;line-height:1.5;color:#2a3138}
+.concept p{margin:0 0 8px}
+.eq{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:17px;text-align:center;background:#f6f5f0;border-radius:8px;padding:8px;margin:8px 0;line-height:1.6}
+.eq b{font-weight:700}
+h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:18px 0 8px}
+.ctrls{display:flex;flex-direction:column;gap:8px}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.row{display:grid;grid-template-columns:118px 1fr 70px;align-items:center;gap:8px;font-size:13.5px}
+.row output{font-variant-numeric:tabular-nums;text-align:right;font-size:13px}
+.row input[type=range]{width:100%}
+.chk{display:flex;align-items:center;gap:8px;font-size:13.5px;cursor:pointer}
+.radios{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px}
+table.ro{width:100%;border-collapse:collapse;font-size:12.8px;font-variant-numeric:tabular-nums}
+table.ro th,table.ro td{padding:4px 5px;border-bottom:1px solid #eeede7;text-align:right}
+table.ro th:first-child,table.ro td:first-child{text-align:left}
+table.ro th{color:var(--muted);font-weight:600}
+table.ro tr.sum td{font-weight:700}
+.try{font-size:13.5px;line-height:1.5;padding-left:18px;margin:0}
+.try li{margin-bottom:5px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12.5px;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:14px;height:4px;border-radius:2px;margin-right:5px;vertical-align:middle;background:var(--c)}
+.hint{font-size:12.5px;color:var(--muted)}
+@media (max-width:900px){
+  .scene{position:static;grid-template-columns:1fr}
+  .scene.on{display:block}
+  .stage{height:72vh}
+  .side{border-left:0;border-top:1px solid var(--line)}
+  main{overflow:auto}
+}
+.prob{margin:14px 0 4px;padding:12px 14px;border-radius:10px;background:#fff9db;border:1px solid #ffe066;border-left:5px solid #f08c00;font-size:14px;line-height:1.5}
+.prob .tag{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#e8590c}
+.prob h4{margin:2px 0 6px;font-size:15px}
+.prob p{margin:0 0 8px}
+.prob .q{font-weight:600}
+.prob .btns{margin-top:6px}
+.prob .sol{margin-top:10px;padding-top:8px;border-top:1px dashed #fcc419}
+.prob .sol ol{margin:0;padding-left:20px}
+.prob .sol li{margin-bottom:4px}
+.prob .ans{margin-top:6px;font-weight:700;color:#2b8a3e}
+/* ===== dark studio theme ===== */
+body{background:#0b0b0d;color:#e9ecef;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:#111214;border-bottom:1px solid #26282c}
+header .sub,.hint,.legend{color:#9aa1a9}
+.themes{color:#9aa1a9}.themes a,.themes span.cur{border-color:#2f3237;color:#e9ecef}.themes a:hover{background:#1c1e22}.themes span.cur{background:#1c7ed6;border-color:#1c7ed6}
+#langBtn{background:#1c1e22;color:#e9ecef;border-color:#2f3237}
+nav button{color:#9aa1a9}nav button:hover{color:#fff}nav button.on{color:#fff;border-bottom-color:#4dabf7}
+.side{background:#111214;border-left:1px solid #26282c}
+.concept{color:#ced4da}.eq{background:#1a1c20;color:#f1f3f5}
+h3{color:#868e96}
+.btn{background:#1c1e22;color:#e9ecef;border-color:#2f3237}.btn:hover{background:#262a30}
+.btn.primary{background:#1c7ed6;border-color:#1c7ed6;color:#fff}.btn.primary:hover{background:#228be6}
+table.ro th,table.ro td{border-bottom-color:#26282c}table.ro th{color:#868e96}
+input[type=range]{accent-color:#4dabf7}
+.cvwrap{border-color:#26282c}
+.scene.dark .cvwrap{background:#0e0f11}
+.gl3{position:absolute;inset:0;display:block;z-index:0}
+.cvwrap canvas:not(.gl3){z-index:1}
+.prob{background:#1d1a12;border-color:#5c4a12;border-left-color:#f08c00;color:#e9ecef}
+.prob .sol{border-top-color:#5c4a12}.prob .ans{color:#69db7c}
+.try{color:#ced4da}
+.reto{margin:12px 0 6px;padding:14px;border-radius:12px;background:linear-gradient(160deg,#1b1530,#141225);border:1px solid #4c3a8f;border-left:5px solid #9775fa;font-size:14px;line-height:1.5;color:#e9ecef}
+.reto .tag{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#b197fc}
+.reto h4{margin:2px 0 6px;font-size:15.5px}.reto p{margin:0 0 8px}.reto .q{font-weight:600;color:#fff}
+.reto .ans-row{display:flex;gap:8px;align-items:center;margin:8px 0}
+.reto input[type=number]{width:110px;font:inherit;font-size:15px;padding:7px 9px;border-radius:8px;border:1px solid #4c3a8f;background:#0e0c1a;color:#fff}
+.reto .fb{font-weight:650;margin-top:4px}.reto .fb.ok{color:#69db7c}.reto .fb.no{color:#ffa8a8}
+.reto .sol{margin-top:10px;padding-top:8px;border-top:1px dashed #4c3a8f}.reto .sol ol{margin:0;padding-left:20px}.reto .sol li{margin-bottom:4px}
+.reto .meas{color:#b197fc;font-weight:600;margin-top:6px}
+.scene.quiz table.ro{filter:blur(7px);pointer-events:none}
+nav button.has-reto::after{content:" ★";color:#b197fc}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div>
+      <h1 data-es="Tema 1 · Dinámica: leyes de Newton" data-en="Theme 1 · Dynamics: Newton's laws"></h1>
+      <div class="sub" data-es="Mecánica para Ingeniería — simulaciones interactivas" data-en="Mechanics for Engineering — interactive simulations"></div>
+    </div>
+    <div class="themes"><span data-es="Temas:" data-en="Themes:"></span><span class="cur" data-es="1 · Dinámica" data-en="1 · Dynamics"></span><a href="t2.html" target="_top" data-es="2 · Trabajo y energía" data-en="2 · Work & energy"></a><a href="t3.html" target="_top" data-es="3 · Colisiones" data-en="3 · Collisions"></a><a href="t4.html" target="_top" data-es="4 · Cinemática rot." data-en="4 · Rot. kinematics"></a><a href="t5.html" target="_top" data-es="5 · Dinámica rot." data-en="5 · Rot. dynamics"></a><a href="t6.html" target="_top" data-es="6 · Oscilaciones" data-en="6 · Oscillations"></a></div>
+    <button id="langBtn"></button>
+  </div>
+  <nav id="tabs">
+    <button data-s="s1" class="on" data-es="1.0 Fuerzas como vectores" data-en="1.0 Forces as vectors"></button>
+    <button data-s="s2" data-es="1.1 Primera ley" data-en="1.1 First law"></button>
+    <button data-s="s3" data-es="1.2 Segunda ley" data-en="1.2 Second law"></button>
+    <button data-s="s4" data-es="1.3 Tercera ley" data-en="1.3 Third law"></button>
+    <button data-s="s5" data-es="1.4 Aplicaciones de la 2ª ley" data-en="1.4 Applications of the 2nd law"></button>
+    <button data-s="s8" data-es="1.5 Fricción" data-en="1.5 Friction"></button>
+    <button data-s="s6" data-es="Extra · Movimiento circular" data-en="Extra · Circular motion"></button>
+    <button data-s="s7" data-es="Extra · Fuerzas de arrastre" data-en="Extra · Drag forces"></button>
+  </nav>
+</header>
+<main>
+
+<!-- ============ S1: vectors ============ -->
+<section class="scene on" id="s1">
+  <div class="stage"><div class="cvwrap" id="w1"><canvas id="c1"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="Las fuerzas son vectores" data-en="Forces are vectors"></h2>
+    <div class="concept">
+      <p data-es="Una fuerza tiene <b>magnitud</b>, <b>dirección</b> y <b>sentido</b>. Si varias fuerzas actúan sobre el mismo cuerpo, el efecto total es su <b>suma vectorial</b>, la fuerza neta (principio de superposición):" data-en="A force has <b>magnitude</b> and <b>direction</b>. When several forces act on the same body, the total effect is their <b>vector sum</b>, the net force (superposition principle):"></p>
+      <div class="eq"><b>ΣF</b> = <b>F</b><sub>1</sub> + <b>F</b><sub>2</sub> + <b>F</b><sub>3</sub></div>
+      <p data-es="En componentes cartesianas se suman por separado:" data-en="In Cartesian components they add separately:"></p>
+      <div class="eq">ΣF<sub>x</sub> = F<sub>1x</sub> + F<sub>2x</sub> + F<sub>3x</sub><br>ΣF<sub>y</sub> = F<sub>1y</sub> + F<sub>2y</sub> + F<sub>3y</sub></div>
+      <p data-es="Si <b>ΣF = 0</b>, el cuerpo está en <b>equilibrio</b>." data-en="If <b>ΣF = 0</b>, the body is in <b>equilibrium</b>."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="hint" data-es="Arrastra la punta de cada flecha. Cuadrícula: 1 cuadro = 1 N." data-en="Drag the tip of each arrow. Grid: 1 square = 1 N."></div>
+      <label class="chk"><input type="checkbox" id="k1f3" checked><span data-es="Incluir F₃" data-en="Include F₃"></span></label>
+      <label class="chk"><input type="checkbox" id="k1comp"><span data-es="Mostrar componentes x, y" data-en="Show x, y components"></span></label>
+      <label class="chk"><input type="checkbox" id="k1chain"><span data-es="Suma gráfica (punta con cola)" data-en="Graphical sum (tip to tail)"></span></label>
+      <label class="chk"><input type="checkbox" id="k1snap" checked><span data-es="Ajustar a 0.5 N" data-en="Snap to 0.5 N"></span></label>
+      <div class="btns">
+        <button class="btn" id="b1eq" data-es="Equilibrar (ajusta F₃)" data-en="Balance (adjust F₃)"></button>
+        <button class="btn" id="b1rand" data-es="Aleatorio" data-en="Random"></button>
+      </div>
+      <div class="row"><span data-es="Masa del disco" data-en="Puck mass"></span><input type="range" id="r1m" min="0.5" max="5" step="0.5" value="1"><output id="o1m"></output></div>
+      <div class="btns">
+        <button class="btn primary" id="b1run"></button>
+        <button class="btn" id="b1reset" data-es="Regresar disco" data-en="Reset puck"></button>
+      </div>
+    </div>
+    <h3 data-es="Tabla de componentes" data-en="Component table"></h3>
+    <table class="ro" id="t1"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Activa la <b>suma gráfica</b>: la fuerza neta va de la cola de F₁ a la punta del último vector (método del polígono)." data-en="Turn on the <b>graphical sum</b>: the net force runs from the tail of F₁ to the tip of the last vector (polygon method)."></li>
+      <li data-es="Muestra las componentes y comprueba en la tabla que ΣFₓ y ΣF_y son sumas de números." data-en="Show the components and check in the table that ΣFₓ and ΣF_y are plain sums of numbers."></li>
+      <li data-es="Pulsa <b>Equilibrar</b> y luego <b>Soltar</b>: el disco no se mueve. ¿Por qué? (→ 1ª ley)" data-en="Press <b>Balance</b> then <b>Release</b>: the puck doesn't move. Why? (→ 1st law)"></li>
+      <li data-es="Suelta con ΣF ≠ 0: el disco acelera exactamente en la dirección de ΣF (→ 2ª ley)." data-en="Release with ΣF ≠ 0: the puck accelerates exactly along ΣF (→ 2nd law)."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ S2: first law ============ -->
+<section class="scene" id="s2">
+  <div class="stage"><div class="cvwrap" id="w2"><canvas id="c2"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="Primera ley: inercia" data-en="First law: inertia"></h2>
+    <div class="concept">
+      <p data-es="Si la fuerza neta sobre un cuerpo es cero, su <b>vector velocidad</b> no cambia: ni su magnitud ni su dirección. El cuerpo sigue en reposo o en movimiento rectilíneo uniforme." data-en="If the net force on a body is zero, its <b>velocity vector</b> does not change — neither magnitude nor direction. The body stays at rest or in uniform straight-line motion."></p>
+      <div class="eq"><b>ΣF</b> = 0 &nbsp;⇔&nbsp; <b>v</b> = constante</div>
+      <p data-es="Esto solo se cumple en <b>marcos de referencia inerciales</b>. Aquí: un disco sobre hielo visto desde arriba." data-en="This holds only in <b>inertial reference frames</b>. Here: a puck on ice seen from above."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="hint" data-es="Mantén presionado sobre el hielo para <b>empujar</b> el disco hacia el cursor. En pausa, arrastra la punta de <b>v</b> para cambiar la velocidad." data-en="Press and hold on the ice to <b>push</b> the puck toward the cursor. While paused, drag the tip of <b>v</b> to change the velocity."></div>
+      <div class="row"><span data-es="Fuerza de empuje" data-en="Push force"></span><input type="range" id="r2F" min="1" max="20" step="1" value="6"><output id="o2F"></output></div>
+      <div class="row"><span data-es="Masa" data-en="Mass"></span><input type="range" id="r2m" min="0.5" max="5" step="0.5" value="1"><output id="o2m"></output></div>
+      <label class="chk"><input type="checkbox" id="k2fr"><span data-es="Fricción (hielo áspero)" data-en="Friction (rough ice)"></span></label>
+      <div class="row"><span data-es="Coef. μₖ" data-en="Coeff. μₖ"></span><input type="range" id="r2mu" min="0.02" max="0.5" step="0.01" value="0.1"><output id="o2mu"></output></div>
+      <div class="btns">
+        <button class="btn primary" id="b2pause"></button>
+        <button class="btn" id="b2stop" data-es="Detener disco" data-en="Stop puck"></button>
+        <button class="btn" id="b2clear" data-es="Borrar rastro" data-en="Clear trail"></button>
+        <button class="btn" id="b2reset" data-es="Reiniciar" data-en="Reset"></button>
+      </div>
+      <div class="legend"><span style="--c:var(--v)">v</span><span style="--c:var(--F)" data-es="F empuje" data-en="F push"></span><span style="--c:var(--fr)" data-es="F fricción" data-en="F friction"></span><span style="--c:var(--R)">ΣF</span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="t2"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Sin fricción, los puntos del rastro (uno cada 0.3 s) quedan <b>equidistantes y en línea recta</b>: velocidad constante." data-en="Without friction, the trail dots (one every 0.3 s) are <b>evenly spaced on a straight line</b>: constant velocity."></li>
+      <li data-es="Empuja un momento y suelta: el disco <b>no se detiene</b>, solo cambia a otra velocidad constante." data-en="Push briefly and let go: the puck <b>doesn't stop</b>, it just moves on with a new constant velocity."></li>
+      <li data-es="Empuja de lado: la fuerza cambia la <b>dirección</b> de v, no solo su magnitud." data-en="Push sideways: the force changes the <b>direction</b> of v, not just its size."></li>
+      <li data-es="Activa la fricción: ahora ΣF ≠ 0 y el disco frena. Lo «natural» no es detenerse; detenerse requiere una fuerza." data-en="Turn on friction: now ΣF ≠ 0 and the puck slows. Stopping isn't «natural»; it needs a force."></li>
+      <li data-es="Una masa mayor responde menos al mismo empujón: la masa mide la inercia." data-en="A larger mass responds less to the same push: mass measures inertia."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ S3: second law ============ -->
+<section class="scene" id="s3">
+  <div class="stage">
+    <div class="cvwrap" id="w3"><canvas id="c3"></canvas></div>
+    <div class="cvwrap graph" id="wg3"><canvas id="g3"></canvas></div>
+  </div>
+  <aside class="side">
+    <h2 data-es="Segunda ley: ΣF = m a" data-en="Second law: ΣF = m a"></h2>
+    <div class="concept">
+      <p data-es="Es una ecuación <b>vectorial</b>: la aceleración siempre apunta en la dirección de la fuerza neta, pero la velocidad puede apuntar a cualquier otro lado." data-en="It is a <b>vector</b> equation: the acceleration always points along the net force, but the velocity can point anywhere else."></p>
+      <div class="eq"><b>a</b> = <b>ΣF</b> / m &nbsp;&nbsp;⇒&nbsp;&nbsp; a<sub>x</sub> = ΣF<sub>x</sub>/m,&nbsp; a<sub>y</sub> = ΣF<sub>y</sub>/m</div>
+      <p data-es="La componente de ΣF <b>paralela</b> a v cambia la rapidez; la componente <b>perpendicular</b> cambia la dirección." data-en="The component of ΣF <b>parallel</b> to v changes the speed; the <b>perpendicular</b> component changes the direction."></p>
+    </div>
+    <h3 data-es="Casos" data-en="Cases"></h3>
+    <div class="btns">
+      <button class="btn" data-p="acc" data-es="F ∥ v (acelera)" data-en="F ∥ v (speeds up)"></button>
+      <button class="btn" data-p="brake" data-es="F opuesta a v (frena)" data-en="F opposite v (slows)"></button>
+      <button class="btn" data-p="para" data-es="F ⊥ v₀ constante (parábola)" data-en="Constant F ⊥ v₀ (parabola)"></button>
+      <button class="btn" data-p="circ" data-es="F siempre ⊥ v (círculo)" data-en="F always ⊥ v (circle)"></button>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="hint" data-es="Arrastra la punta de <b>ΣF</b> en cualquier momento. Antes de iniciar (o en pausa) arrastra la punta de <b>v</b>." data-en="Drag the tip of <b>ΣF</b> at any time. Before starting (or while paused) drag the tip of <b>v</b>."></div>
+      <div class="radios">
+        <label class="chk"><input type="radio" name="m3" value="const" checked><span data-es="ΣF constante" data-en="Constant ΣF"></span></label>
+        <label class="chk"><input type="radio" name="m3" value="perp"><span data-es="ΣF siempre ⊥ v" data-en="ΣF always ⊥ v"></span></label>
+      </div>
+      <div class="row"><span data-es="Masa" data-en="Mass"></span><input type="range" id="r3m" min="0.5" max="5" step="0.5" value="1"><output id="o3m"></output></div>
+      <div class="btns">
+        <button class="btn primary" id="b3run"></button>
+        <button class="btn" id="b3reset" data-es="Reiniciar" data-en="Reset"></button>
+      </div>
+      <div class="legend"><span style="--c:var(--R)">ΣF</span><span style="--c:var(--a)">a</span><span style="--c:var(--v)">v</span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="t3"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Con la misma fuerza, duplica la masa: la flecha de <b>a</b> se reduce a la mitad." data-en="Keep the force, double the mass: the <b>a</b> arrow shrinks to half."></li>
+      <li data-es="En la gráfica, la <b>pendiente</b> de vₓ(t) es aₓ y la de v_y(t) es a_y. Con fuerza constante son rectas." data-en="On the graph, the <b>slope</b> of vₓ(t) is aₓ and that of v_y(t) is a_y. With constant force they are straight lines."></li>
+      <li data-es="Caso parábola: vₓ se queda constante (ΣFₓ = 0) mientras v_y cambia. Los ejes son independientes." data-en="Parabola case: vₓ stays constant (ΣFₓ = 0) while v_y changes. The axes are independent."></li>
+      <li data-es="Caso círculo: la rapidez |v| no cambia aunque haya fuerza. Radio r = m v² / F; prueba cambiar la masa." data-en="Circle case: speed |v| doesn't change even with a force. Radius r = m v² / F; try changing the mass."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ S4: third law ============ -->
+<section class="scene" id="s4">
+  <div class="stage">
+    <div class="cvwrap" id="w4"><canvas id="c4"></canvas></div>
+    <div class="cvwrap graph" id="wg4"><canvas id="g4"></canvas></div>
+  </div>
+  <aside class="side">
+    <h2 data-es="Tercera ley: acción y reacción" data-en="Third law: action and reaction"></h2>
+    <div class="concept">
+      <p data-es="Si el cuerpo 2 ejerce una fuerza sobre el cuerpo 1, el cuerpo 1 ejerce sobre el 2 una fuerza de <b>igual magnitud y sentido opuesto</b>, en todo instante:" data-en="If body 2 exerts a force on body 1, body 1 exerts on body 2 a force of <b>equal magnitude and opposite direction</b>, at every instant:"></p>
+      <div class="eq"><b>F</b><sub>12</sub> = − <b>F</b><sub>21</sub></div>
+      <p data-es="Actúan sobre <b>cuerpos distintos</b>, por eso no se cancelan. Consecuencia: m₁<b>a</b>₁ = −m₂<b>a</b>₂, y el momento total <b>p</b> = m₁<b>v</b>₁ + m₂<b>v</b>₂ se conserva." data-en="They act on <b>different bodies</b>, so they don't cancel. Consequence: m₁<b>a</b>₁ = −m₂<b>a</b>₂, and total momentum <b>p</b> = m₁<b>v</b>₁ + m₂<b>v</b>₂ is conserved."></p>
+      <p class="hint" data-es="Notación: F₁₂ = fuerza sobre 1 ejercida por 2." data-en="Notation: F₁₂ = force on 1 exerted by 2."></p>
+    </div>
+    <h3 data-es="Escenario" data-en="Scenario"></h3>
+    <div class="ctrls">
+      <div class="radios">
+        <label class="chk"><input type="radio" name="sc4" value="explosion" checked><span data-es="Resorte comprimido (explosión)" data-en="Compressed spring (explosion)"></span></label>
+        <label class="chk"><input type="radio" name="sc4" value="collision"><span data-es="Choque" data-en="Collision"></span></label>
+      </div>
+      <div class="row"><span>m₁</span><input type="range" id="r4m1" min="0.5" max="5" step="0.5" value="1"><output id="o4m1"></output></div>
+      <div class="row"><span>m₂</span><input type="range" id="r4m2" min="0.5" max="5" step="0.5" value="2"><output id="o4m2"></output></div>
+      <div class="row coll"><span data-es="v₁ inicial" data-en="Initial v₁"></span><input type="range" id="r4v1" min="0" max="3" step="0.25" value="2"><output id="o4v1"></output></div>
+      <div class="row coll"><span data-es="v₂ inicial" data-en="Initial v₂"></span><input type="range" id="r4v2" min="-3" max="0" step="0.25" value="0"><output id="o4v2"></output></div>
+      <div class="row"><span data-es="Cámara lenta" data-en="Slow motion"></span><input type="range" id="r4sp" min="0.05" max="1" step="0.05" value="0.25"><output id="o4sp"></output></div>
+      <div class="btns">
+        <button class="btn primary" id="b4run"></button>
+        <button class="btn" id="b4reset" data-es="Reiniciar" data-en="Reset"></button>
+      </div>
+      <div class="legend"><span style="--c:var(--F)" data-es="F₁₂ (sobre 1)" data-en="F₁₂ (on 1)"></span><span style="--c:#0c8599" data-es="F₂₁ (sobre 2)" data-en="F₂₁ (on 2)"></span><span style="--c:var(--v)">v</span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="t4"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Pon m₂ = 5 kg y m₁ = 0.5 kg: las fuerzas son <b>idénticas</b> en magnitud, pero el carro ligero sale disparado. Misma F, distinta a." data-en="Set m₂ = 5 kg and m₁ = 0.5 kg: the forces are <b>identical</b> in size, but the light cart flies off. Same F, different a."></li>
+      <li data-es="En la gráfica las curvas son espejo una de otra; sus áreas (impulsos J = ∫F dt) son iguales y opuestas, por eso Δp₁ = −Δp₂." data-en="On the graph the curves mirror each other; their areas (impulses J = ∫F dt) are equal and opposite, so Δp₁ = −Δp₂."></li>
+      <li data-es="Choque con el carro 2 en reposo: aunque «no hace nada», empuja al carro 1 tan fuerte como éste lo empuja a él." data-en="Collision with cart 2 at rest: even though it «does nothing», it pushes cart 1 just as hard as cart 1 pushes it."></li>
+      <li data-es="Observa que p total no cambia en ningún momento." data-en="Notice total p never changes."></li>
+    </ul>
+  </aside>
+</section>
+
+
+<!-- ============ S5: inclined plane ============ -->
+<section class="scene" id="s5">
+  <div class="stage"><div class="cvwrap"><canvas id="c5"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="Aplicación: bloque en un plano inclinado" data-en="Application: block on an inclined plane"></h2>
+    <div class="concept">
+      <p data-es="Método general: (1) aislar el cuerpo, (2) dibujar <b>todas</b> las fuerzas (diagrama de cuerpo libre), (3) elegir ejes cómodos — aquí, paralelo y perpendicular al plano —, (4) aplicar ΣF = m a en cada eje." data-en="General method: (1) isolate the body, (2) draw <b>all</b> forces (free-body diagram), (3) choose convenient axes — here, parallel and perpendicular to the incline —, (4) apply ΣF = m a on each axis."></p>
+      <div class="eq">⊥: &nbsp;N − m g cos θ = 0<br>∥: &nbsp;F − m g sin θ ± f = m a</div>
+      <p data-es="Fricción estática: f<sub>s</sub> ≤ μ<sub>s</sub> N (se ajusta para impedir el movimiento). Fricción cinética: f<sub>k</sub> = μ<sub>k</sub> N, opuesta a la velocidad." data-en="Static friction: f<sub>s</sub> ≤ μ<sub>s</sub> N (adjusts to prevent motion). Kinetic friction: f<sub>k</sub> = μ<sub>k</sub> N, opposite to the velocity."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="row"><span data-es="Ángulo θ" data-en="Angle θ"></span><input type="range" id="r5th" min="0" max="60" step="1" value="25"><output id="o5th"></output></div>
+      <div class="row"><span data-es="Masa" data-en="Mass"></span><input type="range" id="r5m" min="1" max="10" step="0.5" value="4"><output id="o5m"></output></div>
+      <div class="row"><span>μ<sub>s</sub></span><input type="range" id="r5ms" min="0" max="1" step="0.01" value="0.5"><output id="o5ms"></output></div>
+      <div class="row"><span>μ<sub>k</sub></span><input type="range" id="r5mk" min="0" max="1" step="0.01" value="0.3"><output id="o5mk"></output></div>
+      <div class="row"><span data-es="F aplicada (∥)" data-en="Applied F (∥)"></span><input type="range" id="r5F" min="-60" max="60" step="1" value="0"><output id="o5F"></output></div>
+      <label class="chk"><input type="checkbox" id="k5dec" checked><span data-es="Descomponer el peso (ejes inclinados)" data-en="Resolve the weight (tilted axes)"></span></label>
+      <div class="btns">
+        <button class="btn primary" id="b5run"></button>
+        <button class="btn" id="b5reset" data-es="Reiniciar" data-en="Reset"></button>
+      </div>
+      <div class="legend"><span style="--c:#e03131">mg</span><span style="--c:#0c8599">N</span><span style="--c:#f08c00">f</span><span style="--c:#c2255c" data-es="F aplicada" data-en="applied F"></span><span style="--c:#6741d9">ΣF</span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="t5"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Con F = 0, sube θ poco a poco: el bloque empieza a deslizar justo cuando tan θ = μ<sub>s</sub> (ángulo crítico)." data-en="With F = 0, raise θ slowly: the block starts sliding exactly when tan θ = μ<sub>s</sub> (critical angle)."></li>
+      <li data-es="Mientras está en reposo, mira cómo la fricción estática <b>cambia</b> de valor para igualar a m g sin θ." data-en="While at rest, watch static friction <b>change</b> its value to match m g sin θ."></li>
+      <li data-es="Sin fricción, cambia la masa: la aceleración a = g sin θ no depende de m." data-en="Without friction, change the mass: the acceleration a = g sin θ doesn't depend on m."></li>
+      <li data-es="Empuja hacia arriba (F &gt; 0): la fricción cambia de sentido. ¿Qué F mínima hace subir al bloque?" data-en="Push up the slope (F &gt; 0): friction flips direction. What minimum F makes the block move up?"></li>
+      <li data-es="N no siempre es igual a m g: aquí N = m g cos θ." data-en="N is not always m g: here N = m g cos θ."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ S6: uniform circular motion ============ -->
+<section class="scene" id="s6">
+  <div class="stage"><div class="cvwrap"><canvas id="c6"></canvas></div></div>
+  <aside class="side">
+    <h2 data-es="Dinámica del movimiento circular uniforme" data-en="Dynamics of uniform circular motion"></h2>
+    <div class="concept">
+      <p data-es="Aunque la rapidez sea constante, la <b>dirección</b> de <b>v</b> cambia todo el tiempo, así que hay aceleración: apunta al centro (centrípeta)." data-en="Even if the speed is constant, the <b>direction</b> of <b>v</b> keeps changing, so there is an acceleration: it points to the center (centripetal)."></p>
+      <div class="eq">a<sub>c</sub> = v² / r = ω² r &nbsp;&nbsp; ΣF<sub>radial</sub> = m v² / r</div>
+      <p data-es="La «fuerza centrípeta» no es un nuevo tipo de fuerza: es la fuerza neta hacia el centro que aporta algo real (tensión, fricción, gravedad, normal…)." data-en="The «centripetal force» is not a new kind of force: it's the net force toward the center supplied by something real (tension, friction, gravity, normal…)."></p>
+      <div class="eq">ω = v / r &nbsp;&nbsp; T = 2π r / v</div>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="row"><span data-es="Radio r" data-en="Radius r"></span><input type="range" id="r6r" min="1" max="5" step="0.25" value="3"><output id="o6r"></output></div>
+      <div class="row"><span data-es="Rapidez v" data-en="Speed v"></span><input type="range" id="r6v" min="1" max="10" step="0.5" value="4"><output id="o6v"></output></div>
+      <div class="row"><span data-es="Masa" data-en="Mass"></span><input type="range" id="r6m" min="0.5" max="5" step="0.5" value="1"><output id="o6m"></output></div>
+      <label class="chk"><input type="checkbox" id="k6dv" checked><span data-es="Mostrar construcción de Δv" data-en="Show Δv construction"></span></label>
+      <div class="btns">
+        <button class="btn primary" id="b6cut" data-es="✂ Cortar la cuerda" data-en="✂ Cut the string"></button>
+        <button class="btn" id="b6pause"></button>
+        <button class="btn" id="b6reset" data-es="Reiniciar" data-en="Reset"></button>
+      </div>
+      <div class="legend"><span style="--c:var(--v)">v</span><span style="--c:var(--a)">a<sub>c</sub></span><span style="--c:var(--R)" data-es="T (tensión = ΣF)" data-en="T (tension = ΣF)"></span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="t6"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Corta la cuerda: la piedra sale en línea recta <b>tangente</b>, no hacia afuera. No existe una «fuerza centrífuga» que la empuje." data-en="Cut the string: the stone leaves in a straight <b>tangent</b> line, not outward. There's no «centrifugal force» pushing it."></li>
+      <li data-es="Duplica v: la tensión se multiplica por 4. Duplica r con v fija: la tensión se reduce a la mitad." data-en="Double v: the tension goes up 4×. Double r at fixed v: the tension halves."></li>
+      <li data-es="La construcción de Δv muestra por qué <b>a</b> apunta al centro: Δv = v₂ − v₁ apunta hacia adentro." data-en="The Δv construction shows why <b>a</b> points inward: Δv = v₂ − v₁ points to the center."></li>
+      <li data-es="Discusión: un auto en una curva plana — ¿qué fuerza hace de centrípeta? (fricción estática, v<sub>máx</sub> = √(μ<sub>s</sub> g r))." data-en="Discussion: a car on a flat curve — what supplies the centripetal force? (static friction, v<sub>max</sub> = √(μ<sub>s</sub> g r))."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ S7: drag ============ -->
+<section class="scene" id="s7">
+  <div class="stage">
+    <div class="cvwrap"><canvas id="c7"></canvas></div>
+    <div class="cvwrap graph"><canvas id="g7"></canvas></div>
+  </div>
+  <aside class="side">
+    <h2 data-es="Fuerzas de arrastre y velocidad terminal" data-en="Drag forces and terminal velocity"></h2>
+    <div class="concept">
+      <p data-es="Un fluido (aire, agua) ejerce sobre un cuerpo en movimiento una fuerza opuesta a su velocidad que <b>crece con la rapidez</b>. Dos modelos comunes:" data-en="A fluid (air, water) exerts on a moving body a force opposite to its velocity that <b>grows with speed</b>. Two common models:"></p>
+      <div class="eq">lineal: F<sub>D</sub> = −b v &nbsp;&nbsp; ⇒ &nbsp; v<sub>t</sub> = m g / b<br>cuadrático: F<sub>D</sub> = −c v|v| &nbsp; ⇒ &nbsp; v<sub>t</sub> = √(m g / c)</div>
+      <p data-es="Al caer, el arrastre crece hasta igualar al peso: ΣF = 0 y la velocidad deja de cambiar (<b>velocidad terminal</b>). El modelo lineal sirve para objetos pequeños y lentos; el cuadrático, para la mayoría de objetos en el aire." data-en="While falling, drag grows until it equals the weight: ΣF = 0 and the velocity stops changing (<b>terminal velocity</b>). The linear model fits small, slow objects; the quadratic one fits most objects in air."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="row"><span data-es="Masa" data-en="Mass"></span><input type="range" id="r7m" min="0.1" max="5" step="0.1" value="1"><output id="o7m"></output></div>
+      <div class="row"><span>b (kg/s)</span><input type="range" id="r7b" min="0.1" max="2" step="0.05" value="0.5"><output id="o7b"></output></div>
+      <div class="row"><span>c (kg/m)</span><input type="range" id="r7c" min="0.005" max="0.2" step="0.005" value="0.025"><output id="o7c"></output></div>
+      <div class="row"><span data-es="v inicial (↓)" data-en="Initial v (↓)"></span><input type="range" id="r7v0" min="0" max="60" step="1" value="0"><output id="o7v0"></output></div>
+      <div class="btns">
+        <button class="btn primary" id="b7run"></button>
+        <button class="btn" id="b7reset" data-es="Reiniciar" data-en="Reset"></button>
+      </div>
+      <div class="legend"><span style="--c:#e03131" data-es="peso mg" data-en="weight mg"></span><span style="--c:#f08c00" data-es="arrastre F<sub>D</sub>" data-en="drag F<sub>D</sub>"></span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="t7"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Observa las flechas: la naranja (arrastre) crece hasta igualar a la roja (peso). Desde ahí, las marcas del fondo pasan a ritmo constante." data-en="Watch the arrows: the orange one (drag) grows until it matches the red one (weight). From then on the background marks scroll at a steady rate."></li>
+      <li data-es="En la gráfica, v(t) se acerca a la línea punteada v<sub>t</sub>; en el vacío la recta sigue subiendo sin límite." data-en="On the graph, v(t) approaches the dashed v<sub>t</sub> line; in vacuum the straight line keeps rising forever."></li>
+      <li data-es="Lanza hacia abajo con v₀ mayor que v<sub>t</sub>: el objeto <b>frena</b> mientras cae, porque el arrastre supera al peso." data-en="Throw down with v₀ above v<sub>t</sub>: the object <b>slows down</b> while falling, because drag exceeds weight."></li>
+      <li data-es="Cuadruplica la masa: v<sub>t</sub> se multiplica por 4 (lineal) pero solo por 2 (cuadrático)." data-en="Quadruple the mass: v<sub>t</sub> goes up 4× (linear) but only 2× (quadratic)."></li>
+    </ul>
+  </aside>
+</section>
+
+<!-- ============ S8: friction ============ -->
+<section class="scene" id="s8">
+  <div class="stage">
+    <div class="cvwrap"><canvas id="c8"></canvas></div>
+    <div class="cvwrap graph"><canvas id="g8"></canvas></div>
+  </div>
+  <aside class="side">
+    <h2 data-es="Fricción estática y cinética" data-en="Static and kinetic friction"></h2>
+    <div class="concept">
+      <p data-es="Mientras el bloque no se mueve, la fricción <b>estática</b> toma el valor que haga falta para impedir el movimiento, hasta un máximo. Al empezar a deslizar, la fricción <b>cinética</b> es casi constante y menor:" data-en="While the block doesn't move, <b>static</b> friction takes whatever value is needed to prevent motion, up to a maximum. Once sliding, <b>kinetic</b> friction is nearly constant and smaller:"></p>
+      <div class="eq">f<sub>s</sub> ≤ μ<sub>s</sub> N &nbsp;&nbsp;&nbsp; f<sub>k</sub> = μ<sub>k</sub> N &nbsp;&nbsp;&nbsp; μ<sub>k</sub> &lt; μ<sub>s</sub></div>
+      <p data-es="Ojo: N no siempre es m g. Si jalas hacia arriba con ángulo θ, N = m g − F sin θ, y la fricción disminuye." data-en="Careful: N is not always m g. If you pull upward at angle θ, N = m g − F sin θ, and friction decreases."></p>
+    </div>
+    <h3 data-es="Controles" data-en="Controls"></h3>
+    <div class="ctrls">
+      <div class="radios">
+        <label class="chk"><input type="radio" name="mat8" value="0.5,0.3" checked><span data-es="Madera–madera" data-en="Wood–wood"></span></label>
+        <label class="chk"><input type="radio" name="mat8" value="0.74,0.57"><span data-es="Acero–acero" data-en="Steel–steel"></span></label>
+        <label class="chk"><input type="radio" name="mat8" value="1.0,0.8"><span data-es="Hule–concreto" data-en="Rubber–concrete"></span></label>
+        <label class="chk"><input type="radio" name="mat8" value="0.1,0.03"><span data-es="Hielo–hielo" data-en="Ice–ice"></span></label>
+      </div>
+      <div class="row"><span data-es="Masa" data-en="Mass"></span><input type="range" id="r8m" min="1" max="10" step="0.5" value="4"><output id="o8m"></output></div>
+      <div class="row"><span data-es="Ángulo del jalón θ" data-en="Pull angle θ"></span><input type="range" id="r8th" min="0" max="60" step="5" value="0"><output id="o8th"></output></div>
+      <div class="row"><span data-es="Fuerza F" data-en="Force F"></span><input type="range" id="r8F" min="0" max="80" step="0.5" value="0"><output id="o8F"></output></div>
+      <div class="btns">
+        <button class="btn primary" id="b8ramp" data-es="Rampa: aumentar F poco a poco" data-en="Ramp: increase F slowly"></button>
+        <button class="btn" id="b8reset" data-es="Reiniciar" data-en="Reset"></button>
+      </div>
+      <div class="legend"><span style="--c:#c2255c" data-es="F aplicada" data-en="applied F"></span><span style="--c:#f08c00" data-es="fricción f" data-en="friction f"></span><span style="--c:#0c8599">N</span><span style="--c:#e03131">mg</span></div>
+    </div>
+    <h3 data-es="Lecturas" data-en="Readings"></h3>
+    <table class="ro" id="t8"></table>
+    <h3 data-es="Prueba esto en clase" data-en="Try this in class"></h3>
+    <ul class="try">
+      <li data-es="Usa la rampa: en la gráfica f sube igual que F (estática) hasta μ<sub>s</sub>N, luego cae de golpe a μ<sub>k</sub>N cuando el bloque arranca." data-en="Use the ramp: on the graph f rises with F (static) up to μ<sub>s</sub>N, then drops suddenly to μ<sub>k</sub>N when the block breaks loose."></li>
+      <li data-es="Por eso cuesta más <b>arrancar</b> un mueble que mantenerlo en movimiento." data-en="That's why it's harder to <b>start</b> moving furniture than to keep it moving."></li>
+      <li data-es="Jala con θ = 30°: N baja, y el bloque arranca con una F menor. ¿Cuál ángulo minimiza la F necesaria? (tan θ = μ<sub>s</sub>)" data-en="Pull at θ = 30°: N drops and the block starts with less F. Which angle minimizes the needed F? (tan θ = μ<sub>s</sub>)"></li>
+      <li data-es="Cambia la masa: la F de arranque es proporcional a m (si θ = 0)." data-en="Change the mass: the breakaway F is proportional to m (when θ = 0)."></li>
+    </ul>
+  </aside>
+</section>
+
+</main>
+<script src="lib/three.min.js"></script><script src="lib/three-extras.js"></script><script>
+"use strict";
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+let LANG = 'es';
+const L = (es, en) => LANG === 'es' ? es : en;
+const add = (a, b) => ({x: a.x + b.x, y: a.y + b.y});
+const sub = (a, b) => ({x: a.x - b.x, y: a.y - b.y});
+const mul = (a, s) => ({x: a.x * s, y: a.y * s});
+const len = a => Math.hypot(a.x, a.y);
+const dot = (a, b) => a.x * b.x + a.y * b.y;
+const angDeg = a => Math.atan2(a.y, a.x) * 180 / Math.PI;
+const fx = (x, d = 2) => { const v = Math.abs(x) < 0.5 * Math.pow(10, -d) ? 0 : x; return v.toFixed(d); };
+const snapv = (v, s) => Math.round(v / s) * s;
+const C = {F: '#e03131', a: '#2f9e44', v: '#1c7ed6', R: '#6741d9', fr: '#f08c00', ink: '#1d2329', muted: '#8a949d', grid: '#eceae3', axis: '#c4c1b6', teal: '#0c8599'};
+const PAL_L = {...C}, PAL_D = {F: '#ff6b6b', a: '#69db7c', v: '#4dabf7', R: '#b197fc', fr: '#ffa94d', ink: '#f1f3f5', muted: '#a5adb5', grid: 'rgba(255,255,255,.08)', axis: 'rgba(255,255,255,.3)', teal: '#3bc9db'};
+let DARK = false;
+function setDark(on) { if (on === DARK) return; DARK = on; Object.assign(C, on ? PAL_D : PAL_L); }
+
+function setupCanvas(cv) {
+  const o = {cv, ctx: cv.getContext('2d'), w: 1, h: 1};
+  const ro = new ResizeObserver(() => {
+    const r = cv.parentElement.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    o.w = Math.max(1, r.width); o.h = Math.max(1, r.height);
+    cv.width = Math.round(o.w * d); cv.height = Math.round(o.h * d);
+    o.ctx.setTransform(d, 0, 0, d, 0, 0);
+  });
+  ro.observe(cv.parentElement);
+  return o;
+}
+function ptr(e, cv) { const r = cv.getBoundingClientRect(); return {x: e.clientX - r.left, y: e.clientY - r.top}; }
+
+function arrow(ctx, x0, y0, x1, y1, col, w = 3, dash = null, alpha = 1) {
+  const dx = x1 - x0, dy = y1 - y0, Ln = Math.hypot(dx, dy);
+  if (Ln < 1.5) return;
+  const ux = dx / Ln, uy = dy / Ln, hl = Math.min(10 + w * 2.2, Ln * 0.55), hw = hl * 0.48;
+  ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+  if (dash) ctx.setLineDash(dash);
+  ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - ux * hl * 0.85, y1 - uy * hl * 0.85); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x1, y1);
+  ctx.lineTo(x1 - ux * hl - uy * hw, y1 - uy * hl + ux * hw);
+  ctx.lineTo(x1 - ux * hl + uy * hw, y1 - uy * hl - ux * hw);
+  ctx.closePath(); ctx.fill(); ctx.restore();
+}
+function text(ctx, s, x, y, col = C.ink, size = 14, align = 'left', weight = 650) {
+  ctx.save(); ctx.font = `${weight} ${size}px system-ui,-apple-system,Segoe UI,sans-serif`;
+  ctx.textAlign = align; ctx.textBaseline = 'middle';
+  ctx.lineWidth = 4; ctx.strokeStyle = DARK ? 'rgba(0,0,0,.7)' : 'rgba(255,255,255,.92)'; ctx.lineJoin = 'round';
+  ctx.strokeText(s, x, y); ctx.fillStyle = col; ctx.fillText(s, x, y); ctx.restore();
+}
+// label placed just beyond an arrow tip
+function tipLabel(ctx, s, x0, y0, x1, y1, col) {
+  const dx = x1 - x0, dy = y1 - y0, Ln = Math.hypot(dx, dy) || 1;
+  text(ctx, s, x1 + dx / Ln * 16, y1 + dy / Ln * 16, col, 15, 'center', 700);
+}
+function badge(ctx, s, x, y, ok) {
+  ctx.save(); ctx.font = '650 14px system-ui,sans-serif'; ctx.textAlign = 'left';
+  const w = ctx.measureText(s).width + 22;
+  ctx.fillStyle = DARK ? 'rgba(20,21,24,.78)' : (ok ? '#ebfbee' : '#fff5f5'); ctx.strokeStyle = ok ? (DARK ? '#40c057' : '#2f9e44') : (DARK ? '#fa5252' : '#e03131'); ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.roundRect(x, y, w, 30, 8); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = DARK ? (ok ? '#8ce99a' : '#ffa8a8') : (ok ? '#2b8a3e' : '#c92a2a'); ctx.textBaseline = 'middle'; ctx.fillText(s, x + 11, y + 15); ctx.restore();
+}
+function grid(ctx, w, h, cx, cy, s, axes = true) {
+  ctx.save(); ctx.lineWidth = 1; ctx.strokeStyle = C.grid; ctx.beginPath();
+  for (let x = cx % s; x < w; x += s) { ctx.moveTo(Math.round(x) + .5, 0); ctx.lineTo(Math.round(x) + .5, h); }
+  for (let y = cy % s; y < h; y += s) { ctx.moveTo(0, Math.round(y) + .5); ctx.lineTo(w, Math.round(y) + .5); }
+  ctx.stroke();
+  if (axes) { ctx.strokeStyle = C.axis; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke(); }
+  ctx.restore();
+}
+function puck(ctx, x, y, r, m) {
+  ctx.save();
+  const g = ctx.createRadialGradient(x - r * .35, y - r * .35, r * .2, x, y, r);
+  g.addColorStop(0, '#5c6670'); g.addColorStop(1, '#22282e');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = '600 11px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(m, x, y); ctx.restore();
+}
+function handle(ctx, x, y, col) {
+  ctx.save(); ctx.fillStyle = '#fff'; ctx.strokeStyle = col; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.restore();
+}
+// generic time plot
+function plot(g, series, o) {
+  const {ctx, w, h} = g; ctx.clearRect(0, 0, w, h);
+  const pl = 54, pr = 14, pt = 26, pb = 28, W = w - pl - pr, H = h - pt - pb;
+  let ymin = 0, ymax = 0;
+  series.forEach(s => s.pts.forEach(p => { if (p[0] >= o.xmin && p[0] <= o.xmax) { ymin = Math.min(ymin, p[1]); ymax = Math.max(ymax, p[1]); } }));
+  if (ymax - ymin < (o.minSpan || 1)) { const c = (ymax + ymin) / 2, sp = (o.minSpan || 1) / 2; ymin = Math.min(ymin, c - sp); ymax = Math.max(ymax, c + sp); }
+  const pad = (ymax - ymin) * 0.1; ymin -= pad; ymax += pad;
+  const X = t => pl + (t - o.xmin) / (o.xmax - o.xmin) * W, Y = v => pt + (ymax - v) / (ymax - ymin) * H;
+  // grid & ticks
+  ctx.save(); ctx.font = '11px system-ui,sans-serif'; ctx.fillStyle = C.muted; ctx.strokeStyle = C.grid; ctx.lineWidth = 1;
+  const step = niceStep((ymax - ymin) / 4);
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let v = Math.ceil(ymin / step) * step; v <= ymax; v += step) { const y = Y(v); ctx.beginPath(); ctx.moveTo(pl, y); ctx.lineTo(pl + W, y); ctx.stroke(); ctx.fillText(+v.toFixed(3), pl - 6, y); }
+  const xs = niceStep((o.xmax - o.xmin) / 6); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let t = Math.ceil(o.xmin / xs) * xs; t <= o.xmax; t += xs) { const x = X(t); ctx.beginPath(); ctx.moveTo(x, pt); ctx.lineTo(x, pt + H); ctx.stroke(); ctx.fillText(+t.toFixed(3), x, pt + H + 5); }
+  ctx.strokeStyle = C.axis; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(pl, Y(0)); ctx.lineTo(pl + W, Y(0)); ctx.stroke();
+  ctx.fillStyle = C.ink; ctx.font = '600 12px system-ui,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText(o.title, pl, 13);
+  ctx.textAlign = 'right'; ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif'; ctx.fillText(o.xlab, pl + W, 13);
+  // clip & draw
+  ctx.beginPath(); ctx.rect(pl, pt, W, H); ctx.clip();
+  series.forEach(s => {
+    if (!s.pts.length) return;
+    if (s.fill) {
+      ctx.beginPath(); ctx.moveTo(X(s.pts[0][0]), Y(0));
+      s.pts.forEach(p => ctx.lineTo(X(p[0]), Y(p[1]))); ctx.lineTo(X(s.pts[s.pts.length - 1][0]), Y(0)); ctx.closePath();
+      ctx.globalAlpha = 0.15; ctx.fillStyle = s.col; ctx.fill(); ctx.globalAlpha = 1;
+    }
+    ctx.beginPath(); ctx.strokeStyle = s.col; ctx.lineWidth = 2.5; ctx.setLineDash(s.dash || []);
+    s.pts.forEach((p, i) => i ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1]))); ctx.stroke(); ctx.setLineDash([]);
+  });
+  ctx.restore();
+  // legend
+  let lx = pl + 160; ctx.save(); ctx.font = '600 12px system-ui,sans-serif'; ctx.textBaseline = 'middle';
+  series.forEach(s => { ctx.strokeStyle = s.col; ctx.lineWidth = 3; ctx.setLineDash(s.dash || []); ctx.beginPath(); ctx.moveTo(lx, 13); ctx.lineTo(lx + 18, 13); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = s.col; ctx.fillText(s.label, lx + 23, 13); lx += ctx.measureText(s.label).width + 46; });
+  ctx.restore();
+}
+function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw || 1))); const n = raw / p; return (n < 1.5 ? 1 : n < 3.5 ? 2 : n < 7.5 ? 5 : 10) * p; }
+function setTxt(el, es, en) { el.dataset.es = es; el.dataset.en = en; el.innerHTML = L(es, en); }
+function bindRange(id, outId, fmt, cb) {
+  const r = $(id), o = $(outId);
+  const f = () => { o.textContent = fmt(+r.value); cb(+r.value); };
+  r.addEventListener('input', f); f();
+}
+
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const rot = (v, a) => ({x: v.x * Math.cos(a) - v.y * Math.sin(a), y: v.x * Math.sin(a) + v.y * Math.cos(a)});
+function spring(ctx, x0, y0, x1, y1, coils = 10, amp = 8, col = '#495057', w = 2) {
+  const dx = x1 - x0, dy = y1 - y0, Ln = Math.hypot(dx, dy) || 1, ux = dx / Ln, uy = dy / Ln;
+  ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(x0, y0);
+  const lead = Math.min(8, Ln * 0.1), n = coils * 2;
+  ctx.lineTo(x0 + ux * lead, y0 + uy * lead);
+  for (let i = 1; i < n; i++) { const t = lead + (Ln - 2 * lead) * i / n, s = i % 2 ? amp : -amp; ctx.lineTo(x0 + ux * t - uy * s, y0 + uy * t + ux * s); }
+  ctx.lineTo(x1 - ux * lead, y1 - uy * lead); ctx.lineTo(x1, y1); ctx.stroke(); ctx.restore();
+}
+// vertical bar chart: items [{label, value, col}] ; zero line in middle if negatives
+function bars(ctx, x, y, w, h, items, o = {}) {
+  ctx.save();
+  ctx.fillStyle = DARK ? 'rgba(20,21,24,.72)' : '#fafaf7'; ctx.strokeStyle = DARK ? 'rgba(255,255,255,.12)' : '#e6e4dc'; ctx.beginPath(); ctx.roundRect(x, y, w, h, 10); ctx.fill(); ctx.stroke();
+  const pt = 30, pb = 34, H = h - pt - pb, n = items.length, bw = Math.min(46, (w - 20) / n * 0.62), gap = (w - 20) / n;
+  let vmax = o.max || Math.max(1e-9, ...items.map(i => Math.abs(i.value)));
+  const neg = items.some(i => i.value < -1e-9) || o.neg;
+  const y0 = neg ? y + pt + H / 2 : y + pt + H, sc = (neg ? H / 2 : H) / vmax;
+  if (o.title) { ctx.fillStyle = C.ink; ctx.font = '650 12.5px system-ui,sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(o.title, x + 10, y + 15); }
+  ctx.strokeStyle = C.axis; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x + 8, y0); ctx.lineTo(x + w - 8, y0); ctx.stroke();
+  items.forEach((it, i) => {
+    const cx = x + 10 + gap * (i + .5), v = clamp(it.value, -vmax * 1.05, vmax * 1.05), bh = v * sc;
+    ctx.fillStyle = it.col; ctx.globalAlpha = it.alpha || 1;
+    ctx.fillRect(cx - bw / 2, bh >= 0 ? y0 - bh : y0, bw, Math.abs(bh)); ctx.globalAlpha = 1;
+    ctx.fillStyle = C.ink; ctx.font = '600 11.5px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(it.label, cx, y + h - 22);
+    ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif';
+    ctx.fillText(it.txt !== undefined ? it.txt : fx(it.value, 1), cx, y + h - 9);
+  });
+  ctx.restore();
+}
+function startApp(scenes) {
+  let active = Object.keys(scenes)[0];
+  Object.values(scenes).forEach(s => s.init && s.init());
+  const tabs = document.querySelectorAll('#tabs button[data-s]');
+  const show = id => {
+    if (!scenes[id]) return; active = id;
+    tabs.forEach(x => x.classList.toggle('on', x.dataset.s === id));
+    document.querySelectorAll('.scene').forEach(sc => sc.classList.toggle('on', sc.id === id));
+    if (scenes[id].onShow) scenes[id].onShow();
+  };
+  tabs.forEach(b => b.onclick = () => { show(b.dataset.s); try { history.replaceState(null, '', '#' + b.dataset.s); } catch (e) {} });
+  const h = location.hash.slice(1); if (scenes[h]) show(h);
+  const h1 = document.querySelector('header h1');
+  window.applyLang = () => {
+    document.documentElement.lang = LANG;
+    document.querySelectorAll('[data-es]').forEach(e => { e.innerHTML = e.dataset[LANG]; });
+    $('langBtn').textContent = LANG === 'es' ? 'English' : 'Español';
+    document.title = h1.textContent;
+  };
+  $('langBtn').onclick = () => { LANG = LANG === 'es' ? 'en' : 'es'; applyLang(); };
+  applyLang();
+  let last = performance.now(), tabT = 0;
+  function loop(now) {
+    const dt = Math.min(0.04, (now - last) / 1000); last = now;
+    const S = scenes[active];
+    try {
+      S.step && S.step(dt);
+      S.r3 = !!(typeof G3 !== 'undefined' && G3.ok && VIEWS[active] && S.skin);
+      if (S.r3 && !G3.render(active, S)) S.r3 = false;
+      if (!S.r3 && typeof G3 !== 'undefined' && G3.ok) G3.hide();
+      setDark(S.r3); document.getElementById(active).classList.toggle('dark', S.r3);
+      S.draw && S.draw(); tabT += dt; if (tabT > 0.1) { tabT = 0; S.table && S.table(); } }
+    catch (e) { console.error(e); }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+/* ---------- real-life problem cards ---------- */
+function setR(id, v) { const r = $(id); if (!r) return; r.value = v; r.dispatchEvent(new Event('input')); }
+function setRad(name, v) { const r = document.querySelector(`input[name=${name}][value="${v}"]`); if (r) { r.checked = true; r.dispatchEvent(new Event('change')); } }
+function setChk(id, v) { const c = $(id); if (c) { c.checked = v; c.dispatchEvent(new Event('change')); } }
+function addProblems(P, S = {}) {
+  const bi = (a, tag = 'span', cls = '') => `<${tag}${cls ? ` class="${cls}"` : ''} data-es="${a[0].replace(/"/g, '&quot;')}" data-en="${a[1].replace(/"/g, '&quot;')}"></${tag}>`;
+  Object.entries(P).forEach(([id, p]) => {
+    const aside = document.querySelector(`#${id} .side`), concept = aside && aside.querySelector('.concept');
+    if (!concept) return;
+    const box = document.createElement('div'); box.className = 'prob';
+    box.innerHTML = bi(['Problema de la vida real', 'Real-life problem'], 'div', 'tag') + bi(p.title, 'h4') + bi(p.text, 'p') + bi(p.q, 'p', 'q')
+      + `<div class="btns"><button class="btn primary" data-load data-es="Cargar en la simulación" data-en="Load into the simulation"></button><button class="btn" data-sol data-es="Ver solución" data-en="Show solution"></button><button class="btn" data-skin hidden data-es="Ver como diagrama" data-en="Show as diagram"></button></div>`
+      + `<div class="sol" hidden><ol>${p.steps.map(s => bi(s, 'li')).join('')}</ol>${bi(p.ans, 'div', 'ans')}</div>`;
+    concept.after(box);
+    const sk = box.querySelector('[data-skin]'), scn = S[id];
+    const setSkin = on => { if (!scn) return; scn.skin = on; sk.hidden = false; sk.dataset.es = on ? 'Ver como diagrama' : 'Ver escena real'; sk.dataset.en = on ? 'Show as diagram' : 'Show real scene'; sk.innerHTML = sk.dataset[LANG]; };
+    box.querySelector('[data-load]').onclick = () => { try { setSkin(true); p.load(); } catch (e) { console.error(e); } };
+    sk.onclick = () => setSkin(!scn.skin);
+    if (!p.noDefault) setSkin(true);
+    const sb = box.querySelector('[data-sol]'), sol = box.querySelector('.sol');
+    sb.onclick = () => { sol.hidden = !sol.hidden; sb.dataset.es = sol.hidden ? 'Ver solución' : 'Ocultar solución'; sb.dataset.en = sol.hidden ? 'Show solution' : 'Hide solution'; sb.innerHTML = sb.dataset[LANG]; };
+  });
+}
+/* ---------- sprites for real-life scenes ---------- */
+function person(ctx, x, y, H, o = {}) {
+  // feet at (x, y); returns world position of the front hand
+  const f = o.facing || 1, lean = o.lean || 0, s = H / 100, a = o.arm !== undefined ? o.arm : 0.4, a2 = o.arm2 !== undefined ? o.arm2 : a, st = o.stride || 6;
+  if (o.dry) { const ty0 = o.pose === 'sit' ? 6 : 0, hx = 4 + (o.armLen || 28) * Math.cos(a), hy = -76 + ty0 + (o.armLen || 28) * Math.sin(a), c = Math.cos(lean), sn = Math.sin(lean); return {x: x + f * s * (hx * c - hy * sn), y: y + s * (hx * sn + hy * c)}; }
+  if (!o.noShadow) shadow(ctx, x, y + 2, H * 0.42);
+  ctx.save(); ctx.translate(x, y); ctx.scale(f * s, s); ctx.rotate(lean); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const pants = o.pants || '#364fc7', shirt = o.col || '#e8590c', skin = o.skin || '#f1c27d';
+  ctx.strokeStyle = pants; ctx.lineWidth = 11;
+  if (o.pose === 'sit') { ctx.beginPath(); ctx.moveTo(-4, -40); ctx.lineTo(20, -40); ctx.lineTo(22, -14); ctx.stroke(); }
+  else { ctx.beginPath(); ctx.moveTo(-2, -48); ctx.lineTo(-st, 0); ctx.stroke(); ctx.globalAlpha = 1; ctx.beginPath(); ctx.moveTo(2, -48); ctx.lineTo(st, 0); ctx.stroke();
+    if (!o.skates) { ctx.fillStyle = o.shoe || '#212529'; ctx.beginPath(); ctx.ellipse(-st + 4, -1, 9, 4.5, 0, 0, 7); ctx.ellipse(st + 4, -1, 9, 4.5, 0, 0, 7); ctx.fill(); } }
+  const ty = o.pose === 'sit' ? 6 : 0;
+  ctx.strokeStyle = skin; ctx.lineWidth = 7; ctx.beginPath(); ctx.moveTo(-2, -76 + ty); ctx.lineTo(-2 + (o.armLen || 26) * Math.cos(a2), -76 + ty + (o.armLen || 26) * Math.sin(a2)); ctx.stroke();
+  ctx.fillStyle = shirt; ctx.beginPath(); ctx.roundRect(-11, -84 + ty, 22, 40, 7); ctx.fill();
+  ctx.strokeStyle = skin; ctx.beginPath(); ctx.moveTo(4, -76 + ty); ctx.lineTo(4 + (o.armLen || 28) * Math.cos(a), -76 + ty + (o.armLen || 28) * Math.sin(a)); ctx.stroke();
+  ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(1, -95 + ty, 10.5, 0, 7); ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,.12)'; ctx.fillRect(-11, -84 + ty, 6, 40);
+  ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.arc(7, -96 + ty, 1.6, 0, 7); ctx.fill();
+  ctx.fillStyle = o.hair || '#5c3d2e'; ctx.beginPath(); ctx.arc(0, -97 + ty, 11, Math.PI * 1.05, Math.PI * 2.02); ctx.fill();
+  if (o.long) { ctx.fillRect(-11, -98 + ty, 6, 18); }
+  if (o.skates) { ctx.fillStyle = '#f8f9fa'; ctx.beginPath(); ctx.roundRect(-st - 6, -8, 16, 8, 3); ctx.roundRect(st - 6, -8, 16, 8, 3); ctx.fill(); ctx.strokeStyle = '#868e96'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(-st - 9, 3); ctx.lineTo(-st + 12, 3); ctx.moveTo(st - 9, 3); ctx.lineTo(st + 12, 3); ctx.stroke(); }
+  ctx.restore();
+  const hx = 4 + (o.armLen || 28) * Math.cos(a), hy = -76 + ty + (o.armLen || 28) * Math.sin(a), c = Math.cos(lean), sn = Math.sin(lean);
+  return {x: x + f * s * (hx * c - hy * sn), y: y + s * (hx * sn + hy * c)};
+}
+function carSprite(ctx, x, y, Lp, col = '#e03131', f = 1, spin = 0) {
+  const H = Lp * 0.28, x0 = x - Lp / 2, y0 = y - H - Lp * 0.08;
+  ctx.save(); ctx.translate(x, 0); ctx.scale(f, 1); ctx.translate(-x, 0);
+  ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(x0, y0, Lp, H, Lp * 0.06); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(x0 + Lp * .22, y0 + 1); ctx.lineTo(x0 + Lp * .34, y0 - H * .75); ctx.lineTo(x0 + Lp * .68, y0 - H * .75); ctx.lineTo(x0 + Lp * .82, y0 + 1); ctx.fill();
+  ctx.fillStyle = '#d0ebff'; ctx.fillRect(x0 + Lp * .37, y0 - H * .6, Lp * .14, H * .5); ctx.fillRect(x0 + Lp * .54, y0 - H * .6, Lp * .12, H * .5);
+  ctx.fillStyle = '#fff3bf'; ctx.fillRect(x0 + Lp - 5, y0 + H * .25, 5, H * .25);
+  const r = Lp * 0.09;
+  [x0 + Lp * .2, x0 + Lp * .8].forEach(wx => { ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.arc(wx, y - r, r, 0, 7); ctx.fill(); ctx.fillStyle = '#adb5bd'; ctx.beginPath(); ctx.arc(wx, y - r, r * .45, 0, 7); ctx.fill(); ctx.strokeStyle = '#495057'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(wx, y - r); ctx.lineTo(wx + Math.cos(spin) * r * .45, y - r + Math.sin(spin) * r * .45); ctx.stroke(); });
+  ctx.restore();
+}
+function boxSprite(ctx, cx, cy, w, h, rot = 0, col = '#c8a165') {
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  ctx.fillStyle = col; ctx.fillRect(-w / 2, -h / 2, w, h); ctx.strokeStyle = 'rgba(0,0,0,.25)'; ctx.lineWidth = 1.5; ctx.strokeRect(-w / 2, -h / 2, w, h);
+  ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(-w * .08, -h / 2, w * .16, h);
+  ctx.restore();
+}
+function ballSprite(ctx, x, y, r, c1, c2) {
+  const g = ctx.createRadialGradient(x - r * .35, y - r * .4, r * .1, x, y, r); g.addColorStop(0, c1); g.addColorStop(1, c2);
+  ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+}
+function basketball(ctx, x, y, r, rot = 0) {
+  ballSprite(ctx, x, y, r, '#ffa94d', '#d9480f');
+  ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.strokeStyle = '#5f3dc4'; ctx.strokeStyle = '#3b2314'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(-r, 0); ctx.lineTo(r, 0); ctx.moveTo(0, -r); ctx.lineTo(0, r); ctx.stroke();
+  ctx.beginPath(); ctx.arc(-r * 1.3, 0, r * .95, -0.75, 0.75); ctx.stroke(); ctx.beginPath(); ctx.arc(r * 1.3, 0, r * .95, Math.PI - 0.75, Math.PI + 0.75); ctx.stroke();
+  ctx.restore();
+}
+function billiard(ctx, x, y, r, col, num) {
+  ballSprite(ctx, x, y, r, col === '#fff' ? '#ffffff' : '#495057', col === '#fff' ? '#ced4da' : '#000');
+  if (num) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x, y, r * .45, 0, 7); ctx.fill(); ctx.fillStyle = '#000'; ctx.font = `700 ${Math.round(r * .6)}px system-ui,sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(num, x, y + 1); }
+}
+function phoneSprite(ctx, cx, cy, w, h, rot = 0) {
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  ctx.fillStyle = '#212529'; ctx.beginPath(); ctx.roundRect(-w / 2, -h / 2, w, h, w * .18); ctx.fill();
+  const g = ctx.createLinearGradient(-w / 2, -h / 2, w / 2, h / 2); g.addColorStop(0, '#4dabf7'); g.addColorStop(1, '#9775fa');
+  ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(-w / 2 + 3, -h / 2 + 6, w - 6, h - 12, 3); ctx.fill();
+  ctx.restore();
+}
+function droneSprite(ctx, x, y, s, t = 0) {
+  ctx.save(); ctx.translate(x, y);
+  ctx.strokeStyle = '#343a40'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-s, -s * .25); ctx.lineTo(s, -s * .25); ctx.stroke();
+  ctx.fillStyle = '#495057'; ctx.beginPath(); ctx.roundRect(-s * .4, -s * .35, s * .8, s * .4, 5); ctx.fill();
+  ctx.fillStyle = '#c8a165'; ctx.fillRect(-s * .28, s * .08, s * .56, s * .38); ctx.strokeStyle = '#8d6e3f'; ctx.lineWidth = 1; ctx.strokeRect(-s * .28, s * .08, s * .56, s * .38);
+  [-1, 1].forEach(k => { ctx.fillStyle = 'rgba(134,142,150,.55)'; ctx.beginPath(); ctx.ellipse(k * s, -s * .32, s * .38 * Math.abs(Math.cos(t * 20 + k)), s * .07, 0, 0, 7); ctx.fill(); ctx.fillStyle = '#212529'; ctx.fillRect(k * s - 2, -s * .36, 4, 6); });
+  ctx.restore();
+}
+function treeOrWindowRow() {}
+/* ---------- scenery painters ---------- */
+function shadow(ctx, x, y, w, a = 0.18) { ctx.save(); ctx.fillStyle = `rgba(0,0,0,${a})`; ctx.beginPath(); ctx.ellipse(x, y, w / 2, Math.max(2, w * 0.09), 0, 0, 7); ctx.fill(); ctx.restore(); }
+function scenery(ctx, w, h, gy, type, shift = 0) {
+  // gy: ground line in px; shift: horizontal scroll in px (for parallax)
+  ctx.save();
+  const sky = (c1, c2) => { const g = ctx.createLinearGradient(0, 0, 0, gy); g.addColorStop(0, c1); g.addColorStop(1, c2); ctx.fillStyle = g; ctx.fillRect(0, 0, w, gy); };
+  const clouds = (n = 4, s = 0.25) => { ctx.fillStyle = 'rgba(255,255,255,.9)'; for (let i = 0; i < n; i++) { const x = ((i * 0.29 + 0.07) * w * 1.3 - shift * s) % (w * 1.3), xx = x < -120 ? x + w * 1.3 : x, y = gy * (0.12 + 0.18 * ((i * 7) % 3) / 2); [[0, 0, 22], [24, -10, 26], [52, 0, 20], [26, 6, 22]].forEach(([dx, dy, r]) => { ctx.beginPath(); ctx.arc(xx + dx, y + dy, r, 0, 7); ctx.fill(); }); } };
+  const hills = (col, amp, base, s, k) => { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(0, gy); for (let x = 0; x <= w; x += 8) ctx.lineTo(x, base - amp * (0.5 + 0.5 * Math.sin((x + shift * s) * k) * Math.cos((x + shift * s) * k * 0.37))); ctx.lineTo(w, gy); ctx.closePath(); ctx.fill(); };
+  if (type === 'park') {
+    sky('#74c0fc', '#d0ebff'); clouds(); hills('#b2f2bb', 26, gy - 18, 0.15, 0.011); hills('#8ce99a', 16, gy - 4, 0.3, 0.02);
+    const g = ctx.createLinearGradient(0, gy, 0, h); g.addColorStop(0, '#69db7c'); g.addColorStop(1, '#40c057'); ctx.fillStyle = g; ctx.fillRect(0, gy, w, h - gy);
+    ctx.fillStyle = 'rgba(255,255,255,.18)'; for (let x = (-shift % 40 + 40) % 40 - 40; x < w; x += 40) ctx.fillRect(x, gy + 4, 20, 3);
+  } else if (type === 'ice') {
+    const g0 = ctx.createLinearGradient(0, 0, 0, gy); g0.addColorStop(0, '#343a40'); g0.addColorStop(1, '#495057'); ctx.fillStyle = g0; ctx.fillRect(0, 0, w, gy);
+    for (let i = 0; i < 40; i++) { ctx.fillStyle = ['#ffd43b', '#ff8787', '#74c0fc', '#f8f9fa'][i % 4]; ctx.globalAlpha = .35; ctx.beginPath(); ctx.arc((i * 97) % w, 20 + (i * 53) % (gy * 0.55), 3, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1; const bh = 34; ctx.fillStyle = '#f8f9fa'; ctx.fillRect(0, gy - bh, w, bh);
+    ['#1c7ed6', '#e03131', '#2f9e44', '#f59f00'].forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(((i * 0.27 + 0.05) * w - shift) % w, gy - bh + 7, w * 0.16, bh - 14); });
+    ctx.fillStyle = '#ffc9c9'; ctx.fillRect(0, gy - 4, w, 4);
+    const g = ctx.createLinearGradient(0, gy, 0, h); g.addColorStop(0, '#e7f5ff'); g.addColorStop(1, '#c5e4fb'); ctx.fillStyle = g; ctx.fillRect(0, gy, w, h - gy);
+    ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 1; for (let i = 0; i < 12; i++) { const y = gy + 8 + ((i * 37) % (h - gy - 10)); ctx.beginPath(); ctx.moveTo(((i * 131) % w), y); ctx.lineTo(((i * 131) % w) + 60, y + 3); ctx.stroke(); }
+  } else if (type === 'indoor') {
+    const g0 = ctx.createLinearGradient(0, 0, 0, gy); g0.addColorStop(0, '#f8f0e3'); g0.addColorStop(1, '#efe3cf'); ctx.fillStyle = g0; ctx.fillRect(0, 0, w, gy);
+    ctx.fillStyle = 'rgba(0,0,0,.035)'; for (let x = 0; x < w; x += 46) ctx.fillRect(x, 0, 23, gy);
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, gy - 14, w, 14);
+    const g = ctx.createLinearGradient(0, gy, 0, h); g.addColorStop(0, '#c08552'); g.addColorStop(1, '#a0673a'); ctx.fillStyle = g; ctx.fillRect(0, gy, w, h - gy);
+    ctx.strokeStyle = 'rgba(70,40,15,.25)'; ctx.lineWidth = 1; for (let y = gy + 14; y < h; y += 14) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+    for (let r = 0, y = gy; y < h; y += 14, r++) for (let x = ((r % 2) * 60 - shift) % 120 - 120; x < w; x += 120) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + 14); ctx.stroke(); }
+  } else if (type === 'road') {
+    sky('#91a7ff', '#dbe4ff'); clouds(3, 0.1);
+    for (let i = 0; i < 18; i++) { const bw = 40 + (i * 23) % 50, bh = 50 + (i * 47) % 90, x = ((i * 71 - shift * 0.3) % (w + 200) + w + 200) % (w + 200) - 100; ctx.fillStyle = ['#adb5bd', '#ced4da', '#868e96'][i % 3]; ctx.fillRect(x, gy - 10 - bh, bw, bh); ctx.fillStyle = 'rgba(255,255,255,.5)'; for (let wy = gy - bh; wy < gy - 20; wy += 14) for (let wx = x + 6; wx < x + bw - 8; wx += 12) ctx.fillRect(wx, wy, 6, 7); }
+    ctx.fillStyle = '#ced4da'; ctx.fillRect(0, gy - 10, w, 10);
+    ctx.fillStyle = '#495057'; ctx.fillRect(0, gy, w, h - gy); ctx.fillStyle = '#f8f9fa'; for (let x = (-shift % 80 + 80) % 80 - 80; x < w; x += 80) ctx.fillRect(x, gy + (h - gy) * 0.45, 40, 4);
+  } else if (type === 'night') {
+    const g = ctx.createLinearGradient(0, 0, 0, gy); g.addColorStop(0, '#0b1026'); g.addColorStop(1, '#2b3a67'); ctx.fillStyle = g; ctx.fillRect(0, 0, w, gy);
+    ctx.fillStyle = '#fff'; for (let i = 0; i < 90; i++) { ctx.globalAlpha = 0.3 + ((i * 13) % 7) / 10; ctx.fillRect((i * 151) % w, (i * 89) % (gy * 0.9), 1.6, 1.6); } ctx.globalAlpha = 1;
+    ctx.fillStyle = '#1b1f3b'; ctx.beginPath(); ctx.moveTo(0, gy); for (let x = 0; x <= w; x += 30) ctx.lineTo(x, gy - 20 - 18 * Math.abs(Math.sin(x * 0.013))); ctx.lineTo(w, gy); ctx.fill();
+    ctx.fillStyle = '#212544'; ctx.fillRect(0, gy, w, h - gy);
+  } else if (type === 'sea') {
+    sky('#a5d8ff', '#e7f5ff'); clouds(3, 0.05); ctx.fillStyle = '#1971c2'; ctx.fillRect(0, gy, w, h - gy);
+  } else if (type === 'felt') {
+    ctx.fillStyle = '#5c3a1e'; ctx.fillRect(0, 0, w, h); const g = ctx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, Math.max(w, h) * 0.7); g.addColorStop(0, '#2b9348'); g.addColorStop(1, '#1b6b33'); ctx.fillStyle = g; ctx.fillRect(18, 18, w - 36, h - 36);
+    ctx.fillStyle = '#111'; [[18, 18], [w / 2, 14], [w - 18, 18], [18, h - 18], [w / 2, h - 14], [w - 18, h - 18]].forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 14, 0, 7); ctx.fill(); });
+  } else if (type === 'warehouse') {
+    const g0 = ctx.createLinearGradient(0, 0, 0, gy); g0.addColorStop(0, '#dee2e6'); g0.addColorStop(1, '#ced4da'); ctx.fillStyle = g0; ctx.fillRect(0, 0, w, gy);
+    ctx.strokeStyle = 'rgba(0,0,0,.08)'; ctx.lineWidth = 2; for (let x = 0; x < w; x += 18) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, gy); ctx.stroke(); }
+    ctx.fillStyle = '#adb5bd'; ctx.fillRect(0, gy, w, h - gy); ctx.fillStyle = '#fcc419'; for (let x = 0; x < w; x += 60) ctx.fillRect(x, gy + 10, 30, 5);
+  }
+  ctx.restore();
+}
+/* ---------- challenge problems (Retos) ---------- */
+function addRetos(R) {
+  const bi = (a, tag = 'span', cls = '') => `<${tag}${cls ? ` class="${cls}"` : ''} data-es="${a[0].replace(/"/g, '&quot;')}" data-en="${a[1].replace(/"/g, '&quot;')}"></${tag}>`;
+  R.forEach((r, n) => {
+    const sec = document.getElementById(r.tab), aside = sec && sec.querySelector('.side'); if (!aside) return;
+    const nb = document.querySelector(`#tabs button[data-s=${r.tab}]`); if (nb) nb.classList.add('has-reto');
+    const box = document.createElement('div'); box.className = 'reto';
+    box.innerHTML = bi(['Reto · problema desafiante', 'Challenge problem'], 'div', 'tag') + bi(r.title, 'h4') + bi(r.text, 'p') + bi(r.q, 'p', 'q')
+      + `<div class="btns"><button class="btn primary" data-a="see" data-es="1 · Ver la situación" data-en="1 · Watch the setup"></button></div>`
+      + `<div class="ans-row"><input type="number" step="any" data-a="in"><span>${r.unit}</span><button class="btn" data-a="chk" data-es="2 · Comprobar" data-en="2 · Check"></button></div>`
+      + `<div class="fb"></div><div class="btns"><button class="btn" data-a="rev" data-es="3 · Revelar con la simulación" data-en="3 · Reveal with the simulation"></button></div>`
+      + `<div class="sol" hidden><ol>${r.steps.map(s => bi(s, 'li')).join('')}</ol>${bi(r.ans, 'div', 'fb ok')}<div class="meas"></div></div>`;
+    const h2 = aside.querySelector('h2'); h2.after(box);
+    const fb = box.querySelector('.fb'), sol = box.querySelector('.sol'), meas = box.querySelector('.meas'); let timer = null;
+    const watch = (cond, then, maxMs = 30000) => { clearInterval(timer); const t0 = performance.now(); timer = setInterval(() => { if (cond() || performance.now() - t0 > maxMs) { clearInterval(timer); then(); } }, 30); };
+    box.querySelector('[data-a=see]').onclick = () => {
+      sec.classList.add('quiz'); sol.hidden = true; fb.textContent = ''; r.setup();
+      const t0 = performance.now(); watch(() => performance.now() - t0 > (r.preview || 1500), () => { r.pause(); fb.className = 'fb'; fb.textContent = L('Pausado en el momento clave. Resuelve en tu cuaderno y escribe tu respuesta.', 'Paused at the key moment. Solve it on paper and enter your answer.'); });
+    };
+    box.querySelector('[data-a=chk]').onclick = () => {
+      const v = parseFloat(box.querySelector('[data-a=in]').value); if (!isFinite(v)) { fb.className = 'fb no'; fb.textContent = L('Escribe un número.', 'Enter a number.'); return; }
+      const ok = Math.abs(v - r.answer) <= Math.max(r.tol * Math.abs(r.answer), r.abs || 0);
+      fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.textContent = ok ? L('¡Correcto! Compruébalo con la simulación (paso 3).', 'Correct! Check it with the simulation (step 3).') : L('Todavía no. Pista: ', 'Not yet. Hint: ') + (ok ? '' : L(r.hint[0], r.hint[1]));
+    };
+    box.querySelector('[data-a=rev]').onclick = () => {
+      sec.classList.remove('quiz'); sol.hidden = false; meas.textContent = L('Simulando…', 'Simulating…'); r.reveal();
+      watch(r.done, () => { r.pause && r.stopAtEnd !== false && r.pause(); meas.textContent = L('La simulación mide: ', 'The simulation measures: ') + r.measured(); }, 40000);
+    };
+  });
+}
+
+/* ================= 3D studio (Three.js, rendering only) =================
+   World units = screen px / 100 on the plane z = 0, so 3D objects line up
+   exactly with the 2D overlay (arrows, labels, drag handles). */
+const G3 = (() => {
+  let ok = false;
+  try { ok = !!window.THREE && !!document.createElement('canvas').getContext('webgl2'); } catch (e) { ok = false; }
+  if (!ok) return {ok: false};
+  const canvas = document.createElement('canvas'); canvas.className = 'gl3';
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({canvas, antialias: true}); } catch (e) { return {ok: false}; }
+  renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.82;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const pm = new THREE.PMREMGenerator(renderer);
+  const env = pm.fromScene(new THREE.RoomEnvironment(), 0.04).texture;
+  const FOV = 28, views = {};
+
+  /* ---------- textures & materials ---------- */
+  const texCache = {};
+  function tex(key, w, h, paint, rep = [1, 1]) {
+    if (!texCache[key]) { const c = document.createElement('canvas'); c.width = w; c.height = h; paint(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8; texCache[key] = t; }
+    const t = texCache[key].clone(); t.needsUpdate = true; t.repeat.set(rep[0], rep[1]); return t;
+  }
+  const noise = (c, w, h, n, col, a, sz = 2) => { c.fillStyle = col; for (let i = 0; i < n; i++) { c.globalAlpha = Math.random() * a; c.fillRect(Math.random() * w, Math.random() * h, sz, sz); } c.globalAlpha = 1; };
+  const M = {
+    chrome: () => new THREE.MeshStandardMaterial({color: 0xd7d9de, roughness: 0.18, metalness: 1}),
+    metal: (c = 0x3a3b3f, r = 0.45) => new THREE.MeshStandardMaterial({color: c, roughness: r, metalness: 0.85}),
+    plastic: (c, r = 0.32) => new THREE.MeshPhysicalMaterial({color: c, roughness: r, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.15}),
+    matte: (c, r = 0.8) => new THREE.MeshStandardMaterial({color: c, roughness: r, metalness: 0}),
+    rubber: () => new THREE.MeshStandardMaterial({color: 0x1a1a1c, roughness: 0.85}),
+    glass: (c = 0x223344) => new THREE.MeshPhysicalMaterial({color: c, roughness: 0.05, metalness: 0.2, transmission: 0, clearcoat: 1, opacity: 0.85, transparent: true}),
+    glow: (c, i = 2) => new THREE.MeshStandardMaterial({color: c, emissive: c, emissiveIntensity: i}),
+    wood: (c = '#8b5a2b') => new THREE.MeshStandardMaterial({map: tex('wood' + c, 256, 256, (g, w, h) => { g.fillStyle = c; g.fillRect(0, 0, w, h); for (let y = 0; y < h; y += 3) { g.fillStyle = `rgba(0,0,0,${0.04 + Math.random() * 0.08})`; g.fillRect(0, y, w, 1 + Math.random() * 2); } }), roughness: 0.6}),
+    cardboard: () => new THREE.MeshStandardMaterial({map: tex('card', 256, 256, (g, w, h) => { g.fillStyle = '#c8a165'; g.fillRect(0, 0, w, h); noise(g, w, h, 3000, '#7f5539', 0.25); g.fillStyle = 'rgba(230,220,190,.85)'; g.fillRect(w * 0.42, 0, w * 0.16, h); }), roughness: 0.85})
+  };
+
+  /* ---------- geometry helpers ---------- */
+  const rbox = (w, h, d, r = 0.04) => new THREE.RoundedBoxGeometry(w, h, d, 4, Math.min(r, w / 2.2, h / 2.2, d / 2.2));
+  const mesh = (geo, mat, cast = true) => { const m = new THREE.Mesh(geo, mat); m.castShadow = cast; m.receiveShadow = true; return m; };
+  const cyl = (r1, r2, h, mat, seg = 32) => mesh(new THREE.CylinderGeometry(r1, r2, h, seg), mat);
+  const sph = (r, mat, seg = 32) => mesh(new THREE.SphereGeometry(r, seg, seg / 2), mat);
+  function tube(points, r, mat, seg) { const c = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.2); return mesh(new THREE.TubeGeometry(c, seg || points.length * 4, r, 10, false), mat); }
+  function setTube(m, points, r, seg) { const c = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.2); m.geometry.dispose(); m.geometry = new THREE.TubeGeometry(c, seg || points.length * 4, r, 10, false); }
+  function helix(a, b, R, coils, n = 20) {   // points of a coil spring between Vector3 a and b
+    const d = new THREE.Vector3().subVectors(b, a), L = d.length(), u = d.clone().normalize();
+    const v = Math.abs(u.y) < 0.9 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0), p = new THREE.Vector3().crossVectors(u, v).normalize(), q = new THREE.Vector3().crossVectors(u, p);
+    const pts = [a.clone()], lead = Math.min(0.25 * L, 0.18);
+    pts.push(a.clone().addScaledVector(u, lead * 0.6));
+    const N = coils * n;
+    for (let i = 0; i <= N; i++) { const t = i / N, ang = t * coils * 2 * Math.PI, rr = R * Math.min(1, Math.min(t, 1 - t) * 25); pts.push(a.clone().addScaledVector(u, lead + (L - 2 * lead) * t).addScaledVector(p, rr * Math.sin(ang)).addScaledVector(q, rr * Math.cos(ang))); }
+    pts.push(b.clone().addScaledVector(u, -lead * 0.6), b.clone());
+    return pts;
+  }
+
+  /* ---------- people & vehicles ---------- */
+  function mannequin(o = {}) {
+    const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+    const skin = M.matte(o.skin || 0xf1c27d, 0.6), shirt = M.matte(o.shirt || 0xe8590c, 0.7), pants = M.matte(o.pants || 0x364fc7, 0.75), hair = M.matte(o.hair || 0x5c3d2e, 0.9), shoe = M.matte(0x212529, 0.5);
+    const torso = mesh(new THREE.CapsuleGeometry(0.115, 0.22, 6, 16), shirt); torso.position.y = 0.66; body.add(torso);
+    const neck = cyl(0.04, 0.04, 0.06, skin); neck.position.y = 0.83; body.add(neck);
+    const head = sph(0.088, skin); head.position.y = 0.92; body.add(head);
+    const hr = sph(0.093, hair); hr.scale.set(1, 0.75, 1); hr.position.set(-0.012, 0.955, 0); body.add(hr);
+    if (o.long) { const pony = mesh(new THREE.CapsuleGeometry(0.035, 0.14, 4, 8), hair); pony.position.set(-0.1, 0.86, 0); body.add(pony); }
+    const limb = (len, r, mat) => { const p = new THREE.Group(), m = mesh(new THREE.CapsuleGeometry(r, len, 4, 12), mat); m.position.y = -len / 2 - r * 0.3; p.add(m); return p; };
+    const armL = limb(0.3, 0.036, shirt), armR = limb(0.3, 0.036, shirt);
+    [armL, armR].forEach((a, i) => { a.position.set(0, 0.79, i ? -0.15 : 0.15); const hand = sph(0.04, skin); hand.position.y = -0.37; a.add(hand); body.add(a); });
+    const legL = limb(0.36, 0.05, pants), legR = limb(0.36, 0.05, pants);
+    [legL, legR].forEach((l, i) => { l.position.set(0, 0.47, i ? -0.065 : 0.065); const sh = mesh(rbox(0.13, 0.05, 0.07, 0.02), shoe); sh.position.set(0.03, -0.44, 0); l.add(sh);
+      if (o.skates) { const bl = mesh(new THREE.BoxGeometry(0.17, 0.012, 0.012), M.chrome()); bl.position.set(0.03, -0.475, 0); l.add(bl); }
+      body.add(l); });
+    const api = {group: g, body, armL, armR, legL, legR,
+      pose(p = {}) {
+        body.rotation.z = -(p.lean || 0);
+        armL.rotation.z = p.armL !== undefined ? p.armL : 0.15; armR.rotation.z = p.armR !== undefined ? p.armR : (p.armL !== undefined ? p.armL : 0.15);
+        const sp = p.stride || 0.12; legL.rotation.z = sp; legR.rotation.z = -sp;
+        if (p.sit) { legL.rotation.z = legR.rotation.z = Math.PI / 2; body.position.y = -0.38; } else body.position.y = 0;
+        return api;
+      }};
+    return api.pose();
+  }
+  function carModel(color = 0xe03131) {
+    const g = new THREE.Group(), paint = M.plastic(color, 0.25);
+    const bodyM = mesh(rbox(1, 0.24, 0.44, 0.08), paint); bodyM.position.y = 0.22; g.add(bodyM);
+    const cab = mesh(rbox(0.56, 0.2, 0.4, 0.08), paint); cab.position.set(-0.04, 0.41, 0); g.add(cab);
+    const win = mesh(rbox(0.5, 0.15, 0.405, 0.05), M.glass(0x1b2a3a)); win.position.set(-0.04, 0.42, 0); g.add(win);
+    const hl = mesh(new THREE.BoxGeometry(0.02, 0.05, 0.1), M.glow(0xfff3bf, 1.5)); hl.position.set(0.5, 0.25, 0.13); g.add(hl); const hl2 = hl.clone(); hl2.position.z = -0.13; g.add(hl2);
+    const tl = mesh(new THREE.BoxGeometry(0.02, 0.05, 0.1), M.glow(0xff3333, 1)); tl.position.set(-0.5, 0.25, 0.13); g.add(tl); const tl2 = tl.clone(); tl2.position.z = -0.13; g.add(tl2);
+    const wheels = [];
+    [[0.32, 0.2], [0.32, -0.2], [-0.32, 0.2], [-0.32, -0.2]].forEach(([x, z]) => { const w = new THREE.Group(); const t = cyl(0.1, 0.1, 0.07, M.rubber(), 28); t.rotation.x = Math.PI / 2; w.add(t); const rim = cyl(0.055, 0.055, 0.075, M.chrome(), 16); rim.rotation.x = Math.PI / 2; w.add(rim); const sp = mesh(new THREE.BoxGeometry(0.1, 0.015, 0.08), M.metal(0x495057)); w.add(sp); w.position.set(x, 0.1, z); g.add(w); wheels.push(w); });
+    g.userData.wheels = wheels; return g;
+  }
+
+  /* ---------- environments ---------- */
+  function paintSky(g, w, h, top, bot, clouds) { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, top); gr.addColorStop(1, bot); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    if (clouds) for (let i = 0; i < 9; i++) { const x = Math.random() * w, y = h * (0.1 + Math.random() * 0.45), s = 30 + Math.random() * 50; g.fillStyle = 'rgba(255,255,255,.85)'; [[0, 0, 1], [0.9, -0.3, 1.2], [1.9, 0, 0.9], [1, 0.25, 1]].forEach(([dx, dy, r]) => { g.beginPath(); g.arc(x + dx * s, y + dy * s, r * s, 0, 7); g.fill(); }); } }
+  const BACKS = {
+    studio: (g, w, h) => { g.fillStyle = '#0c0c0e'; g.fillRect(0, 0, w, h); const gr = g.createRadialGradient(w * 0.78, h * 0.05, 10, w * 0.78, h * 0.05, w * 0.6); gr.addColorStop(0, 'rgba(120,120,128,.55)'); gr.addColorStop(0.5, 'rgba(50,50,56,.25)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); },
+    sky: (g, w, h) => paintSky(g, w, h, '#4a90d9', '#cfe6fb', true),
+    night: (g, w, h) => { paintSky(g, w, h, '#05081a', '#253563', false); for (let i = 0; i < 400; i++) { g.fillStyle = `rgba(255,255,255,${Math.random()})`; g.fillRect(Math.random() * w, Math.random() * h * 0.85, 1.5, 1.5); } },
+    space: (g, w, h) => { g.fillStyle = '#05060c'; g.fillRect(0, 0, w, h); for (let i = 0; i < 600; i++) { g.fillStyle = `rgba(200,220,255,${Math.random() * 0.8})`; g.fillRect(Math.random() * w, Math.random() * h, 1.4, 1.4); } const gr = g.createRadialGradient(w * .3, h * .3, 0, w * .3, h * .3, w * .5); gr.addColorStop(0, 'rgba(90,60,160,.25)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); },
+    city: (g, w, h) => { paintSky(g, w, h, '#5d8fd6', '#dbe7f7', true); for (let i = 0; i < 40; i++) { const bw = 40 + Math.random() * 70, bh = h * (0.12 + Math.random() * 0.3), x = Math.random() * w; g.fillStyle = ['#7f8a96', '#99a3ad', '#6c7680'][i % 3]; g.fillRect(x, h - bh, bw, bh); g.fillStyle = 'rgba(255,240,200,.55)'; for (let y = h - bh + 8; y < h - 10; y += 14) for (let xx = x + 6; xx < x + bw - 8; xx += 12) if (Math.random() > 0.3) g.fillRect(xx, y, 6, 7); } }
+  };
+  const FLOORS = {
+    grass: g => { g.fillStyle = '#4c9a3e'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 9000, '#2f6b27', 0.5, 3); noise(g, 512, 512, 5000, '#8fd37a', 0.35, 2); },
+    asphalt: g => { g.fillStyle = '#3d4045'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 12000, '#000', 0.35, 2); noise(g, 512, 512, 6000, '#888', 0.3, 2); },
+    wood: g => { for (let y = 0; y < 512; y += 64) { g.fillStyle = ['#b07a4a', '#a56f40', '#bb8656', '#9e6a3c'][(y / 64) % 4]; g.fillRect(0, y, 512, 64); for (let k = 0; k < 40; k++) { g.fillStyle = 'rgba(60,30,10,.07)'; g.fillRect(0, y + Math.random() * 64, 512, 1); } g.fillStyle = 'rgba(40,20,5,.35)'; g.fillRect(0, y, 512, 2); g.fillRect(((y / 64) % 2) * 256 + 120, y, 2, 64); } },
+    tile: g => { g.fillStyle = '#d5d8dc'; g.fillRect(0, 0, 512, 512); g.strokeStyle = '#a9adb3'; g.lineWidth = 3; for (let i = 0; i <= 512; i += 128) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 512); g.moveTo(0, i); g.lineTo(512, i); g.stroke(); } },
+    concrete: g => { g.fillStyle = '#9ea3a8'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 15000, '#555', 0.25, 2); g.fillStyle = '#f1c40f'; g.fillRect(0, 230, 512, 14); },
+    felt: g => { g.fillStyle = '#1f7a3a'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 20000, '#0d4a20', 0.3, 2); },
+    water: g => { g.fillStyle = '#1c6ea4'; g.fillRect(0, 0, 512, 512); g.strokeStyle = 'rgba(255,255,255,.25)'; g.lineWidth = 2; for (let i = 0; i < 70; i++) { const x = Math.random() * 512, y = Math.random() * 512; g.beginPath(); g.arc(x, y, 14, Math.PI * 1.1, Math.PI * 1.9); g.stroke(); } },
+    carpet: g => { g.fillStyle = '#4c3a8f'; g.fillRect(0, 0, 512, 512); noise(g, 512, 512, 30000, '#000', 0.25, 2); noise(g, 512, 512, 10000, '#9f8cf0', 0.25, 2); },
+    dashes: g => { g.clearRect(0, 0, 512, 512); g.fillStyle = '#f1f3f5'; g.fillRect(0, 240, 300, 32); },
+    shelves: g => { g.fillStyle = '#e9ecef'; g.fillRect(0, 0, 512, 512); for (let r = 0; r < 4; r++) { g.fillStyle = '#868e96'; g.fillRect(0, r * 128 + 116, 512, 12); for (let x = 4; x < 508; x += 26 + Math.random() * 20) { g.fillStyle = ['#e03131', '#1c7ed6', '#f59f00', '#2f9e44', '#ae3ec9', '#f8f9fa'][Math.floor(Math.random() * 6)]; const hh = 50 + Math.random() * 55; g.fillRect(x, r * 128 + 116 - hh, 22, hh); } } },
+    ice: g => { g.fillStyle = '#eaf6ff'; g.fillRect(0, 0, 512, 512); g.strokeStyle = 'rgba(160,200,230,.5)'; for (let i = 0; i < 60; i++) { g.beginPath(); const x = Math.random() * 512, y = Math.random() * 512; g.moveTo(x, y); g.lineTo(x + 40 + Math.random() * 80, y + Math.random() * 10 - 5); g.stroke(); } }
+  };
+
+  /* ---------- view object ---------- */
+  function View(def) {
+    this.def = def; this.scene = new THREE.Scene(); this.cam = new THREE.PerspectiveCamera(FOV, 1, 0.05, 500); this.W = 0; this.H = 0; this.o = {};
+    this.scene.environment = env; this.scene.environmentIntensity = def.env !== undefined ? def.env : 0.4; this.scene.background = new THREE.Color(0x0b0b0d);
+  }
+  View.prototype = {
+    P(px, py, z = 0) { return new THREE.Vector3(px / 100, -py / 100, z); },
+    u(px) { return px / 100; },
+    add(...m) { m.forEach(x => this.scene.add(x)); return m[0]; },
+    lights(o = {}) {
+      const W = this.W / 100, H = this.H / 100, D = this.D;
+      this.add(new THREE.AmbientLight(0xffffff, o.amb !== undefined ? o.amb : 0.15));
+      if (o.hemi) this.add(new THREE.HemisphereLight(0xcfe6ff, 0x3a5a2a, o.hemi));
+      const key = new THREE.SpotLight(0xffffff, (o.key || 600) * 0.55, 0, 0.6, 0.6, 1.4);
+      const kp = o.kpos || [W * 0.85, 4, D * 0.55]; key.position.set(kp[0], kp[1], kp[2]); key.target.position.set(W / 2, -H * 0.6, 0);
+      key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0004; key.shadow.camera.near = 1; key.shadow.camera.far = 80;
+      this.add(key, key.target); this.key = key;
+      const rim = new THREE.DirectionalLight(0x9fb8ff, o.rim !== undefined ? o.rim : 0.5); rim.position.set(-6, 4, -6); this.add(rim);
+      const fill = new THREE.DirectionalLight(0xffffff, o.fill !== undefined ? o.fill : 0.35); fill.position.set(W * 0.2, 2, D); this.add(fill);
+    },
+    back(type, dist = 30) {   // far backdrop covering the frustum
+      const d = this.D + dist, hh = 2 * d * Math.tan(FOV * Math.PI / 360) * 1.25, ww = hh * (this.W / this.H) * 1.25;
+      const key = 'back_' + type, t = tex(key, 1024, 512, BACKS[type] || BACKS.studio);
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(ww, hh), new THREE.MeshBasicMaterial({map: t, toneMapped: false}));
+      m.position.set(this.W / 200, -this.H / 200, -dist); this.add(m); return m;
+    },
+    wall(color, z = -2.5, opts = {}) {   // near wall (indoor scenes)
+      const m = mesh(new THREE.PlaneGeometry(80, 40), opts.map ? new THREE.MeshStandardMaterial({map: opts.map, roughness: 0.9}) : M.matte(color, 0.95), false);
+      m.position.set(this.W / 200, -this.H / 200 + 10, z); this.add(m); return m;
+    },
+    floor(type, gy, opts = {}) {   // horizontal floor at screen px line gy
+      const y = -gy / 100, L = 120, Z = 60;
+      if (type === 'mirror' || type === 'ice' || opts.reflect) {
+        const mir = new THREE.Reflector(new THREE.PlaneGeometry(L, Z), {clipBias: 0.003, textureWidth: 1024, textureHeight: 1024, color: type === 'ice' ? 0x99aabb : 0x777777});
+        mir.rotation.x = -Math.PI / 2; mir.position.set(this.W / 200, y - 0.003, 0); this.add(mir);
+      }
+      let mat;
+      if (type === 'mirror') mat = new THREE.MeshStandardMaterial({color: 0x141416, roughness: 0.55, metalness: 0.4, transparent: true, opacity: 0.86});
+      else if (type === 'ice') mat = new THREE.MeshStandardMaterial({map: tex('f_ice', 512, 512, FLOORS.ice, [L / 6, Z / 6]), roughness: 0.15, metalness: 0, transparent: true, opacity: 0.72});
+      else { const r = opts.rep || 2.5; mat = new THREE.MeshStandardMaterial({map: tex('f_' + type, 512, 512, FLOORS[type], [L / r, Z / r]), roughness: opts.rough !== undefined ? opts.rough : 0.85, metalness: 0, transparent: !!opts.reflect, opacity: opts.reflect ? 0.85 : 1}); }
+      const m = mesh(new THREE.PlaneGeometry(L, Z), mat, false); m.rotation.x = -Math.PI / 2; m.position.set(this.W / 200, y, 0); this.add(m); this.floorMesh = m; return m;
+    },
+    table(type, opts = {}) {   // top views: the screen plane is the ground; objects extrude toward +z
+      const W = this.W / 100, H = this.H / 100, r = opts.rep || 2.5;
+      const mat = new THREE.MeshStandardMaterial({map: tex('t_' + type, 512, 512, FLOORS[type], [W * 2 / r, H * 2 / r]), roughness: opts.rough !== undefined ? opts.rough : 0.85});
+      const m = mesh(new THREE.PlaneGeometry(W * 2, H * 2), mat, false); m.position.set(W / 2, -H / 2, 0); this.add(m); this.floorMesh = m; return m;
+    },
+    topLights(o = {}) {
+      const W = this.W / 100, H = this.H / 100;
+      this.add(new THREE.AmbientLight(0xffffff, o.amb !== undefined ? o.amb : 0.35));
+      const key = new THREE.DirectionalLight(0xffffff, (o.key || 2.2) * 0.75); key.position.set(W * 0.75, -H * 0.1, 12); key.target.position.set(W / 2, -H / 2, 0);
+      key.castShadow = true; key.shadow.mapSize.set(2048, 2048); const sc = key.shadow.camera; sc.left = -W; sc.right = W; sc.top = H; sc.bottom = -H; sc.near = 1; sc.far = 40; key.shadow.bias = -0.0005;
+      this.add(key, key.target); const fill = new THREE.DirectionalLight(0xffffff, 0.4); fill.position.set(0, -H, 8); this.add(fill);
+    },
+    resize(W, H) {
+      this.W = W; this.H = H; this.D = (H / 100) / 2 / Math.tan(FOV * Math.PI / 360);
+      this.cam.aspect = W / H; this.cam.position.set(W / 200, -H / 200, this.D); this.cam.lookAt(W / 200, -H / 200, 0); this.cam.updateProjectionMatrix();
+      this.cam.far = this.D + 200; this.cam.updateProjectionMatrix();
+    }
+  };
+
+  /* ---------- page integration ---------- */
+  let cur = null;
+  function render(id, sc) {
+    const def = VIEWS[id]; if (!def) return false;
+    const wrap = sc.g.cv.parentElement; if (sc.g.w < 10 || sc.g.h < 10) return true;
+    if (canvas.parentElement !== wrap) wrap.insertBefore(canvas, wrap.firstChild);
+    const W = Math.round(wrap.clientWidth), H = Math.round(wrap.clientHeight); if (W < 10 || H < 10) return true;
+    let v = views[id];
+    if (!v || v.W !== W || v.H !== H) {
+      if (v) v.scene.traverse(o => { if (o.geometry) o.geometry.dispose(); });
+      v = views[id] = new View(def); v.resize(W, H); def.build(v, sc);
+    }
+    renderer.setSize(W, H, false); canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    def.sync(v, sc, performance.now() / 1000);
+    renderer.render(v.scene, v.cam); cur = id; return true;
+  }
+  function hide() { if (canvas.parentElement) canvas.parentElement.removeChild(canvas); }
+  return {ok: true, render, hide, M, tex, mesh, rbox, cyl, sph, tube, setTube, helix, mannequin, carModel, FLOORS, noise};
+})();
+const VIEWS = {};
+</script>
+<script>
+{
+/* ======================= S1: forces as vectors ======================= */
+const s1 = {
+  g: setupCanvas($('c1')),
+  F: [{x: 3, y: 1}, {x: -1, y: 2.5}, {x: -1.5, y: -2}],
+  cols: ['#e8590c', '#0c8599', '#c2255c'], names: ['F₁', 'F₂', 'F₃'],
+  use3: true, comp: false, chain: false, snap: true, m: 1,
+  pos: {x: 0, y: 0}, vel: {x: 0, y: 0}, run: false, trail: [], tt: 0, drag: -1,
+  geo() { const {w, h} = this.g, s = Math.min(w, h) / 17; return {s, cx: w / 2, cy: h / 2, ox: w / 2 + this.pos.x * s, oy: h / 2 - this.pos.y * s}; },
+  list() { return this.use3 ? this.F : this.F.slice(0, 2); },
+  sum() { return this.list().reduce(add, {x: 0, y: 0}); },
+  step(dt) {
+    if (!this.run) return;
+    const a = mul(this.sum(), 1 / this.m);
+    this.vel = add(this.vel, mul(a, dt)); this.pos = add(this.pos, mul(this.vel, dt));
+    this.tt += dt; if (this.tt > 0.12) { this.tt = 0; this.trail.push({...this.pos}); }
+    const g = this.geo();
+    if (Math.abs(this.pos.x) * g.s > this.g.w / 2 + 30 || Math.abs(this.pos.y) * g.s > this.g.h / 2 + 30) { this.run = false; this.btn(); }
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const g = this.geo(), S = v => [g.ox + v.x * g.s, g.oy - v.y * g.s];
+    if (this.r3) {} else if (this.skin) { ctx.fillStyle = '#f8f0e3'; ctx.fillRect(0, 0, w, h); ctx.globalAlpha = .5; grid(ctx, w, h, g.cx, g.cy, g.s); ctx.globalAlpha = 1; text(ctx, L('pared · cables y peso del cuadro', 'wall · cables and the picture\'s weight'), w - 12, h - 16, C.muted, 12, 'right', 600); }
+    else grid(ctx, w, h, g.cx, g.cy, g.s);
+    text(ctx, 'x', w - 14, g.cy - 12, C.muted, 13); text(ctx, 'y', g.cx + 12, 12, C.muted, 13);
+    text(ctx, L('1 cuadro = 1 N', '1 square = 1 N'), 12, h - 16, C.muted, 12, 'left', 500);
+    ctx.fillStyle = '#adb5bd'; this.trail.forEach(p => { ctx.beginPath(); ctx.arc(g.cx + p.x * g.s, g.cy - p.y * g.s, 2.5, 0, 7); ctx.fill(); });
+    const list = this.list(), sum = this.sum();
+    if (this.comp) {
+      list.forEach((f, i) => {
+        const [tx, ty] = S(f);
+        ctx.save(); ctx.strokeStyle = this.cols[i]; ctx.globalAlpha = .55; ctx.setLineDash([4, 4]); ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx, g.oy); ctx.moveTo(tx, ty); ctx.lineTo(g.ox, ty); ctx.stroke(); ctx.restore();
+        arrow(ctx, g.ox, g.oy, tx, g.oy, this.cols[i], 2, null, .7);
+        arrow(ctx, g.ox, g.oy, g.ox, ty, this.cols[i], 2, null, .7);
+      });
+    }
+    if (this.chain) {
+      let st = {x: 0, y: 0};
+      list.forEach((f, i) => { const en = add(st, f); const a = S(st), b = S(en); if (i > 0) arrow(ctx, a[0], a[1], b[0], b[1], this.cols[i], 2.5, [7, 5], .9); st = en; });
+    }
+    list.forEach((f, i) => { const [tx, ty] = S(f); arrow(ctx, g.ox, g.oy, tx, ty, this.cols[i], 3.5); });
+    const [rx, ry] = S(sum);
+    arrow(ctx, g.ox, g.oy, rx, ry, C.R, 6, null, .9);
+    if (this.r3) {} else if (this.skin) {
+      ctx.save(); ctx.strokeStyle = '#6c5f4b'; ctx.lineWidth = 2;
+      list.forEach((f, i) => { if (f.y <= 0) return; const [tx, ty] = S(mul(f, 1.6)); ctx.beginPath(); ctx.moveTo(g.ox, g.oy - 18); ctx.lineTo(tx, ty); ctx.stroke(); ctx.fillStyle = '#495057'; ctx.beginPath(); ctx.arc(tx, ty, 5, 0, 7); ctx.fill(); });
+      ctx.restore();
+      const fw = 84, fh = 62; ctx.fillStyle = '#8d6e3f'; ctx.fillRect(g.ox - fw / 2, g.oy - fh / 2, fw, fh);
+      ctx.fillStyle = '#d0ebff'; ctx.fillRect(g.ox - fw / 2 + 7, g.oy - fh / 2 + 7, fw - 14, fh - 14);
+      ctx.fillStyle = '#69db7c'; ctx.beginPath(); ctx.moveTo(g.ox - fw / 2 + 7, g.oy + fh / 2 - 7); ctx.lineTo(g.ox - 10, g.oy - 6); ctx.lineTo(g.ox + 6, g.oy + 6); ctx.lineTo(g.ox + 18, g.oy - 10); ctx.lineTo(g.ox + fw / 2 - 7, g.oy + fh / 2 - 7); ctx.fill();
+      ctx.fillStyle = '#ffd43b'; ctx.beginPath(); ctx.arc(g.ox + 22, g.oy - 14, 6, 0, 7); ctx.fill();
+    } else puck(ctx, g.ox, g.oy, 15, this.m + 'kg');
+    list.forEach((f, i) => { const [tx, ty] = S(f); handle(ctx, tx, ty, this.cols[i]); tipLabel(ctx, this.names[i], g.ox, g.oy, tx, ty, this.cols[i]); });
+    if (len(sum) > 0.05) tipLabel(ctx, 'ΣF', g.ox, g.oy, rx, ry, C.R);
+    const eq = len(sum) < 1e-6;
+    badge(ctx, eq ? L('ΣF = 0  ⇒  equilibrio', 'ΣF = 0  ⇒  equilibrium') : `|ΣF| = ${fx(len(sum))} N`, 12, 12, eq);
+  },
+  table() {
+    const rows = this.list().map((f, i) => `<tr><td style="color:${this.cols[i]};font-weight:700">${this.names[i]}</td><td>${fx(f.x)}</td><td>${fx(f.y)}</td><td>${fx(len(f))}</td><td>${len(f) ? fx(angDeg(f), 1) : '—'}</td></tr>`).join('');
+    const s = this.sum();
+    $('t1').innerHTML = `<tr><th></th><th>Fₓ (N)</th><th>F_y (N)</th><th>|F| (N)</th><th>θ (°)</th></tr>${rows}<tr class="sum"><td style="color:${C.R}">ΣF</td><td>${fx(s.x)}</td><td>${fx(s.y)}</td><td>${fx(len(s))}</td><td>${len(s) > 1e-6 ? fx(angDeg(s), 1) : '—'}</td></tr>`
+      + `<tr><td colspan="5" class="hint" style="text-align:left;padding-top:8px">${L('a = ΣF/m', 'a = ΣF/m')} = (${fx(s.x / this.m)}, ${fx(s.y / this.m)}) m/s²</td></tr>`;
+  },
+  btn() { setTxt($('b1run'), this.run ? 'Pausa' : 'Soltar disco', this.run ? 'Pause' : 'Release puck'); },
+  init() {
+    const cv = $('c1');
+    cv.addEventListener('pointerdown', e => {
+      const p = ptr(e, cv), g = this.geo();
+      this.drag = -1; let best = 20;
+      this.list().forEach((f, i) => { const d = Math.hypot(g.ox + f.x * g.s - p.x, g.oy - f.y * g.s - p.y); if (d < best) { best = d; this.drag = i; } });
+      if (this.drag >= 0) cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener('pointermove', e => {
+      const p = ptr(e, cv), g = this.geo();
+      if (this.drag < 0) {
+        const hov = this.list().some(f => Math.hypot(g.ox + f.x * g.s - p.x, g.oy - f.y * g.s - p.y) < 20);
+        cv.style.cursor = hov ? 'grab' : 'default'; return;
+      }
+      cv.style.cursor = 'grabbing';
+      let v = {x: (p.x - g.ox) / g.s, y: (g.oy - p.y) / g.s};
+      const M = len(v); if (M > 8) v = mul(v, 8 / M);
+      if (this.snap) v = {x: snapv(v.x, 0.5), y: snapv(v.y, 0.5)};
+      this.F[this.drag] = v;
+    });
+    const up = () => { this.drag = -1; };
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    $('k1f3').onchange = e => { this.use3 = e.target.checked; };
+    $('k1comp').onchange = e => { this.comp = e.target.checked; };
+    $('k1chain').onchange = e => { this.chain = e.target.checked; };
+    $('k1snap').onchange = e => { this.snap = e.target.checked; };
+    $('b1eq').onclick = () => { this.use3 = true; $('k1f3').checked = true; this.F[2] = mul(add(this.F[0], this.F[1]), -1); };
+    $('b1rand').onclick = () => { this.F = this.F.map(() => ({x: snapv(Math.random() * 10 - 5, 0.5), y: snapv(Math.random() * 10 - 5, 0.5)})); };
+    $('b1run').onclick = () => { this.run = !this.run; this.btn(); };
+    $('b1reset').onclick = () => { this.run = false; this.pos = {x: 0, y: 0}; this.vel = {x: 0, y: 0}; this.trail = []; this.btn(); };
+    bindRange('r1m', 'o1m', v => v.toFixed(1) + ' kg', v => this.m = v);
+    this.btn();
+  }
+};
+
+/* ======================= S2: first law ======================= */
+const s2 = {
+  g: setupCanvas($('c2')), s: 40,
+  m: 1, pos: {x: 0, y: 0}, vel: {x: 2, y: 0.8}, fric: false, mu: 0.1, Fp: 6,
+  push: false, target: null, paused: false, dragV: false, trail: [], tt: 0,
+  Fa: {x: 0, y: 0}, Ff: {x: 0, y: 0},
+  toS(p) { return [this.g.w / 2 + p.x * this.s, this.g.h / 2 - p.y * this.s]; },
+  toW(p) { return {x: (p.x - this.g.w / 2) / this.s, y: (this.g.h / 2 - p.y) / this.s}; },
+  step(dt) {
+    if (this.paused) return;
+    const n = 8, h = dt / n, W = this.g.w / this.s / 2, H = this.g.h / this.s / 2, fk = this.mu * this.m * 9.8;
+    for (let i = 0; i < n; i++) {
+      let Fa = {x: 0, y: 0}, Ff = {x: 0, y: 0};
+      if (this.push && this.target) { const d = sub(this.target, this.pos), D = len(d); if (D > 0.1) Fa = mul(d, this.Fp / D); }
+      const sp = len(this.vel);
+      if (this.fric) {
+        if (sp < 0.02) {
+          if (len(Fa) <= fk) { Ff = mul(Fa, -1); this.vel = {x: 0, y: 0}; }
+          else Ff = mul(Fa, -fk / len(Fa));
+        } else Ff = mul(this.vel, -fk / sp);
+      }
+      const F = add(Fa, Ff), nv = add(this.vel, mul(F, h / this.m));
+      if (this.fric && sp >= 0.02 && dot(nv, this.vel) <= 0 && len(Fa) <= fk) this.vel = {x: 0, y: 0}; else this.vel = nv;
+      this.pos = add(this.pos, mul(this.vel, h));
+      let wr = false;
+      if (this.pos.x > W) { this.pos.x -= 2 * W; wr = true; } if (this.pos.x < -W) { this.pos.x += 2 * W; wr = true; }
+      if (this.pos.y > H) { this.pos.y -= 2 * H; wr = true; } if (this.pos.y < -H) { this.pos.y += 2 * H; wr = true; }
+      if (wr) this.trail.push(null);
+      this.Fa = Fa; this.Ff = Ff;
+    }
+    if (len(this.vel) < 1e-6 && !this.push) { this.Fa = {x: 0, y: 0}; this.Ff = {x: 0, y: 0}; }
+    this.tt += dt;
+    if (this.tt >= 0.3) { this.tt -= 0.3; if (len(this.vel) > 1e-4) this.trail.push({...this.pos}); if (this.trail.length > 80) this.trail.shift(); }
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    if (!this.r3) { ctx.fillStyle = this.fric ? '#f3f6f8' : '#eef6fc'; ctx.fillRect(0, 0, w, h); }
+    if (this.r3) {} else if (this.skin) { const [hx, hy] = this.toS({x: 0.2, y: 0}); [[1.83, '#1c7ed6'], [1.22, '#fff'], [0.61, '#e03131'], [0.15, '#fff']].forEach(([r, c]) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(hx, hy, r * this.s, 0, 7); ctx.fill(); }); ctx.strokeStyle = '#e03131'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(hx, 0); ctx.lineTo(hx, h); ctx.stroke(); text(ctx, L('pista de curling', 'curling sheet'), w - 12, h - 16, C.muted, 12, 'right', 600); }
+    if (!this.r3) grid(ctx, w, h, w / 2, h / 2, this.s, false);
+    text(ctx, L('1 cuadro = 1 m · puntos cada 0.3 s', '1 square = 1 m · dots every 0.3 s'), 12, h - 16, C.muted, 12, 'left', 500);
+    // trail
+    const tr = this.trail, nT = tr.length;
+    tr.forEach((p, i) => { if (!p) return; const [x, y] = this.toS(p); ctx.fillStyle = `rgba(73,80,87,${0.25 + 0.6 * i / nT})`; ctx.beginPath(); ctx.arc(x, y, 3.5, 0, 7); ctx.fill(); });
+    const [px, py] = this.toS(this.pos);
+    if (this.push && this.target) { const [tx, ty] = this.toS(this.target); ctx.save(); ctx.setLineDash([3, 5]); ctx.strokeStyle = C.F; ctx.globalAlpha = .5; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(tx, ty); ctx.stroke(); ctx.restore(); }
+    const fs = 9, vs = 35;
+    const F = add(this.Fa, this.Ff);
+    const showFa = len(this.Fa) > 1e-6, showFf = len(this.Ff) > 1e-6;
+    if (showFa) { arrow(ctx, px, py, px + this.Fa.x * fs, py - this.Fa.y * fs, C.F, 3); }
+    if (showFf) { arrow(ctx, px, py, px + this.Ff.x * fs, py - this.Ff.y * fs, C.fr, 3); }
+    if (len(F) > 1e-3) { arrow(ctx, px, py, px + F.x * fs, py - F.y * fs, C.R, 6, null, .8); }
+    if (this.r3) {} else if (this.skin) { ballSprite(ctx, px, py, 18, '#ced4da', '#495057'); ctx.fillStyle = '#e03131'; ctx.beginPath(); ctx.roundRect(px - 10, py - 4, 20, 8, 4); ctx.fill(); }
+    else puck(ctx, px, py, 17, this.m + 'kg');
+    const vx = px + this.vel.x * vs, vy = py - this.vel.y * vs;
+    arrow(ctx, px, py, vx, vy, C.v, 4);
+    if (len(this.vel) > 0.05) tipLabel(ctx, 'v', px, py, vx, vy, C.v);
+    if (this.paused) handle(ctx, len(this.vel) > 0.05 ? vx : px + 24, len(this.vel) > 0.05 ? vy : py, C.v);
+    if (showFa) tipLabel(ctx, L('F empuje', 'F push'), px, py, px + this.Fa.x * fs, py - this.Fa.y * fs, C.F);
+    if (showFf && len(this.Ff) * fs > 25) tipLabel(ctx, L('F fricción', 'F friction'), px, py, px + this.Ff.x * fs, py - this.Ff.y * fs, C.fr);
+    const zero = len(F) < 1e-3;
+    badge(ctx, zero ? L('ΣF = 0  ⇒  v constante', 'ΣF = 0  ⇒  v constant') : L('ΣF ≠ 0  ⇒  v cambia', 'ΣF ≠ 0  ⇒  v changes'), 12, 12, zero);
+    if (this.paused) text(ctx, L('EN PAUSA', 'PAUSED'), w - 14, 26, C.muted, 13, 'right');
+  },
+  table() {
+    const F = add(this.Fa, this.Ff), a = mul(F, 1 / this.m);
+    $('t2').innerHTML = `<tr><th></th><th>x</th><th>y</th><th>${L('magnitud', 'magnitude')}</th></tr>
+      <tr><td style="color:${C.v}"><b>v</b> (m/s)</td><td>${fx(this.vel.x)}</td><td>${fx(this.vel.y)}</td><td>${fx(len(this.vel))}</td></tr>
+      <tr><td style="color:${C.R}"><b>ΣF</b> (N)</td><td>${fx(F.x)}</td><td>${fx(F.y)}</td><td>${fx(len(F))}</td></tr>
+      <tr><td style="color:${C.a}"><b>a</b> (m/s²)</td><td>${fx(a.x)}</td><td>${fx(a.y)}</td><td>${fx(len(a))}</td></tr>`;
+  },
+  btn() { setTxt($('b2pause'), this.paused ? 'Continuar' : 'Pausa', this.paused ? 'Resume' : 'Pause'); },
+  init() {
+    const cv = $('c2');
+    cv.addEventListener('pointerdown', e => {
+      const p = ptr(e, cv); cv.setPointerCapture(e.pointerId);
+      if (this.paused) {
+        const [px, py] = this.toS(this.pos); const vs = 35;
+        const tip = len(this.vel) > 0.05 ? [px + this.vel.x * vs, py - this.vel.y * vs] : [px + 24, py];
+        if (Math.hypot(tip[0] - p.x, tip[1] - p.y) < 22 || Math.hypot(px - p.x, py - p.y) < 20) { this.dragV = true; return; }
+      }
+      this.push = true; this.target = this.toW(p);
+    });
+    cv.addEventListener('pointermove', e => {
+      const p = ptr(e, cv);
+      if (this.dragV) { const [px, py] = this.toS(this.pos); let v = {x: (p.x - px) / 35, y: (py - p.y) / 35}; if (len(v) > 8) v = mul(v, 8 / len(v)); this.vel = {x: snapv(v.x, .25), y: snapv(v.y, .25)}; this.trail = []; return; }
+      if (this.push) this.target = this.toW(p);
+      cv.style.cursor = this.paused ? 'grab' : 'crosshair';
+    });
+    const up = () => { this.push = false; this.target = null; this.dragV = false; if (!this.paused) { this.Fa = {x: 0, y: 0}; } };
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    bindRange('r2F', 'o2F', v => v + ' N', v => this.Fp = v);
+    bindRange('r2m', 'o2m', v => v.toFixed(1) + ' kg', v => this.m = v);
+    bindRange('r2mu', 'o2mu', v => v.toFixed(2), v => this.mu = v);
+    $('k2fr').onchange = e => { this.fric = e.target.checked; };
+    $('b2pause').onclick = () => { this.paused = !this.paused; this.btn(); };
+    $('b2stop').onclick = () => { this.vel = {x: 0, y: 0}; };
+    $('b2clear').onclick = () => { this.trail = []; };
+    $('b2reset').onclick = () => { this.pos = {x: -4, y: -1.5}; this.vel = {x: 2, y: 0.8}; this.trail = []; this.tt = 0; };
+    this.pos = {x: -4, y: -1.5};
+    this.btn();
+  }
+};
+
+/* ======================= S3: second law ======================= */
+const s3 = {
+  g: setupCanvas($('c3')), gg: setupCanvas($('g3')),
+  sp: 20, fs: 16, vs: 16,
+  m: 1, mode: 'const', F: {x: 3, y: 0}, Fmag: 3,
+  p0: {x: -10, y: 0}, v0: {x: 1, y: 0},
+  pos: {x: 0, y: 0}, vel: {x: 0, y: 0}, run: false, t: 0, trail: [], hist: [], tt: 0, ht: 0, drag: null,
+  Fvec() {
+    if (this.mode === 'perp') { const s = len(this.vel); const u = s > 1e-6 ? mul(this.vel, 1 / s) : {x: 1, y: 0}; return mul({x: -u.y, y: u.x}, this.Fmag); }
+    return this.F;
+  },
+  toS(p) { return [this.g.w / 2 + p.x * this.sp, this.g.h / 2 - p.y * this.sp]; },
+  reset() { this.pos = {...this.p0}; this.vel = {...this.v0}; this.t = 0; this.trail = [{...this.pos}]; this.hist = [[0, this.vel.x, this.vel.y]]; this.tt = 0; this.ht = 0; this.run = false; this.btn(); },
+  preset(k) {
+    const W = this.g.w / this.sp / 2, H = this.g.h / this.sp / 2;
+    if (k === 'acc') { this.mode = 'const'; this.F = {x: 2, y: 0}; this.v0 = {x: 1, y: 0}; this.p0 = {x: -W * 0.85, y: 0}; }
+    if (k === 'brake') { this.mode = 'const'; this.F = {x: -2, y: 0}; this.v0 = {x: 8, y: 0}; this.p0 = {x: -W * 0.85, y: 0}; }
+    if (k === 'para') { this.mode = 'const'; this.F = {x: 0, y: -3}; this.v0 = {x: 5, y: 0}; this.p0 = {x: -W * 0.85, y: H * 0.7}; }
+    if (k === 'circ') { this.mode = 'perp'; this.Fmag = 4; this.v0 = {x: 5, y: 0}; const r = this.m * 25 / this.Fmag; this.p0 = {x: 0, y: -r}; }
+    document.querySelector(`input[name=m3][value=${this.mode}]`).checked = true;
+    this.reset(); this.run = true; this.btn();
+  },
+  step(dt) {
+    if (!this.run) return;
+    const n = 10, h = dt / n, W = this.g.w / this.sp / 2, H = this.g.h / this.sp / 2;
+    for (let i = 0; i < n; i++) {
+      const a = mul(this.Fvec(), 1 / this.m);
+      this.vel = add(this.vel, mul(a, h)); this.pos = add(this.pos, mul(this.vel, h)); this.t += h;
+      let wr = false;
+      if (this.pos.x > W) { this.pos.x -= 2 * W; wr = true; } if (this.pos.x < -W) { this.pos.x += 2 * W; wr = true; }
+      if (this.pos.y > H) { this.pos.y -= 2 * H; wr = true; } if (this.pos.y < -H) { this.pos.y += 2 * H; wr = true; }
+      if (wr) this.trail.push(null);
+    }
+    this.tt += dt; if (this.tt > 0.1) { this.tt = 0; this.trail.push({...this.pos}); if (this.trail.length > 600) this.trail.shift(); }
+    this.ht += dt; if (this.ht > 0.03) { this.ht = 0; this.hist.push([this.t, this.vel.x, this.vel.y]); while (this.hist.length && this.hist[0][0] < this.t - 12) this.hist.shift(); }
+    if (len(this.vel) > 60) { this.run = false; this.btn(); }
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    if (this.r3) {} else if (this.skin) {
+      const sky = ctx.createLinearGradient(0, 0, 0, h); sky.addColorStop(0, '#a5d8ff'); sky.addColorStop(1, '#e7f5ff'); ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+      ctx.fillStyle = 'rgba(255,255,255,.85)'; [[.15, .2], [.6, .12], [.8, .55], [.3, .7]].forEach(([a, b]) => { const cx_ = w * a, cy_ = h * b; [0, 22, 44].forEach((o, k) => { ctx.beginPath(); ctx.arc(cx_ + o, cy_ - (k === 1 ? 10 : 0), 20, 0, 7); ctx.fill(); }); });
+      const F = this.Fvec(), Fl = len(F); if (Fl > 0.1) { const u = mul(F, 1 / Fl), ph = (performance.now() / 8) % 120; ctx.strokeStyle = 'rgba(255,255,255,.95)'; ctx.lineWidth = 2;
+        for (let k = 0; k < 14; k++) { const bx = ((k * 137) % w), by = ((k * 211) % h), o = ph + k * 9; ctx.beginPath(); ctx.moveTo(bx + u.x * o, by - u.y * o); ctx.lineTo(bx + u.x * (o + 40), by - u.y * (o + 40)); ctx.stroke(); } }
+      text(ctx, L('dron de reparto · viento lateral', 'delivery drone · crosswind'), w - 12, 22, '#1864ab', 12.5, 'right', 650);
+    } else grid(ctx, w, h, w / 2, h / 2, this.sp, false);
+    text(ctx, L('1 cuadro = 1 m · puntos cada 0.1 s', '1 square = 1 m · dots every 0.1 s'), 12, h - 16, C.muted, 12, 'left', 500);
+    ctx.fillStyle = 'rgba(73,80,87,.55)';
+    this.trail.forEach(p => { if (!p) return; const [x, y] = this.toS(p); ctx.beginPath(); ctx.arc(x, y, 2.3, 0, 7); ctx.fill(); });
+    const [px, py] = this.toS(this.pos), F = this.Fvec(), a = mul(F, 1 / this.m);
+    const Fx = px + F.x * this.fs, Fy = py - F.y * this.fs, ax = px + a.x * this.fs, ay = py - a.y * this.fs, vx = px + this.vel.x * this.vs, vy = py - this.vel.y * this.vs;
+    arrow(ctx, px, py, Fx, Fy, C.R, 8, null, .35);
+    arrow(ctx, px, py, ax, ay, C.a, 3);
+    arrow(ctx, px, py, vx, vy, C.v, 3.5);
+    if (this.r3) {} else if (this.skin) droneSprite(ctx, px, py, 26, performance.now() / 1000); else puck(ctx, px, py, 14, this.m + 'kg');
+    handle(ctx, Fx, Fy, C.R);
+    if (!this.run) handle(ctx, len(this.vel) > 0.1 ? vx : px + 22, len(this.vel) > 0.1 ? vy : py, C.v);
+    tipLabel(ctx, 'ΣF', px, py, Fx, Fy, C.R);
+    if (Math.hypot(ax - Fx, ay - Fy) > 22) tipLabel(ctx, 'a', px, py, ax, ay, C.a);
+    else text(ctx, 'a', (px + ax) / 2 + 10, (py + ay) / 2 - 10, C.a, 14, 'center', 700);
+    if (len(this.vel) > 0.1) tipLabel(ctx, 'v', px, py, vx, vy, C.v);
+    text(ctx, L('flechas: 1 cuadro = 1.25 N, 1.25 m/s², 1.25 m/s', 'arrows: 1 square = 1.25 N, 1.25 m/s², 1.25 m/s'), w - 12, h - 16, C.muted, 12, 'right', 500);
+    text(ctx, `t = ${this.t.toFixed(2)} s`, 14, 22, C.ink, 14, 'left');
+    if (this.mode === 'perp' && len(this.vel) > 0.01) text(ctx, `r = m v²/F = ${fx(this.m * dot(this.vel, this.vel) / this.Fmag)} m`, 14, 44, C.muted, 13, 'left', 600);
+    // graph
+    const t1 = Math.max(this.t, 4), t0 = Math.max(0, t1 - 12);
+    plot(this.gg, [
+      {pts: this.hist.map(p => [p[0], p[1]]), col: C.v, label: 'vₓ'},
+      {pts: this.hist.map(p => [p[0], p[2]]), col: '#5f3dc4', dash: [6, 4], label: 'v_y'}
+    ], {xmin: t0, xmax: t1, title: L('Velocidad (m/s)', 'Velocity (m/s)'), xlab: L('t (s) · pendiente = a', 't (s) · slope = a'), minSpan: 2});
+  },
+  table() {
+    const F = this.Fvec(), a = mul(F, 1 / this.m), v = this.vel;
+    const ang = (len(F) > 1e-6 && len(v) > 1e-6) ? fx(Math.acos(Math.max(-1, Math.min(1, dot(F, v) / len(F) / len(v)))) * 180 / Math.PI, 1) + '°' : '—';
+    const r = (lab, c, u, q) => `<tr><td style="color:${c}"><b>${lab}</b> (${u})</td><td>${fx(q.x)}</td><td>${fx(q.y)}</td><td>${fx(len(q))}</td></tr>`;
+    $('t3').innerHTML = `<tr><th></th><th>x</th><th>y</th><th>${L('magnitud', 'magnitude')}</th></tr>` + r('ΣF', C.R, 'N', F) + r('a', C.a, 'm/s²', a) + r('v', C.v, 'm/s', v)
+      + `<tr><td colspan="4" class="hint" style="text-align:left;padding-top:8px">m = ${this.m.toFixed(1)} kg · m·|a| = ${fx(this.m * len(a))} N · ${L('ángulo entre ΣF y v', 'angle between ΣF and v')}: ${ang}</td></tr>`;
+  },
+  btn() { setTxt($('b3run'), this.run ? 'Pausa' : 'Iniciar', this.run ? 'Pause' : 'Start'); },
+  init() {
+    const cv = $('c3');
+    cv.addEventListener('pointerdown', e => {
+      const p = ptr(e, cv), [px, py] = this.toS(this.pos), F = this.Fvec();
+      const dF = Math.hypot(px + F.x * this.fs - p.x, py - F.y * this.fs - p.y);
+      const vt = len(this.vel) > 0.1 ? [px + this.vel.x * this.vs, py - this.vel.y * this.vs] : [px + 22, py];
+      const dV = Math.hypot(vt[0] - p.x, vt[1] - p.y);
+      this.drag = null;
+      if (!this.run && dV < 20 && dV <= dF) this.drag = 'v'; else if (dF < 20) this.drag = 'F';
+      if (this.drag) cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener('pointermove', e => {
+      const p = ptr(e, cv), [px, py] = this.toS(this.pos);
+      if (!this.drag) { const F = this.Fvec(); cv.style.cursor = Math.hypot(px + F.x * this.fs - p.x, py - F.y * this.fs - p.y) < 20 ? 'grab' : 'default'; return; }
+      if (this.drag === 'F') {
+        let v = {x: (p.x - px) / this.fs, y: (py - p.y) / this.fs}; if (len(v) > 10) v = mul(v, 10 / len(v));
+        if (this.mode === 'perp') this.Fmag = Math.max(0.5, snapv(len(v), 0.25)); else this.F = {x: snapv(v.x, .25), y: snapv(v.y, .25)};
+      } else {
+        let v = {x: (p.x - px) / this.vs, y: (py - p.y) / this.vs}; if (len(v) > 12) v = mul(v, 12 / len(v));
+        this.vel = {x: snapv(v.x, .25), y: snapv(v.y, .25)}; this.v0 = {...this.vel}; this.p0 = {...this.pos};
+        this.trail = [{...this.pos}]; this.hist = [[this.t, this.vel.x, this.vel.y]];
+      }
+    });
+    const up = () => { this.drag = null; };
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+    document.querySelectorAll('input[name=m3]').forEach(r => r.onchange = () => { this.mode = r.value; if (this.mode === 'perp') this.Fmag = Math.max(0.5, len(this.F)); else { this.F = this.Fvec(); } });
+    document.querySelectorAll('#s3 [data-p]').forEach(b => b.onclick = () => this.preset(b.dataset.p));
+    bindRange('r3m', 'o3m', v => v.toFixed(1) + ' kg', v => this.m = v);
+    $('b3run').onclick = () => { this.run = !this.run; this.btn(); };
+    $('b3reset').onclick = () => this.reset();
+    this.reset();
+  }
+};
+
+/* ======================= S4: third law ======================= */
+const s4 = {
+  g: setupCanvas($('c4')), gg: setupCanvas($('g4')),
+  m1: 1, m2: 2, sc: 'explosion', v1i: 2, v2i: 0, speed: 0.25,
+  k: 400, L0: 0.6, hw: 0.45,
+  x1: 0, x2: 0, v1: 0, v2: 0, F: 0, J: 0, latched: true, run: false, done: false, t: 0, hist: [], tc0: null, tc1: null,
+  reset() {
+    if (this.sc === 'explosion') { this.x1 = -this.hw - 0.2; this.x2 = this.hw + 0.2; this.v1 = 0; this.v2 = 0; this.latched = true; }
+    else { this.x1 = -3.2; this.x2 = 0.8; this.v1 = this.v1i; this.v2 = this.v2i; this.latched = false; }
+    this.t = 0; this.hist = []; this.F = 0; this.J = 0; this.tc0 = this.tc1 = null; this.run = false; this.done = false; this.btn();
+    document.querySelectorAll('#s4 .coll').forEach(el => el.style.display = this.sc === 'collision' ? '' : 'none');
+  },
+  gap() { return (this.x2 - this.hw) - (this.x1 + this.hw); },
+  force() { const g = this.gap(); return g < this.L0 ? this.k * (this.L0 - g) : 0; },
+  step(dt) {
+    if (!this.run || this.done) return;
+    const T = dt * this.speed, n = Math.max(1, Math.ceil(T / 0.0004)), h = T / n;
+    for (let i = 0; i < n; i++) {
+      const F = this.latched ? 0 : this.force();
+      this.v1 += -F / this.m1 * h; this.v2 += F / this.m2 * h;
+      this.x1 += this.v1 * h; this.x2 += this.v2 * h; this.t += h;
+      if (F > 0) { if (this.tc0 === null) this.tc0 = this.t - h; this.tc1 = this.t; this.J += F * h; }
+      if (i % 4 === 0) this.hist.push([this.t, F]);
+    }
+    this.F = this.latched ? 0 : this.force();
+    if (Math.abs(this.x1) > 7 || Math.abs(this.x2) > 7) { this.done = true; this.run = false; this.btn(); }
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const s = w / 12, cx = w / 2, ty = h * 0.62;
+    const X = x => cx + x * s;
+    // track
+    if (this.r3) {} else if (this.skin) scenery(ctx, w, h, ty - 46, 'ice');
+    else if (!this.r3) ctx.fillStyle = '#e9e7df', ctx.fillRect(0, ty, w, 10);
+    ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif'; ctx.textAlign = 'center';
+    for (let x = -6; x <= 6; x++) { ctx.fillRect(X(x) - .5, ty + 10, 1, 6); ctx.fillText(x, X(x), ty + 26); }
+    text(ctx, 'x (m)', w - 14, ty + 26, C.muted, 11, 'right', 500);
+    const pushing = this.gap() < this.L0 + 0.05;
+    const cart = (x, m, col, lab) => {
+      if (this.r3) return ty - (135 + 12 * m) - 20;
+      if (this.skin) {
+        const first = col === '#d9480f', H = 135 + 12 * m, half = (X(this.x2) - X(this.x1)) / 2, al = pushing ? clamp((half - 14) / (H / 100) / Math.cos(0.12), 20, 60) : 28;
+        person(ctx, X(x), ty, H, {armLen: al,facing: first ? 1 : -1, col: first ? '#e64980' : '#1c7ed6', pants: first ? '#5f3dc4' : '#343a40', skates: true, arm: pushing ? 0 : 1.1, arm2: pushing ? 0.1 : 1.2, lean: pushing ? 0.12 : 0, long: first, hair: first ? '#862e9c' : '#5c3d2e'});
+        text(ctx, first ? `Ana · ${fx(m * 25, 0)} kg` : `Beto · ${fx(m * 25, 0)} kg`, X(x), ty - H - 16, col, 13, 'center', 750);
+        return ty - H - 20;
+      }
+      const ch = 34 + 9 * m, cw = this.hw * 2 * s, x0 = X(x) - cw / 2, y0 = ty - 8 - ch;
+      ctx.save(); ctx.fillStyle = col; ctx.beginPath(); ctx.roundRect(x0, y0, cw, ch, 6); ctx.fill();
+      ctx.fillStyle = '#343a40'; [x0 + cw * .25, x0 + cw * .75].forEach(wx => { ctx.beginPath(); ctx.arc(wx, ty - 4, 7, 0, 7); ctx.fill(); });
+      ctx.fillStyle = '#fff'; ctx.font = '650 13px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(lab, X(x), y0 + ch / 2 - 8); ctx.font = '12px system-ui,sans-serif'; ctx.fillText(m.toFixed(1) + ' kg', X(x), y0 + ch / 2 + 9);
+      ctx.restore(); return y0;
+    };
+    // spring (attached to cart 1's right face)
+    const gap = this.gap(), sl = Math.min(gap, this.L0), sx0 = X(this.x1 + this.hw), sx1 = X(this.x1 + this.hw + sl), sy = ty - 26;
+    if (!this.skin && !this.r3) { ctx.save(); ctx.strokeStyle = '#495057'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx0, sy);
+    const coils = 10; for (let i = 1; i < coils * 2; i++) ctx.lineTo(sx0 + (sx1 - sx0) * i / (coils * 2), sy + (i % 2 ? -8 : 8));
+    ctx.lineTo(sx1, sy); ctx.stroke(); ctx.fillStyle = '#495057'; ctx.fillRect(sx1 - 2, sy - 11, 4, 22); ctx.restore(); }
+    const y1 = cart(this.x1, this.m1, '#d9480f', L('Carro 1', 'Cart 1')), y2 = cart(this.x2, this.m2, '#1864ab', L('Carro 2', 'Cart 2'));
+    if (this.latched && !this.skin && !this.r3) {
+      ctx.save(); ctx.strokeStyle = '#868e96'; ctx.setLineDash([5, 4]); ctx.lineWidth = 2; ctx.beginPath();
+      ctx.moveTo(X(this.x1), Math.min(y1, y2) - 6); ctx.lineTo(X(this.x2), Math.min(y1, y2) - 6); ctx.stroke(); ctx.restore();
+      text(ctx, L('cuerda (se corta al iniciar)', 'string (cut on start)'), (X(this.x1) + X(this.x2)) / 2, Math.min(y1, y2) - 20, C.muted, 12, 'center', 500);
+    }
+    // forces
+    const fs = 1.6, Fl = Math.min(this.F * fs, w * 0.3), fy = Math.min(y1, y2) - 40;
+    if (this.F > 0.01) {
+      arrow(ctx, X(this.x1), fy, X(this.x1) - Fl, fy, C.F, 5);
+      arrow(ctx, X(this.x2), fy, X(this.x2) + Fl, fy, C.teal, 5);
+      text(ctx, `F₁₂ = ${fx(-this.F, 1)} N`, X(this.x1) - Fl / 2, fy - 18, C.F, 14, 'center', 700);
+      text(ctx, `F₂₁ = +${fx(this.F, 1)} N`, X(this.x2) + Fl / 2, fy - 18, C.teal, 14, 'center', 700);
+    }
+    // velocities
+    const vs = 40, vy = ty + 50;
+    arrow(ctx, X(this.x1), vy, X(this.x1) + this.v1 * vs, vy, C.v, 3.5);
+    arrow(ctx, X(this.x2), vy, X(this.x2) + this.v2 * vs, vy, C.v, 3.5);
+    if (Math.abs(this.v1) > 0.02) text(ctx, `v₁ = ${fx(this.v1)} m/s`, X(this.x1) + this.v1 * vs / 2, vy + 18, C.v, 13, 'center', 650);
+    if (Math.abs(this.v2) > 0.02) text(ctx, `v₂ = ${fx(this.v2)} m/s`, X(this.x2) + this.v2 * vs / 2, vy + 18, C.v, 13, 'center', 650);
+    text(ctx, `t = ${this.t.toFixed(3)} s   ·   ${L('cámara lenta', 'slow motion')} ×${this.speed.toFixed(2)}`, 14, 22, C.ink, 13, 'left', 600);
+    const pt = this.m1 * this.v1 + this.m2 * this.v2;
+    badge(ctx, `p ${L('total', 'total')} = m₁v₁ + m₂v₂ = ${fx(pt)} kg·m/s`, 14, 38, true);
+    if (this.done) text(ctx, L('Fin — pulsa Reiniciar', 'Done — press Reset'), w - 14, 22, C.muted, 13, 'right');
+    // graph
+    const gg = this.gg;
+    if (this.tc0 === null) {
+      gg.ctx.clearRect(0, 0, gg.w, gg.h);
+      text(gg.ctx, L('La gráfica F(t) aparece cuando los carros interactúan.', 'The F(t) graph appears once the carts interact.'), gg.w / 2, gg.h / 2, C.muted, 13, 'center', 500);
+    } else {
+      const span = Math.max(0.02, (this.tc1 - this.tc0)), pad = span * 0.25;
+      plot(gg, [
+        {pts: this.hist.map(p => [p[0], -p[1]]), col: C.F, label: L('F₁₂ (sobre 1)', 'F₁₂ (on 1)'), fill: true},
+        {pts: this.hist.map(p => [p[0], p[1]]), col: C.teal, label: L('F₂₁ (sobre 2)', 'F₂₁ (on 2)'), fill: true}
+      ], {xmin: this.tc0 - pad, xmax: this.tc1 + pad, title: L('Fuerza (N)', 'Force (N)'), xlab: L(`t (s) · área = impulso: J₁ = ${fx(-this.J)} N·s, J₂ = ${fx(this.J)} N·s`, `t (s) · area = impulse: J₁ = ${fx(-this.J)} N·s, J₂ = ${fx(this.J)} N·s`), minSpan: 10});
+    }
+  },
+  table() {
+    const a1 = -this.F / this.m1, a2 = this.F / this.m2;
+    $('t4').innerHTML = `<tr><th></th><th>m (kg)</th><th>F (N)</th><th>a (m/s²)</th><th>v (m/s)</th><th>p (kg·m/s)</th></tr>
+      <tr><td style="color:#d9480f"><b>${L('Carro 1', 'Cart 1')}</b></td><td>${this.m1.toFixed(1)}</td><td>${fx(-this.F, 1)}</td><td>${fx(a1, 1)}</td><td>${fx(this.v1)}</td><td>${fx(this.m1 * this.v1)}</td></tr>
+      <tr><td style="color:#1864ab"><b>${L('Carro 2', 'Cart 2')}</b></td><td>${this.m2.toFixed(1)}</td><td>${fx(this.F, 1)}</td><td>${fx(a2, 1)}</td><td>${fx(this.v2)}</td><td>${fx(this.m2 * this.v2)}</td></tr>
+      <tr class="sum"><td>${L('Suma', 'Sum')}</td><td></td><td>${fx(0, 1)}</td><td></td><td></td><td>${fx(this.m1 * this.v1 + this.m2 * this.v2)}</td></tr>`;
+  },
+  btn() { setTxt($('b4run'), this.run ? 'Pausa' : (this.t > 0 ? 'Continuar' : 'Iniciar'), this.run ? 'Pause' : (this.t > 0 ? 'Resume' : 'Start')); },
+  init() {
+    document.querySelectorAll('input[name=sc4]').forEach(r => r.onchange = () => { this.sc = r.value; this.reset(); });
+    const resetIfIdle = () => { if (this.t === 0 || this.done) this.reset(); };
+    bindRange('r4m1', 'o4m1', v => v.toFixed(1) + ' kg', v => { this.m1 = v; });
+    bindRange('r4m2', 'o4m2', v => v.toFixed(1) + ' kg', v => { this.m2 = v; });
+    bindRange('r4v1', 'o4v1', v => v.toFixed(2), v => { this.v1i = v; if (this.sc === 'collision') resetIfIdle(); });
+    bindRange('r4v2', 'o4v2', v => v.toFixed(2), v => { this.v2i = v; if (this.sc === 'collision') resetIfIdle(); });
+    bindRange('r4sp', 'o4sp', v => '×' + v.toFixed(2), v => { this.speed = v; });
+    $('b4run').onclick = () => { if (this.done) this.reset(); this.latched = false; this.run = !this.run; this.btn(); };
+    $('b4reset').onclick = () => this.reset();
+    this.reset();
+  }
+};
+
+
+/* ======================= S5: inclined plane ======================= */
+const s5 = {
+  g: setupCanvas($('c5')),
+  th: 25, m: 4, mus: 0.5, muk: 0.3, Fap: 0, dec: true,
+  L: 8, s: 6, v: 0, run: false, edge: null,
+  f: 0, a: 0, stat: true,
+  calc() {
+    const g = 9.8, t = this.th * Math.PI / 180, N = this.m * g * Math.cos(t), drive = this.Fap - this.m * g * Math.sin(t);
+    let f, a, stat = false;
+    if (Math.abs(this.v) < 1e-9) {
+      if (Math.abs(drive) <= this.mus * N + 1e-9) { f = -drive; a = 0; stat = true; }
+      else { f = -Math.sign(drive) * this.muk * N; a = (drive + f) / this.m; }
+    } else { f = -Math.sign(this.v) * this.muk * N; a = (drive + f) / this.m; }
+    return {N, drive, f, a, stat, W: this.m * g, t};
+  },
+  step(dt) {
+    if (!this.run) return;
+    const n = 10, h = dt / n;
+    for (let i = 0; i < n; i++) {
+      const c = this.calc(), nv = this.v + c.a * h;
+      if (this.v !== 0 && Math.sign(nv) !== Math.sign(this.v)) this.v = 0; else this.v = nv;
+      this.s += this.v * h;
+      if (this.s <= 0) { this.vEnd = this.v; this.s = 0; this.v = 0; this.run = false; this.edge = 'bottom'; break; }
+      if (this.s >= this.L) { this.s = this.L; this.v = 0; this.run = false; this.edge = 'top'; break; }
+    }
+    if (!this.run) this.btn();
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const c = this.calc(), t = c.t, yb = h * 0.86, Lp = Math.min(w - 160, (yb - 70) / 0.866), sp = Lp / this.L;
+    const A = {x: (w - Lp * Math.cos(t)) / 2 - 20, y: yb}, u = {x: Math.cos(t), y: -Math.sin(t)}, n = {x: -Math.sin(t), y: -Math.cos(t)};
+    const B = {x: A.x + u.x * Lp, y: A.y + u.y * Lp};
+    // ground & wedge
+    if (this.r3) {} else if (this.skin) scenery(ctx, w, h, yb, 'warehouse'); else { ctx.fillStyle = '#e9e7df'; ctx.fillRect(0, yb, w, h - yb); }
+    if (!this.r3) { ctx.fillStyle = this.skin ? '#adb5bd' : '#d8d4c7'; ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.lineTo(B.x, A.y); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#a8a294'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke(); }
+    // angle arc
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(A.x, A.y, 46, -t, 0); ctx.stroke();
+    text(ctx, `θ = ${this.th}°`, A.x + 56, A.y - 14, C.ink, 13, 'left');
+    // block
+    const bw = 64, bh = 42, P = {x: A.x + u.x * this.s * sp, y: A.y + u.y * this.s * sp};
+    const O = {x: P.x + n.x * bh / 2, y: P.y + n.y * bh / 2};
+    if (this.r3) {} else if (this.skin) {
+      ctx.fillStyle = '#495057'; ctx.fillRect(B.x - 4, B.y - 4, 150, 8); ctx.fillStyle = '#868e96'; ctx.fillRect(B.x + 4, B.y + 4, 140, A.y - B.y - 4);
+      text(ctx, L('camión', 'truck'), B.x + 74, B.y + 24, '#fff', 13, 'center', 700);
+      if (this.Fap > 0.5) { const Q = {x: A.x + u.x * (this.s * sp - bw / 2 - 6), y: A.y + u.y * (this.s * sp - bw / 2 - 6)}; const o = {facing: 1, lean: 0.35, arm: -t + 0.05, col: '#2b8a3e', pants: '#343a40', armLen: 32}; const hnd = person(ctx, 0, 0, 120, {...o, dry: true}); person(ctx, Q.x - hnd.x - 4, Q.y - hnd.y - bh / 2 + Math.sin(t) * 0 , 120, o); }
+      boxSprite(ctx, O.x, O.y, bw, bh, -t);
+      ctx.save(); ctx.translate(O.x, O.y); ctx.rotate(-t); ctx.fillStyle = '#7f5539'; ctx.font = '700 11px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(this.m + ' kg', 0, 10); ctx.restore();
+    } else {
+    ctx.save(); ctx.translate(O.x, O.y); ctx.rotate(-t);
+    ctx.fillStyle = '#5c7cfa'; ctx.beginPath(); ctx.roundRect(-bw / 2, -bh / 2, bw, bh, 5); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = '600 12px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(this.m + ' kg', 0, 0);
+    ctx.restore(); }
+    // tilted axes
+    if (this.dec) {
+      ctx.save(); ctx.strokeStyle = '#adb5bd'; ctx.setLineDash([4, 4]); ctx.lineWidth = 1; ctx.beginPath();
+      ctx.moveTo(O.x - u.x * 170, O.y - u.y * 170); ctx.lineTo(O.x + u.x * 170, O.y + u.y * 170);
+      ctx.moveTo(O.x - n.x * 140, O.y - n.y * 140); ctx.lineTo(O.x + n.x * 140, O.y + n.y * 140); ctx.stroke(); ctx.restore();
+      text(ctx, "x'", O.x + u.x * 180, O.y + u.y * 180, C.muted, 13, 'center'); text(ctx, "y'", O.x + n.x * 150, O.y + n.y * 150, C.muted, 13, 'center');
+    }
+    const fs = 120 / c.W, Ax = (vec, mag, col, wdt, lab, dash) => {
+      const x1 = O.x + vec.x * mag * fs, y1 = O.y + vec.y * mag * fs;
+      arrow(ctx, O.x, O.y, x1, y1, col, wdt, dash);
+      if (!lab || Math.abs(mag) * fs < 14) return;
+      if (dash) { const sg = Math.sign(mag), px = -vec.y * sg, py = vec.x * sg; text(ctx, lab, (O.x + x1) / 2 + px * 30, (O.y + y1) / 2 + py * 30, col, 13, 'center', 650); }
+      else tipLabel(ctx, lab, O.x, O.y, x1, y1, col);
+    };
+    if (this.dec) {
+      Ax(u, -c.W * Math.sin(t), '#e03131', 2, 'mg sinθ', [5, 4]);
+      Ax(n, -c.W * Math.cos(t), '#e03131', 2, 'mg cosθ', [5, 4]);
+    }
+    Ax({x: 0, y: 1}, c.W, '#e03131', 3.5, 'mg');
+    Ax(n, c.N, '#0c8599', 3.5, 'N');
+    if (Math.abs(c.f) > 0.01) Ax(u, c.f, '#f08c00', 3.5, c.stat ? 'fₛ' : 'fₖ');
+    if (Math.abs(this.Fap) > 0.01) Ax(u, this.Fap, '#c2255c', 3.5, 'F');
+    const net = this.Fap - c.W * Math.sin(t) + c.f;
+    if (Math.abs(net) > 0.05) { const x1 = O.x + u.x * net * fs, y1 = O.y + u.y * net * fs; arrow(ctx, O.x, O.y, x1, y1, C.R, 6, null, .55); }
+    // status
+    const crit = Math.atan(this.mus) * 180 / Math.PI;
+    if (c.stat) badge(ctx, L(`En reposo: fₛ = ${fx(Math.abs(c.f), 1)} N ≤ μₛN = ${fx(this.mus * c.N, 1)} N`, `At rest: fₛ = ${fx(Math.abs(c.f), 1)} N ≤ μₛN = ${fx(this.mus * c.N, 1)} N`), 12, 12, true);
+    else badge(ctx, L(`Desliza: fₖ = μₖN = ${fx(this.muk * c.N, 1)} N, a = ${fx(c.a)} m/s²`, `Sliding: fₖ = μₖN = ${fx(this.muk * c.N, 1)} N, a = ${fx(c.a)} m/s²`), 12, 12, false);
+    text(ctx, L(`ángulo crítico (F = 0): θc = arctan μₛ = ${fx(crit, 1)}°`, `critical angle (F = 0): θc = arctan μₛ = ${fx(crit, 1)}°`), 14, 58, C.muted, 13, 'left', 600);
+    if (this.edge) text(ctx, this.edge === 'bottom' ? L('Llegó al fondo — Reiniciar', 'Reached the bottom — Reset') : L('Llegó arriba — Reiniciar', 'Reached the top — Reset'), w - 14, 24, C.muted, 13, 'right');
+  },
+  table() {
+    const c = this.calc(), net = this.Fap - c.W * Math.sin(c.t) + c.f;
+    const r = (a, b, u) => `<tr><td>${a}</td><td>${b}</td><td>${u}</td></tr>`;
+    $('t5').innerHTML = `<tr><th>${L('Magnitud', 'Quantity')}</th><th>${L('valor', 'value')}</th><th></th></tr>`
+      + r('m g', fx(c.W, 1), 'N') + r('m g sin θ', fx(c.W * Math.sin(c.t), 1), 'N') + r('N = m g cos θ', fx(c.N, 1), 'N')
+      + r(L('fricción f', 'friction f') + (c.stat ? ' (s)' : ' (k)'), fx(c.f, 1), 'N') + r(L('F aplicada', 'applied F'), fx(this.Fap, 1), 'N')
+      + `<tr class="sum"><td>ΣF∥</td><td>${fx(net, 1)}</td><td>N</td></tr>` + r('a = ΣF∥/m', fx(net / this.m), 'm/s²') + r('v', fx(this.v), 'm/s')
+      + r(L('posición s (desde abajo)', 'position s (from bottom)'), fx(this.s), 'm');
+  },
+  btn() { setTxt($('b5run'), this.run ? 'Pausa' : 'Iniciar', this.run ? 'Pause' : 'Start'); },
+  reset() { this.s = 6; this.v = 0; this.run = false; this.edge = null; this.btn(); },
+  init() {
+    bindRange('r5th', 'o5th', v => v + '°', v => this.th = v);
+    bindRange('r5m', 'o5m', v => v.toFixed(1) + ' kg', v => this.m = v);
+    bindRange('r5ms', 'o5ms', v => v.toFixed(2), v => { this.mus = v; if (this.muk > v) { this.muk = v; $('r5mk').value = v; $('o5mk').textContent = v.toFixed(2); } });
+    bindRange('r5mk', 'o5mk', v => v.toFixed(2), v => { this.muk = v; if (this.mus < v) { this.mus = v; $('r5ms').value = v; $('o5ms').textContent = v.toFixed(2); } });
+    bindRange('r5F', 'o5F', v => v + ' N', v => this.Fap = v);
+    $('k5dec').onchange = e => this.dec = e.target.checked;
+    $('b5run').onclick = () => { if (this.edge) this.reset(); this.run = !this.run; this.btn(); };
+    $('b5reset').onclick = () => this.reset();
+    this.btn();
+  }
+};
+
+/* ======================= S6: uniform circular motion ======================= */
+const s6 = {
+  g: setupCanvas($('c6')),
+  r: 3, v: 4, m: 1, ang: 0, cut: false, pos: {x: 3, y: 0}, vel: {x: 0, y: 4}, paused: false, dv: true, trail: [], tt: 0,
+  sc() { return Math.min(this.g.w, this.g.h) * 0.42 / 5; },
+  step(dt) {
+    if (this.paused) return;
+    if (!this.cut) {
+      this.ang += this.v / this.r * dt;
+      this.pos = {x: this.r * Math.cos(this.ang), y: this.r * Math.sin(this.ang)};
+      this.vel = {x: -this.v * Math.sin(this.ang), y: this.v * Math.cos(this.ang)};
+    } else {
+      this.pos = add(this.pos, mul(this.vel, dt));
+      const s = this.sc();
+      if (Math.abs(this.pos.x) * s > this.g.w / 2 + 40 || Math.abs(this.pos.y) * s > this.g.h / 2 + 40) this.reset();
+    }
+    this.tt += dt; if (this.tt > 0.06) { this.tt = 0; this.trail.push({...this.pos}); if (this.trail.length > 60) this.trail.shift(); }
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const s = this.sc(), cx = w / 2, cy = h / 2, S = p => [cx + p.x * s, cy - p.y * s];
+    if (this.r3) {} else if (this.skin) { ctx.fillStyle = '#8ce99a'; ctx.fillRect(0, 0, w, h); ctx.fillStyle = 'rgba(43,138,62,.18)'; for (let i = 0; i < 300; i++) ctx.fillRect((i * 97) % w, (i * 61) % h, 2, 6); } else
+    grid(ctx, w, h, cx, cy, s, false);
+    ctx.save(); ctx.strokeStyle = '#ced4da'; ctx.setLineDash([5, 6]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, this.r * s, 0, 7); ctx.stroke(); ctx.restore();
+    ctx.fillStyle = '#495057'; ctx.beginPath(); ctx.arc(cx, cy, 5, 0, 7); ctx.fill();
+    this.trail.forEach((p, i) => { const [x, y] = S(p); ctx.fillStyle = `rgba(73,80,87,${0.1 + 0.5 * i / this.trail.length})`; ctx.beginPath(); ctx.arc(x, y, 2.5, 0, 7); ctx.fill(); });
+    const [bx, by] = S(this.pos), vs = 14, rb = 8 + this.m * 2.5;
+    const ac = this.v * this.v / this.r, T = this.m * ac, rp = this.r * s;
+    if (!this.cut) {
+      if (!this.r3) { ctx.strokeStyle = '#868e96'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(bx, by); ctx.stroke(); }
+      // ghost position for Δv
+      if (this.dv) {
+        const a0 = this.ang - 0.6, p0 = {x: this.r * Math.cos(a0), y: this.r * Math.sin(a0)}, v0 = {x: -this.v * Math.sin(a0), y: this.v * Math.cos(a0)};
+        const [gx, gy] = S(p0);
+        ctx.globalAlpha = .35; ctx.fillStyle = '#495057'; ctx.beginPath(); ctx.arc(gx, gy, rb, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+        arrow(ctx, gx, gy, gx + v0.x * vs, gy - v0.y * vs, C.v, 2.5, [5, 4], .6);
+        text(ctx, 'v₁', gx + v0.x * vs * 1.15, gy - v0.y * vs * 1.15, C.v, 13, 'center');
+        // inset
+        const ix = w - 190, iy = 14, iw = 176, ih = 176, ox = ix + iw / 2, oy = iy + ih / 2 + 10, k = 70 / this.v;
+        ctx.save(); ctx.fillStyle = 'rgba(255,255,255,.95)'; ctx.strokeStyle = '#dee2e6'; ctx.beginPath(); ctx.roundRect(ix, iy, iw, ih, 10); ctx.fill(); ctx.stroke(); ctx.restore();
+        text(ctx, L('Δv = v₂ − v₁', 'Δv = v₂ − v₁'), ix + 10, iy + 14, C.ink, 12.5, 'left');
+        const t1 = [ox + v0.x * k, oy - v0.y * k], t2 = [ox + this.vel.x * k, oy - this.vel.y * k];
+        arrow(ctx, ox, oy, t1[0], t1[1], C.v, 2.5, [5, 4], .7); arrow(ctx, ox, oy, t2[0], t2[1], C.v, 2.5);
+        arrow(ctx, t1[0], t1[1], t2[0], t2[1], C.a, 3);
+        text(ctx, 'v₁', t1[0] + (t1[0] - ox) * .15, t1[1] + (t1[1] - oy) * .15, C.v, 12, 'center');
+        text(ctx, 'v₂', t2[0] + (t2[0] - ox) * .15, t2[1] + (t2[1] - oy) * .15, C.v, 12, 'center');
+        { const mx = (t1[0] + t2[0]) / 2, my = (t1[1] + t2[1]) / 2, ddx = mx - ox, ddy = my - oy, dd = Math.hypot(ddx, ddy) || 1; text(ctx, 'Δv', mx + ddx / dd * 14, my + ddy / dd * 14, C.a, 12.5, 'center'); }
+        text(ctx, L('Δv apunta al centro', 'Δv points to the center'), ix + iw / 2, iy + ih - 12, C.a, 11.5, 'center', 600);
+      }
+      const u = {x: -this.pos.x / this.r, y: -this.pos.y / this.r};
+      const al = Math.min(ac * 12, rp * 0.85), Tl = al;
+      arrow(ctx, bx, by, bx + u.x * Tl, by - u.y * Tl, C.R, 9, null, .3);
+      arrow(ctx, bx, by, bx + u.x * al, by - u.y * al, C.a, 3);
+      text(ctx, 'aᶜ', bx + u.x * al * .55 + u.y * 14, by - u.y * al * .55 + u.x * 14, C.a, 14, 'center', 700);
+      text(ctx, 'T', bx + u.x * Tl * .8 - u.y * 14, by - u.y * Tl * .8 - u.x * 14, C.R, 14, 'center', 700);
+    }
+    if (this.r3) {} else if (this.skin) { ctx.fillStyle = '#f1c27d'; ctx.beginPath(); ctx.arc(cx, cy, 16, 0, 7); ctx.fill(); ctx.fillStyle = '#e8b06a'; ctx.beginPath(); ctx.arc(cx + 6, cy - 6, 6, 0, 7); ctx.fill(); text(ctx, L('mano (vista desde arriba)', 'hand (top view)'), cx, cy + 32, C.muted, 11.5, 'center', 600);
+      ctx.fillStyle = '#868e96'; ctx.beginPath(); ctx.moveTo(bx + rb, by); for (let k = 1; k < 9; k++) { const a = k / 9 * 2 * Math.PI, rr = rb * (0.82 + 0.25 * ((k * 37) % 5) / 5); ctx.lineTo(bx + rr * Math.cos(a), by + rr * Math.sin(a)); } ctx.closePath(); ctx.fill(); }
+    else { ctx.fillStyle = '#343a40'; ctx.beginPath(); ctx.arc(bx, by, rb, 0, 7); ctx.fill(); }
+    const vx = bx + this.vel.x * vs, vy = by - this.vel.y * vs;
+    arrow(ctx, bx, by, vx, vy, C.v, 4); tipLabel(ctx, 'v₂', bx, by, vx, vy, C.v);
+    if (this.cut) badge(ctx, L('Sin cuerda: ΣF = 0  ⇒  línea recta tangente', 'No string: ΣF = 0  ⇒  straight tangent line'), 12, 12, true);
+    else badge(ctx, L(`ΣF = T = m v²/r = ${fx(T, 1)} N  (hacia el centro)`, `ΣF = T = m v²/r = ${fx(T, 1)} N  (toward center)`), 12, 12, false);
+    text(ctx, L('1 cuadro = 1 m', '1 square = 1 m'), 12, h - 16, C.muted, 12, 'left', 500);
+  },
+  table() {
+    const ac = this.v * this.v / this.r;
+    const r = (a, b, u) => `<tr><td>${a}</td><td>${b}</td><td>${u}</td></tr>`;
+    $('t6').innerHTML = `<tr><th>${L('Magnitud', 'Quantity')}</th><th>${L('valor', 'value')}</th><th></th></tr>`
+      + r(L('rapidez |v|', 'speed |v|'), fx(this.v), 'm/s') + r('ω = v/r', fx(this.v / this.r), 'rad/s') + r(L('periodo T = 2πr/v', 'period T = 2πr/v'), fx(2 * Math.PI * this.r / this.v), 's')
+      + r('aᶜ = v²/r', fx(ac), 'm/s²') + `<tr class="sum"><td>${L('tensión', 'tension')} = m v²/r</td><td>${fx(this.m * ac)}</td><td>N</td></tr>`;
+  },
+  btn() { setTxt($('b6pause'), this.paused ? 'Continuar' : 'Pausa', this.paused ? 'Resume' : 'Pause'); },
+  reset() { this.cut = false; this.trail = []; this.btn(); },
+  init() {
+    bindRange('r6r', 'o6r', v => v.toFixed(2) + ' m', v => this.r = v);
+    bindRange('r6v', 'o6v', v => v.toFixed(1) + ' m/s', v => this.v = v);
+    bindRange('r6m', 'o6m', v => v.toFixed(1) + ' kg', v => this.m = v);
+    $('k6dv').onchange = e => this.dv = e.target.checked;
+    $('b6cut').onclick = () => { if (!this.cut) { this.cut = true; this.paused = false; this.btn(); } };
+    $('b6pause').onclick = () => { this.paused = !this.paused; this.btn(); };
+    $('b6reset').onclick = () => this.reset();
+    this.btn();
+  }
+};
+
+/* ======================= S7: drag ======================= */
+const s7 = {
+  g: setupCanvas($('c7')), gg: setupCanvas($('g7')),
+  m: 1, b: 0.5, c: 0.025, v0: 0,
+  y: [0, 0, 0], v: [0, 0, 0], t: 0, run: false, hist: [], ht: 0,
+  cols: ['#868e96', '#1c7ed6', '#ae3ec9'],
+  drag(i, v) { return i === 0 ? 0 : i === 1 ? this.b * v : this.c * v * Math.abs(v); },
+  vt(i) { return i === 0 ? Infinity : i === 1 ? this.m * 9.8 / this.b : Math.sqrt(this.m * 9.8 / this.c); },
+  reset() { this.y = [0, 0, 0]; this.v = [this.v0, this.v0, this.v0]; this.t = 0; this.hist = [[0, this.v0, this.v0, this.v0]]; this.run = false; this.ht = 0; this.btn(); },
+  step(dt) {
+    if (!this.run) return;
+    const n = 10, h = dt / n;
+    for (let k = 0; k < n; k++) for (let i = 0; i < 3; i++) {
+      const a = 9.8 - this.drag(i, this.v[i]) / this.m;
+      this.v[i] += a * h; this.y[i] += this.v[i] * h;
+    }
+    this.t += dt;
+    this.ht += dt; if (this.ht > 0.05) { this.ht = 0; this.hist.push([this.t, ...this.v]); }
+    if (this.t > 20) { this.run = false; this.btn(); }
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const cw = w / 3, cy = h * 0.42, ps = 6;
+    const names = [L('Vacío (sin arrastre)', 'Vacuum (no drag)'), L('Lineal  F = −b v', 'Linear  F = −b v'), L('Cuadrático  F = −c v|v|', 'Quadratic  F = −c v|v|')];
+    for (let i = 0; i < 3; i++) {
+      const x0 = i * cw, xc = x0 + cw / 2;
+      if (this.r3) {} else if (this.skin) { const g = ctx.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#74c0fc'); g.addColorStop(1, '#d0ebff'); ctx.fillStyle = g; ctx.fillRect(x0, 0, cw, h); }
+      else { ctx.fillStyle = i % 2 ? '#f4f8fc' : '#f8f9fa'; ctx.fillRect(x0, 0, cw, h); }
+      // scrolling height marks every 5 m
+      ctx.save(); ctx.beginPath(); ctx.rect(x0, 0, cw, h); ctx.clip();
+      const first = Math.floor((this.y[i] - cy / ps) / 5) * 5;
+      for (let d = first; d < this.y[i] + (h - cy) / ps + 5; d += 5) {
+        const ys = cy + (d - this.y[i]) * ps; if (d < 0) continue;
+        if (this.r3) {} else if (this.skin) { ctx.fillStyle = '#adb5bd'; ctx.fillRect(x0, ys, cw * 0.34, 5 * ps); ctx.fillStyle = '#e9ecef'; ctx.fillRect(x0, ys, cw * 0.34, 3); ctx.fillStyle = '#d0ebff'; [0.04, 0.17].forEach(k => ctx.fillRect(x0 + cw * k, ys + 7, cw * 0.1, 5 * ps - 14)); }
+        ctx.strokeStyle = d % 25 === 0 ? '#ced4da' : '#e9ecef'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, ys); ctx.lineTo(x0 + cw, ys); ctx.stroke();
+        if (d % 25 === 0) { ctx.fillStyle = C.muted; ctx.font = '11px system-ui,sans-serif'; ctx.textAlign = 'left'; ctx.fillText(`${d} m`, x0 + 6, ys - 4); }
+      }
+      ctx.restore();
+      text(ctx, names[i], xc, 20, this.cols[i], 13.5, 'center', 700);
+      const W = this.m * 9.8, D = this.drag(i, this.v[i]), fs = 80 / W;
+      arrow(ctx, xc, cy, xc, cy + W * fs, '#e03131', 4);
+      text(ctx, 'mg', xc + 16, cy + W * fs - 6, '#e03131', 13, 'left', 700);
+      if (Math.abs(D) * fs > 2) { arrow(ctx, xc, cy, xc, cy - D * fs, C.fr, 4); text(ctx, 'F_D', xc + 16, cy - D * fs + 6, C.fr, 13, 'left', 700); }
+      if (this.r3) {} else if (this.skin) basketball(ctx, xc, cy, 20, this.y[i] * 0.4); else { ctx.fillStyle = this.cols[i]; ctx.beginPath(); ctx.arc(xc, cy, 13, 0, 7); ctx.fill(); }
+      text(ctx, `v = ${fx(this.v[i], 1)} m/s`, xc, h - 40, C.ink, 14, 'center', 700);
+      text(ctx, L(`caída: ${fx(this.y[i], 0)} m`, `fallen: ${fx(this.y[i], 0)} m`), xc, h - 18, C.muted, 12.5, 'center', 500);
+      if (i > 0) { const near = Math.abs(this.v[i] - this.vt(i)) / this.vt(i) < 0.01; if (near) text(ctx, L('≈ velocidad terminal', '≈ terminal velocity'), xc, 42, '#2b8a3e', 12.5, 'center', 650); }
+      if (i) { ctx.strokeStyle = '#dee2e6'; ctx.beginPath(); ctx.moveTo(x0, 0); ctx.lineTo(x0, h); ctx.stroke(); }
+    }
+    text(ctx, `t = ${this.t.toFixed(2)} s`, w - 10, h - 18, C.ink, 13, 'right');
+    text(ctx, L('flechas a escala relativa al peso', 'arrows scaled relative to weight'), 10, h - 62, C.muted, 11.5, 'left', 500);
+    const t1 = Math.max(8, this.t);
+    const series = [0, 1, 2].map(i => ({pts: this.hist.map(p => [p[0], p[i + 1]]), col: this.cols[i], label: ['v vacío', 'v lineal', 'v cuadr.'][i]}));
+    if (LANG === 'en') ['v vacuum', 'v linear', 'v quadr.'].forEach((s, i) => series[i].label = s);
+    series.push({pts: [[0, this.vt(1)], [t1, this.vt(1)]], col: this.cols[1], dash: [3, 4], label: 'vₜ'});
+    series.push({pts: [[0, this.vt(2)], [t1, this.vt(2)]], col: this.cols[2], dash: [3, 4], label: 'vₜ'});
+    plot(this.gg, series, {xmin: 0, xmax: t1, title: L('Velocidad (m/s)', 'Velocity (m/s)'), xlab: 't (s)', minSpan: 10});
+  },
+  table() {
+    const head = `<tr><th></th><th>${L('vacío', 'vacuum')}</th><th>${L('lineal', 'linear')}</th><th>${L('cuadr.', 'quadr.')}</th></tr>`;
+    const row = (lab, f) => `<tr><td>${lab}</td>${[0, 1, 2].map(i => `<td>${f(i)}</td>`).join('')}</tr>`;
+    $('t7').innerHTML = head + row('v (m/s)', i => fx(this.v[i], 1)) + row('F_D (N)', i => fx(this.drag(i, this.v[i]), 1))
+      + row('a (m/s²)', i => fx(9.8 - this.drag(i, this.v[i]) / this.m)) + row('vₜ (m/s)', i => i ? fx(this.vt(i), 1) : '∞') + row(L('caída (m)', 'fallen (m)'), i => fx(this.y[i], 0));
+  },
+  btn() { setTxt($('b7run'), this.run ? 'Pausa' : (this.t > 0 ? 'Continuar' : 'Soltar'), this.run ? 'Pause' : (this.t > 0 ? 'Resume' : 'Drop')); },
+  init() {
+    bindRange('r7m', 'o7m', v => v.toFixed(1) + ' kg', v => this.m = v);
+    bindRange('r7b', 'o7b', v => v.toFixed(2), v => this.b = v);
+    bindRange('r7c', 'o7c', v => v.toFixed(3), v => this.c = v);
+    bindRange('r7v0', 'o7v0', v => v + ' m/s', v => { this.v0 = v; if (this.t === 0) this.reset(); });
+    $('b7run').onclick = () => { if (this.t >= 20) this.reset(); this.run = !this.run; this.btn(); };
+    $('b7reset').onclick = () => this.reset();
+    this.reset();
+  }
+};
+
+/* ======================= S8: friction ======================= */
+const s8 = {
+  g: setupCanvas($('c8')), gg: setupCanvas($('g8')),
+  mus: 0.5, muk: 0.3, m: 4, th: 0, F: 0, ramp: false,
+  x: 0, v: 0, t: 0, hist: [], ht: 0, f: 0, slid: false,
+  calc() {
+    const g = 9.8, t = this.th * Math.PI / 180, N = Math.max(0, this.m * g - this.F * Math.sin(t)), drive = this.F * Math.cos(t);
+    let f, stat = false;
+    if (this.v === 0) { if (drive <= this.mus * N) { f = drive; stat = true; } else f = this.muk * N; }
+    else f = this.muk * N;
+    return {N, drive, f, stat, a: this.v === 0 && stat ? 0 : (drive - f) / this.m};
+  },
+  reset() { this.x = 0; this.v = 0; this.t = 0; this.F = 0; this.hist = []; this.ramp = false; this.slid = false; $('r8F').value = 0; $('o8F').textContent = '0 N'; this.btn(); },
+  step(dt) {
+    if (this.ramp) { this.F = Math.min(80, this.F + 5 * dt); $('r8F').value = this.F; $('o8F').textContent = this.F.toFixed(1) + ' N'; }
+    const n = 10, h = dt / n;
+    for (let i = 0; i < n; i++) {
+      const c = this.calc(); this.f = c.f;
+      if (!c.stat) { const nv = this.v + c.a * h; this.v = nv <= 0 ? 0 : nv; this.slid = true; }
+      this.x += this.v * h;
+    }
+    this.t += dt;
+    this.ht += dt; if (this.ht > 0.05) { this.ht = 0; const c = this.calc(); this.hist.push([this.t, c.drive, c.f]); while (this.hist[0][0] < this.t - 20) this.hist.shift(); }
+    if (this.x > 40) { this.x = 0; }
+  },
+  draw() {
+    const {ctx, w, h} = this.g; ctx.clearRect(0, 0, w, h);
+    const c = this.calc(), fy = h * 0.68, sp = 40, cx = w * 0.4;
+    if (this.r3) {} else if (this.skin) scenery(ctx, w, h, fy, 'indoor', this.x * sp); else { ctx.fillStyle = '#e9e7df'; ctx.fillRect(0, fy, w, h - fy); }
+    if (!this.r3) ctx.fillStyle = '#c9c4b5'; if (!this.r3) for (let d = Math.floor((this.x - cx / sp) / 1) ; d < this.x + (w - cx) / sp; d += 1) { const px = cx + (d - this.x) * sp; ctx.fillRect(px, fy, 2, 8); }
+    const bw = 110, bh = 70, bx = cx - bw / 2, by = fy - bh;
+    if (this.r3) {} else if (this.skin) {
+      const t0 = this.th * Math.PI / 180, ax = bx + bw, ay = fy - 14;
+      const o = {facing: -1, lean: -0.22, arm: t0 - 0.22, arm2: t0 - 0.1, col: '#1c7ed6', pants: '#495057', armLen: 30}, hd = person(ctx, 0, 0, 130, {...o, dry: true});
+      const hy = fy + hd.y, dy = ay - hy, dx = t0 > 0.05 ? clamp(dy / Math.tan(t0), 70, 260) : 160, R = {x: ax + dx, y: hy};
+      person(ctx, R.x - hd.x, fy, 130, o);
+      ctx.strokeStyle = '#8d6e3f'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(R.x, R.y); ctx.stroke();
+      ctx.fillStyle = '#8b5a2b'; ctx.beginPath(); ctx.roundRect(bx, by - 40, bw, bh + 40, 4); ctx.fill();
+      ctx.strokeStyle = '#5c3a1e'; ctx.lineWidth = 2; [0.33, 0.66].forEach(k => { ctx.beginPath(); ctx.moveTo(bx + 6, by - 40 + (bh + 40) * k); ctx.lineTo(bx + bw - 6, by - 40 + (bh + 40) * k); ctx.stroke(); });
+      ctx.fillStyle = '#ffd43b'; [0.17, 0.5, 0.83].forEach(k => { ctx.beginPath(); ctx.arc(cx, by - 40 + (bh + 40) * k, 4, 0, 7); ctx.fill(); });
+      text(ctx, L('mueble ', 'cabinet ') + this.m + ' kg', cx, by - 54, '#5c3a1e', 13, 'center', 750);
+    } else {
+    ctx.fillStyle = '#a0522d'; ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 4); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = '600 13px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(this.m + ' kg', cx, by + bh / 2); }
+    const fs = 140 / (this.m * 9.8), O = {x: cx, y: by + bh / 2}, t = this.th * Math.PI / 180;
+    arrow(ctx, O.x, O.y, O.x, O.y + this.m * 9.8 * fs, '#e03131', 3); text(ctx, 'mg', O.x + 14, O.y + this.m * 9.8 * fs - 8, '#e03131', 13, 'left', 700);
+    arrow(ctx, O.x - 18, fy, O.x - 18, fy - c.N * fs, '#0c8599', 3); text(ctx, 'N', O.x - 32, fy - c.N * fs + 8, '#0c8599', 13, 'right', 700);
+    if (this.F > 0.01) { const ex = bx + bw, ey = by + bh / 2, L_ = this.F * fs; arrow(ctx, ex, ey, ex + Math.cos(t) * L_, ey - Math.sin(t) * L_, '#c2255c', 4); text(ctx, `F = ${fx(this.F, 1)} N`, ex + Math.cos(t) * L_ + 10, ey - Math.sin(t) * L_ - 12, '#c2255c', 13, 'left', 700); }
+    if (c.f > 0.01) { arrow(ctx, bx, fy - 6, bx - c.f * fs, fy - 6, C.fr, 4); text(ctx, `f${c.stat ? 'ₛ' : 'ₖ'} = ${fx(c.f, 1)} N`, bx - c.f * fs / 2, fy + 18, C.fr, 13, 'center', 700); }
+    if (this.v > 0.01) { arrow(ctx, cx, by - 20, cx + this.v * 25, by - 20, C.v, 3.5); text(ctx, `v = ${fx(this.v)} m/s`, cx + this.v * 12, by - 36, C.v, 13, 'center'); }
+    if (c.stat) badge(ctx, L(`Estática: fₛ = ${fx(c.f, 1)} N  (máx μₛN = ${fx(this.mus * c.N, 1)} N)`, `Static: fₛ = ${fx(c.f, 1)} N  (max μₛN = ${fx(this.mus * c.N, 1)} N)`), 12, 12, true);
+    else badge(ctx, L(`Desliza: fₖ = μₖN = ${fx(c.f, 1)} N`, `Sliding: fₖ = μₖN = ${fx(c.f, 1)} N`), 12, 12, false);
+    const t1 = Math.max(10, this.t), t0 = Math.max(0, t1 - 20), N = c.N;
+    plot(this.gg, [
+      {pts: this.hist.map(p => [p[0], p[1]]), col: '#c2255c', label: 'F cos θ'}, {pts: this.hist.map(p => [p[0], p[2]]), col: C.fr, label: L('fricción f', 'friction f')},
+      {pts: [[t0, this.mus * N], [t1, this.mus * N]], col: '#868e96', dash: [3, 4], label: 'μₛN'}, {pts: [[t0, this.muk * N], [t1, this.muk * N]], col: '#ced4da', dash: [3, 4], label: 'μₖN'}
+    ], {xmin: t0, xmax: t1, title: 'N', xlab: 't (s)', minSpan: 10});
+  },
+  table() {
+    const c = this.calc(), r = (a, b, u) => `<tr><td>${a}</td><td>${b}</td><td>${u}</td></tr>`;
+    $('t8').innerHTML = r('N = mg − F sin θ', fx(c.N, 1), 'N') + r('F cos θ', fx(c.drive, 1), 'N') + r('μₛ N', fx(this.mus * c.N, 1), 'N') + r('μₖ N', fx(this.muk * c.N, 1), 'N')
+      + `<tr class="sum"><td>f (${c.stat ? L('estática', 'static') : L('cinética', 'kinetic')})</td><td>${fx(c.f, 1)}</td><td>N</td></tr>` + r('a', fx(c.a), 'm/s²') + r('v', fx(this.v), 'm/s');
+  },
+  btn() { setTxt($('b8ramp'), this.ramp ? 'Detener rampa' : 'Rampa: aumentar F poco a poco', this.ramp ? 'Stop ramp' : 'Ramp: increase F slowly'); },
+  init() {
+    document.querySelectorAll('input[name=mat8]').forEach(r => r.onchange = () => { [this.mus, this.muk] = r.value.split(',').map(Number); this.reset(); });
+    bindRange('r8m', 'o8m', v => v.toFixed(1) + ' kg', v => this.m = v);
+    bindRange('r8th', 'o8th', v => v + '°', v => this.th = v);
+    bindRange('r8F', 'o8F', v => v.toFixed(1) + ' N', v => { this.F = v; this.ramp = false; this.btn(); });
+    $('b8ramp').onclick = () => { if (!this.ramp && (this.slid || this.F >= 80)) this.reset(); this.ramp = !this.ramp; this.btn(); };
+    $('b8reset').onclick = () => this.reset();
+    this.btn();
+  }
+};
+
+/* ---------- 3D views · Theme 1 ---------- */
+if (G3.ok) {
+const {M, mesh, rbox, cyl, sph, tube, setTube, helix, mannequin, tex} = G3;
+
+VIEWS.s1 = {   // picture hanging from two cables
+  build(v, sc) {
+    v.back('studio'); v.lights({key: 500});
+    const wall = v.wall(0xc9bca6, -0.6, {map: tex('plaster', 256, 256, (g, w, h) => { g.fillStyle = '#e9dcc6'; g.fillRect(0, 0, w, h); G3.noise(g, w, h, 4000, '#a89878', 0.25, 2); }, [20, 10])});
+    const fr = new THREE.Group(), wood = M.wood('#7a4e24');
+    const outer = mesh(rbox(0.9, 0.68, 0.06, 0.02), wood); fr.add(outer);
+    const pic = new THREE.Mesh(new THREE.PlaneGeometry(0.76, 0.54), new THREE.MeshStandardMaterial({roughness: 0.5, map: tex('landscape', 256, 180, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#74c0fc'); gr.addColorStop(1, '#e7f5ff'); g.fillStyle = gr; g.fillRect(0, 0, w, h); g.fillStyle = '#ffd43b'; g.beginPath(); g.arc(w * .78, h * .25, 16, 0, 7); g.fill(); g.fillStyle = '#5c940d'; g.beginPath(); g.moveTo(0, h); g.lineTo(w * .3, h * .45); g.lineTo(w * .55, h * .8); g.lineTo(w * .75, h * .5); g.lineTo(w, h); g.fill(); g.fillStyle = '#2b8a3e'; g.fillRect(0, h * .85, w, h * .15); })}));
+    pic.position.z = 0.031; fr.add(pic); v.o.fr = v.add(fr);
+    v.o.cab = [0, 1].map(() => v.add(tube([new THREE.Vector3(), new THREE.Vector3(0.1, 0.1, 0)], 0.008, M.metal(0x6c5f4b, 0.6))));
+    v.o.nail = [0, 1].map(() => v.add(cyl(0.025, 0.025, 0.05, M.chrome())));
+    v.o.nail.forEach(n => n.rotation.x = Math.PI / 2);
+  },
+  sync(v, sc) {
+    const g = sc.geo(); v.o.fr.position.copy(v.P(g.ox, g.oy, -0.5));
+    sc.list().slice(0, 2).forEach((f, i) => {
+      const vis = f.y > 0; v.o.cab[i].visible = v.o.nail[i].visible = vis; if (!vis) return;
+      const nx = g.ox + f.x * 1.6 * g.s, ny = g.oy - f.y * 1.6 * g.s;
+      setTube(v.o.cab[i], [v.P(g.ox + Math.sign(f.x) * 30, g.oy - 30, -0.52), v.P(nx, ny, -0.55)], 0.008, 4);
+      v.o.nail[i].position.copy(v.P(nx, ny, -0.56));
+    });
+  }
+};
+
+VIEWS.s2 = {   // curling stone on the sheet (top view)
+  build(v, sc) {
+    v.table('ice', {rep: 3, rough: 0.35}); v.floorMesh.material.color.set(0xc9dcea); v.topLights({key: 1.8});
+    const house = sc.toS({x: 0.2, y: 0});
+    [[1.83, 0x1c7ed6], [1.22, 0xf8f9fa], [0.61, 0xe03131], [0.15, 0xf8f9fa]].forEach(([r, c], i) => { const d = new THREE.Mesh(new THREE.CircleGeometry(r * sc.s / 100, 64), M.matte(c, 0.3)); d.position.copy(v.P(house[0], house[1], 0.002 + i * 0.001)); d.receiveShadow = true; v.add(d); });
+    const line = new THREE.Mesh(new THREE.PlaneGeometry(0.03, 40), M.matte(0xe03131, 0.4)); line.position.copy(v.P(house[0], house[1], 0.006)); v.add(line);
+    const st = new THREE.Group(), gran = M.matte(0x8a8f96, 0.35);
+    const body = cyl(0.22, 0.22, 0.13, gran, 48); body.rotation.x = Math.PI / 2; st.add(body);
+    const band = cyl(0.222, 0.222, 0.03, M.matte(0x5c636a, 0.3), 48); band.rotation.x = Math.PI / 2; st.add(band);
+    const h = mesh(rbox(0.22, 0.05, 0.06, 0.02), M.plastic(0xe03131)); h.position.z = 0.09; st.add(h);
+    const hb = cyl(0.03, 0.03, 0.05, M.plastic(0xe03131)); hb.rotation.x = Math.PI / 2; hb.position.set(-0.07, 0, 0.065); st.add(hb);
+    v.o.st = v.add(st);
+  },
+  sync(v, sc) { const [x, y] = sc.toS(sc.pos); v.o.st.position.copy(v.P(x, y, 0.056)); v.o.st.rotation.z += 0.004 * Math.hypot(sc.vel.x, sc.vel.y); }
+};
+
+VIEWS.s3 = {   // delivery drone in a crosswind
+  build(v, sc) {
+    v.back('sky', 40); v.lights({key: 700, amb: 0.35, hemi: 0.6});
+    const d = new THREE.Group(), dark = M.plastic(0x2b2f36, 0.3);
+    d.add(mesh(rbox(0.36, 0.1, 0.24, 0.04), dark));
+    v.o.rot = [];
+    [[1, 1], [1, -1], [-1, 1], [-1, -1]].forEach(([a, b]) => { const arm = mesh(new THREE.BoxGeometry(0.34, 0.025, 0.025), dark); arm.position.set(a * 0.15, 0.02, b * 0.12); arm.rotation.y = Math.atan2(b * 0.12, a * 0.15) * -1; d.add(arm);
+      const mot = cyl(0.03, 0.03, 0.05, M.chrome()); mot.position.set(a * 0.28, 0.05, b * 0.22); d.add(mot);
+      const r = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 0.004, 32), new THREE.MeshStandardMaterial({color: 0x999999, transparent: true, opacity: 0.35, roughness: 0.4})); r.position.set(a * 0.28, 0.08, b * 0.22); d.add(r); v.o.rot.push(r); });
+    const pk = mesh(rbox(0.2, 0.15, 0.18, 0.015), M.cardboard()); pk.position.y = -0.15; d.add(pk);
+    const led = sph(0.015, M.glow(0x40c057, 3)); led.position.set(0.18, 0, 0); d.add(led);
+    d.rotation.x = 0.35; v.o.d = v.add(d);
+  },
+  sync(v, sc, t) {
+    const [px, py] = sc.toS(sc.pos); v.o.d.position.copy(v.P(px, py, 0));
+    const F = sc.Fvec(); v.o.d.rotation.z = -Math.atan2(F.x, 9) * 0.6; v.o.rot.forEach((r, i) => r.scale.set(1, 1, 1 + 0.05 * Math.sin(t * 60 + i)));
+  }
+};
+
+VIEWS.s4 = {   // skaters pushing off
+  build(v, sc) {
+    const ty = v.H * 0.62; v.back('studio'); v.floor('ice', ty); v.lights({key: 650});
+    const boards = mesh(new THREE.BoxGeometry(60, 0.45, 0.08), M.matte(0xf1f3f5, 0.4)); boards.position.set(v.W / 200, -ty / 100 + 0.225, -2.2); v.add(boards);
+    [0x1c7ed6, 0xe03131, 0x2f9e44, 0xf59f00, 0x7950f2].forEach((c, i) => { const ad = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.3), M.matte(c, 0.5)); ad.position.set(v.W / 200 - 4 + i * 2, -ty / 100 + 0.23, -2.155); v.add(ad); });
+    const rail = mesh(new THREE.BoxGeometry(60, 0.05, 0.12), M.matte(0xe03131, 0.5)); rail.position.set(v.W / 200, -ty / 100 + 0.47, -2.2); v.add(rail);
+    v.o.a = mannequin({shirt: 0xe64980, pants: 0x5f3dc4, hair: 0x862e9c, long: true, skates: true}); v.o.b = mannequin({shirt: 0x1c7ed6, pants: 0x343a40, skates: true});
+    v.add(v.o.a.group, v.o.b.group); v.ty = ty;
+  },
+  sync(v, sc) {
+    const s = v.W / 12, X = x => v.W / 2 + x * s, push = sc.gap() < sc.L0 + 0.05;
+    [[v.o.a, sc.x1, sc.m1, 1], [v.o.b, sc.x2, sc.m2, -1]].forEach(([p, x, m, f]) => {
+      const H = (135 + 12 * m) / 100; p.group.scale.setScalar(H); p.group.position.copy(v.P(X(x), v.ty, 0)); p.group.rotation.y = f > 0 ? 0 : Math.PI;
+      p.pose({lean: push ? 0.15 : 0, armL: push ? 1.45 : 0.2, armR: push ? 1.35 : 0.25, stride: 0.1});
+    });
+  }
+};
+
+VIEWS.s5 = {   // pushing a box up a loading ramp
+  geo(v, sc) {
+    const w = v.W, h = v.H, t = sc.th * Math.PI / 180, yb = h * 0.86, Lp = Math.min(w - 160, (yb - 70) / 0.866), sp = Lp / sc.L;
+    const A = {x: (w - Lp * Math.cos(t)) / 2 - 20, y: yb}, u = {x: Math.cos(t), y: -Math.sin(t)}, n = {x: -Math.sin(t), y: -Math.cos(t)};
+    return {t, yb, Lp, sp, A, u, n, B: {x: A.x + u.x * Lp, y: A.y + u.y * Lp}};
+  },
+  build(v, sc) {
+    const G = this.geo(v, sc); v.back('studio'); v.floor('concrete', G.yb, {rep: 4}); v.lights({key: 600});
+    const ww = v.wall(0, -3, {map: tex('corr', 256, 256, (g, w, h) => { for (let x = 0; x < w; x += 16) { const gr = g.createLinearGradient(x, 0, x + 16, 0); gr.addColorStop(0, '#9aa3ab'); gr.addColorStop(0.5, '#c5ccd3'); gr.addColorStop(1, '#8a939b'); g.fillStyle = gr; g.fillRect(x, 0, 16, h); } }, [30, 8])}); ww.material.color.set(0x6f767d);
+    v.o.ramp = new THREE.Group(); v.add(v.o.ramp);
+    v.o.box = v.add(mesh(rbox(0.64, 0.42, 0.5, 0.02), M.cardboard()));
+    v.o.man = mannequin({shirt: 0x2b8a3e, pants: 0x343a40}); v.add(v.o.man.group);
+    const truck = mesh(rbox(1.6, 1.4, 1.6, 0.05), M.metal(0x868e96, 0.5)); v.o.truck = v.add(truck); v.thLast = null;
+  },
+  sync(v, sc) {
+    const G = this.geo(v, sc);
+    if (v.thLast !== sc.th) { v.thLast = sc.th; v.o.ramp.clear();
+      const sh = new THREE.Shape(); sh.moveTo(G.A.x / 100, -G.A.y / 100); sh.lineTo(G.B.x / 100, -G.B.y / 100); sh.lineTo(G.B.x / 100, -G.A.y / 100); sh.closePath();
+      const geo = new THREE.ExtrudeGeometry(sh, {depth: 1.2, bevelEnabled: false}); geo.translate(0, 0, -0.6); v.o.ramp.add(mesh(geo, M.matte(0xa5abb0, 0.7)));
+      v.o.truck.position.set(G.B.x / 100 + 0.8, -G.B.y / 100 - 0.7 + 0.0, -0.2); }
+    const bh = 42, P = {x: G.A.x + G.u.x * sc.s * G.sp, y: G.A.y + G.u.y * sc.s * G.sp}, O = {x: P.x + G.n.x * bh / 2, y: P.y + G.n.y * bh / 2};
+    v.o.box.position.copy(v.P(O.x, O.y, 0)); v.o.box.rotation.z = G.t;
+    const man = v.o.man, show = sc.Fap > 0.5; man.group.visible = show;
+    if (show) { const back = sc.s * G.sp - 32 - 26, Q = {x: G.A.x + G.u.x * back, y: G.A.y + G.u.y * back}; man.group.scale.setScalar(1.25); man.group.position.copy(v.P(Q.x - 18, Q.y, 0)); man.pose({lean: 0.42, armL: 1.25 + G.t, armR: 1.15 + G.t, stride: 0.3}); }
+  }
+};
+
+VIEWS.s8 = {   // dragging a cabinet across a wooden floor
+  build(v, sc) {
+    const fy = v.H * 0.68; v.fy = fy; v.back('studio'); v.floor('wood', fy, {rep: 3, rough: 0.5}); v.lights({key: 600});
+    v.wall(0, -2.5, {map: tex('paper', 256, 256, (g, w, h) => { g.fillStyle = '#efe3cf'; g.fillRect(0, 0, w, h); for (let x = 0; x < w; x += 32) { g.fillStyle = 'rgba(0,0,0,.04)'; g.fillRect(x, 0, 16, h); } }, [24, 8])});
+    const base = mesh(new THREE.BoxGeometry(80, 0.12, 0.04), M.matte(0xffffff, 0.5)); base.position.set(v.W / 200, -fy / 100 + 0.06, -2.48); v.add(base);
+    const cab = new THREE.Group(), wd = M.wood('#8b5a2b');
+    cab.add(mesh(rbox(1.1, 1.1, 0.55, 0.02), wd));
+    [-0.33, 0, 0.33].forEach(y => { const dr = mesh(rbox(0.98, 0.3, 0.03, 0.01), M.wood('#7a4e24')); dr.position.set(0, y, 0.285); cab.add(dr); const k = sph(0.025, M.metal(0xd4a017, 0.3)); k.position.set(0, y, 0.31); cab.add(k); });
+    v.o.cab = v.add(cab);
+    v.o.man = mannequin({shirt: 0x1c7ed6, pants: 0x495057}); v.add(v.o.man.group);
+    v.o.rope = v.add(tube([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)], 0.012, M.matte(0x8d6e3f, 0.9)));
+  },
+  sync(v, sc) {
+    const fy = v.fy, cx = v.W * 0.4, t0 = sc.th * Math.PI / 180;
+    v.o.cab.position.copy(v.P(cx, fy - 55, 0));
+    if (v.floorMesh) v.floorMesh.material.map.offset.x = sc.x * 40 / 100 / 3;
+    const ax = cx + 55, ay = fy - 14, H = 1.35, hand = {x: 0, y: (0.79 - 0.36 * Math.cos(t0 + 0.2)) * H * 100};
+    const dy = hand.y - 14, dx = t0 > 0.05 ? clamp(dy / Math.tan(t0), 70, 260) : 170;
+    const man = v.o.man; man.group.scale.setScalar(H); man.group.position.copy(v.P(ax + dx + 10, fy, 0)); man.group.rotation.y = Math.PI;
+    man.pose({lean: -0.25, armL: Math.PI / 2 - t0 + 0.25, armR: Math.PI / 2 - t0 + 0.35, stride: 0.25});
+    setTube(v.o.rope, [v.P(ax, ay, 0.05), v.P(ax + dx, fy - hand.y, 0.1)], 0.012, 4);
+  }
+};
+
+VIEWS.s6 = {   // stone on a string (top view)
+  build(v, sc) {
+    v.table('grass', {rep: 2}); v.topLights();
+    v.o.hand = v.add(sph(0.16, M.matte(0xf1c27d, 0.6)));
+    v.o.stone = v.add(mesh(new THREE.DodecahedronGeometry(0.14, 0), M.matte(0x7d8288, 0.7)));
+    v.o.str = v.add(tube([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)], 0.01, M.matte(0xd9c9a3, 0.9)));
+  },
+  sync(v, sc) {
+    const s = sc.sc(), cx = v.W / 2, cy = v.H / 2, bx = cx + sc.pos.x * s, by = cy - sc.pos.y * s;
+    v.o.hand.position.copy(v.P(cx, cy, 0.16)); v.o.stone.position.copy(v.P(bx, by, 0.15)); v.o.stone.rotation.z += 0.05;
+    v.o.str.visible = !sc.cut; if (!sc.cut) setTube(v.o.str, [v.P(cx, cy, 0.16), v.P(bx, by, 0.15)], 0.01, 3);
+  }
+};
+
+VIEWS.s7 = {   // basketballs falling past a building
+  build(v, sc) {
+    v.back('sky', 40); v.lights({key: 650, amb: 0.4, hemi: 0.5});
+    const cw = v.W / 3, facade = tex('facade', 256, 256, (g, w, h) => { g.fillStyle = '#8f98a1'; g.fillRect(0, 0, w, h); g.fillStyle = '#b8d8f0'; for (let r = 0; r < 2; r++) for (let c = 0; c < 2; c++) g.fillRect(24 + c * 120, 20 + r * 128, 90, 96); g.fillStyle = 'rgba(0,0,0,.25)'; g.fillRect(0, 124, w, 8); });
+    v.o.fac = [0, 1, 2].map(i => { const t = facade.clone(); t.needsUpdate = true; t.repeat.set(1, v.H / 100 / 0.6); const m = mesh(new THREE.PlaneGeometry(cw * 0.34 / 100, v.H / 100 + 2), new THREE.MeshStandardMaterial({map: t, roughness: 0.8}), false); m.position.set((i * cw + cw * 0.17) / 100, -v.H / 200, -0.3); v.add(m); return m; });
+    const bt = tex('bball', 256, 128, (g, w, h) => { g.fillStyle = '#e8590c'; g.fillRect(0, 0, w, h); G3.noise(g, w, h, 3000, '#7a2e05', 0.3, 2); g.strokeStyle = '#2b1a0e'; g.lineWidth = 4; g.beginPath(); g.moveTo(0, h / 2); g.lineTo(w, h / 2); for (let k = 0; k < 4; k++) { g.moveTo(k * w / 4, 0); g.lineTo(k * w / 4, h); } g.stroke(); });
+    v.o.ball = [0, 1, 2].map(() => v.add(sph(0.2, new THREE.MeshStandardMaterial({map: bt, roughness: 0.6}))));
+  },
+  sync(v, sc) {
+    const cw = v.W / 3, cy = v.H * 0.42;
+    v.o.ball.forEach((b, i) => { b.position.copy(v.P(i * cw + cw / 2, cy, 0)); b.rotation.x = sc.y[i] * 0.3; });
+    v.o.fac.forEach((f, i) => { f.material.map.offset.y = sc.y[i] / 10; });
+  }
+};
+}
+
+const PROB = {
+  s1: {noDefault: true, title: ['Colgar un cuadro con dos cables', 'Hanging a picture with two cables'],
+    text: ['Un cuadro de 6 N (≈ 0.6 kg) cuelga de dos cables simétricos que forman 45° con la horizontal. El cuadro está en reposo.', 'A 6 N picture (≈ 0.6 kg) hangs from two symmetric cables at 45° to the horizontal. The picture is at rest.'],
+    q: ['¿Qué tensión soporta cada cable?', 'What tension does each cable carry?'],
+    steps: [['Reposo ⇒ ΣF = 0: T₁ + T₂ + W = 0, con W = (0, −6) N.', 'At rest ⇒ ΣF = 0: T₁ + T₂ + W = 0, with W = (0, −6) N.'],
+      ['Eje x: −T cos 45° + T cos 45° = 0 (se cumple por simetría).', 'x axis: −T cos 45° + T cos 45° = 0 (holds by symmetry).'],
+      ['Eje y: 2 T sin 45° − 6 = 0 ⇒ T = 6 / (2 × 0.707).', 'y axis: 2 T sin 45° − 6 = 0 ⇒ T = 6 / (2 × 0.707).'],
+      ['En la simulación: F₁ = (−3, 3), F₂ = (3, 3), F₃ = (0, −6); revisa que ΣF = 0 en la tabla.', 'In the simulation: F₁ = (−3, 3), F₂ = (3, 3), F₃ = (0, −6); check ΣF = 0 in the table.']],
+    ans: ['T ≈ 4.24 N en cada cable (más que la mitad del peso: por eso los cables casi horizontales se revientan).', 'T ≈ 4.24 N in each cable (more than half the weight — that is why nearly horizontal cables snap).'],
+    load() { s1.F = [{x: -3, y: 3}, {x: 3, y: 3}, {x: 0, y: -6}]; s1.use3 = true; $('k1f3').checked = true; setChk('k1comp', true); $('b1reset').click(); }},
+  s2: {title: ['Piedra de curling', 'Curling stone'],
+    text: ['Una piedra de curling sale a 2 m/s sobre hielo pulido. El coeficiente de fricción cinética es apenas μₖ = 0.02.', 'A curling stone leaves at 2 m/s on polished ice. The kinetic friction coefficient is only μₖ = 0.02.'],
+    q: ['¿Qué distancia recorre antes de detenerse? ¿Y si no hubiera fricción?', 'How far does it travel before stopping? And with no friction?'],
+    steps: [['La única fuerza horizontal es la fricción: f = μₖ m g, así que a = −μₖ g = −0.196 m/s².', 'The only horizontal force is friction: f = μₖ m g, so a = −μₖ g = −0.196 m/s².'],
+      ['Distancia: d = v² / (2 μₖ g) = 4 / 0.392.', 'Distance: d = v² / (2 μₖ g) = 4 / 0.392.'],
+      ['Tiempo: t = v / (μₖ g) = 2 / 0.196.', 'Time: t = v / (μₖ g) = 2 / 0.196.'],
+      ['Sin fricción ΣF = 0 y, por la 1ª ley, seguiría a 2 m/s indefinidamente.', 'With no friction ΣF = 0 and, by the 1st law, it would keep going at 2 m/s forever.']],
+    ans: ['d ≈ 10.2 m en t ≈ 10.2 s. Sin fricción, nunca se detiene.', 'd ≈ 10.2 m in t ≈ 10.2 s. With no friction it never stops.'],
+    load() { setChk('k2fr', true); setR('r2mu', 0.02); setR('r2m', 2); s2.pos = {x: -10, y: 0}; s2.vel = {x: 2, y: 0}; s2.trail = []; s2.paused = false; s2.btn(); }},
+  s3: {title: ['Dron con viento lateral', 'Drone in a crosswind'],
+    text: ['Un dron de reparto de 1.5 kg avanza a 2 m/s hacia el este. De pronto, una ráfaga lo empuja con una fuerza neta de 3 N hacia el norte.', 'A 1.5 kg delivery drone flies east at 2 m/s. Suddenly a gust pushes it with a net force of 3 N to the north.'],
+    q: ['¿Qué aceleración tiene? ¿Cuál es su velocidad (magnitud y dirección) 2 s después?', 'What is its acceleration? What is its velocity (magnitude and direction) 2 s later?'],
+    steps: [['a = ΣF / m = 3 / 1.5 = 2 m/s² hacia el norte (misma dirección que la fuerza, no que la velocidad).', 'a = ΣF / m = 3 / 1.5 = 2 m/s² north (same direction as the force, not the velocity).'],
+      ['Por componentes: vₓ = 2 m/s (sin fuerza en x, no cambia); v_y = 0 + 2 × 2 = 4 m/s.', 'By components: vₓ = 2 m/s (no force in x, unchanged); v_y = 0 + 2 × 2 = 4 m/s.'],
+      ['|v| = √(2² + 4²) ≈ 4.47 m/s, θ = arctan(4/2) ≈ 63° al norte del este.', '|v| = √(2² + 4²) ≈ 4.47 m/s, θ = arctan(4/2) ≈ 63° north of east.']],
+    ans: ['a = 2 m/s² (norte); v ≈ 4.47 m/s a 63° del este. La trayectoria es una parábola.', 'a = 2 m/s² (north); v ≈ 4.47 m/s at 63° from east. The path is a parabola.'],
+    load() { setR('r3m', 1.5); setRad('m3', 'const'); s3.mode = 'const'; s3.F = {x: 0, y: 3}; s3.v0 = {x: 2, y: 0}; const W = s3.g.w / s3.sp / 2, H = s3.g.h / s3.sp / 2; s3.p0 = {x: -W * 0.85, y: -H * 0.8}; s3.reset(); s3.run = true; s3.btn(); }},
+  s4: {title: ['Patinadores que se empujan', 'Skaters pushing off'],
+    text: ['En la pista de hielo, Ana (50 kg) y Beto (75 kg) están quietos y se empujan con las manos. Ana sale hacia atrás a 1.5 m/s. (Simulación a escala 1:25: 2 kg y 3 kg; solo importa la razón de masas.)', 'On the ice rink, Ana (50 kg) and Beto (75 kg) stand still and push each other. Ana moves back at 1.5 m/s. (Simulation scaled 1:25: 2 kg and 3 kg; only the mass ratio matters.)'],
+    q: ['¿Quién empuja más fuerte? ¿A qué velocidad sale Beto?', 'Who pushes harder? How fast does Beto move?'],
+    steps: [['3ª ley: la fuerza sobre Ana y sobre Beto es igual y opuesta en todo momento.', '3rd law: the force on Ana and on Beto is equal and opposite at every instant.'],
+      ['Mismo tiempo de contacto ⇒ mismo impulso ⇒ m_A v_A = m_B v_B (el ímpetu total sigue siendo 0).', 'Same contact time ⇒ same impulse ⇒ m_A v_A = m_B v_B (total momentum stays 0).'],
+      ['v_B = 50 × 1.5 / 75.', 'v_B = 50 × 1.5 / 75.']],
+    ans: ['Ninguno: las fuerzas son iguales. Beto sale a 1.0 m/s (en sentido opuesto).', 'Neither: the forces are equal. Beto moves at 1.0 m/s (opposite direction).'],
+    load() { setRad('sc4', 'explosion'); setR('r4m1', 2); setR('r4m2', 3); s4.reset(); }},
+  s5: {title: ['Subir una caja por una rampa de carga', 'Pushing a box up a loading ramp'],
+    text: ['Un repartidor empuja una caja de 8 kg, paralelo a una rampa de 20°. Entre caja y rampa: μₛ = 0.4 y μₖ = 0.3.', 'A courier pushes an 8 kg box parallel to a 20° ramp. Between box and ramp: μₛ = 0.4 and μₖ = 0.3.'],
+    q: ['¿Qué fuerza mínima hace que empiece a subir? ¿Y cuál la mantiene subiendo a velocidad constante?', 'What minimum force starts it moving up? And what force keeps it moving up at constant speed?'],
+    steps: [['N = m g cos 20° = 8 × 9.8 × 0.940 ≈ 73.7 N; m g sin 20° ≈ 26.8 N.', 'N = m g cos 20° = 8 × 9.8 × 0.940 ≈ 73.7 N; m g sin 20° ≈ 26.8 N.'],
+      ['Para arrancar: F = m g sin θ + μₛ N = 26.8 + 0.4 × 73.7 ≈ 56.3 N.', 'To start: F = m g sin θ + μₛ N = 26.8 + 0.4 × 73.7 ≈ 56.3 N.'],
+      ['Ya en movimiento (a = 0): F = m g sin θ + μₖ N = 26.8 + 0.3 × 73.7 ≈ 48.9 N.', 'Once moving (a = 0): F = m g sin θ + μₖ N = 26.8 + 0.3 × 73.7 ≈ 48.9 N.'],
+      ['En la simulación: con F = 57 N arranca; luego baja F a 49 N y la aceleración se vuelve ≈ 0.', 'In the simulation: with F = 57 N it starts; then lower F to 49 N and the acceleration becomes ≈ 0.']],
+    ans: ['F para arrancar ≈ 56 N; F a velocidad constante ≈ 49 N.', 'Starting F ≈ 56 N; constant-speed F ≈ 49 N.'],
+    load() { setR('r5th', 20); setR('r5m', 8); setR('r5ms', 0.4); setR('r5mk', 0.3); setR('r5F', 57); s5.s = 2; s5.v = 0; s5.edge = null; s5.run = true; s5.btn(); }},
+  s8: {title: ['Arrastrar un mueble', 'Dragging furniture'],
+    text: ['Quieres mover un mueble de madera de 10 kg sobre un piso de madera (μₛ = 0.5, μₖ = 0.3).', 'You want to move a 10 kg wooden cabinet across a wooden floor (μₛ = 0.5, μₖ = 0.3).'],
+    q: ['¿Qué fuerza horizontal necesitas para arrancarlo? ¿Y si jalas con una cuerda a 30° sobre la horizontal?', 'What horizontal force starts it moving? And if you pull with a rope 30° above horizontal?'],
+    steps: [['Horizontal: N = m g = 98 N ⇒ F = μₛ N = 49 N.', 'Horizontal: N = m g = 98 N ⇒ F = μₛ N = 49 N.'],
+      ['A 30°: la componente vertical aligera al mueble: N = m g − F sin 30°.', 'At 30°: the vertical component lightens the cabinet: N = m g − F sin 30°.'],
+      ['Arranca cuando F cos 30° = μₛ (m g − F sin 30°) ⇒ F = μₛ m g / (cos 30° + μₛ sin 30°) = 49 / 1.116.', 'It starts when F cos 30° = μₛ (m g − F sin 30°) ⇒ F = μₛ m g / (cos 30° + μₛ sin 30°) = 49 / 1.116.'],
+      ['Usa la rampa y observa en qué F cae la fricción a μₖN.', 'Use the ramp and watch at which F the friction drops to μₖN.']],
+    ans: ['49 N jalando horizontal; ≈ 43.9 N jalando a 30° (¡10 % menos!).', '49 N pulling horizontally; ≈ 43.9 N pulling at 30° (10 % less!).'],
+    load() { setRad('mat8', '0.5,0.3'); setR('r8m', 10); setR('r8th', 30); s8.reset(); s8.ramp = true; s8.btn(); }},
+  s6: {title: ['Honda que se revienta', 'A sling that snaps'],
+    text: ['Haces girar una piedra de 0.5 kg en un círculo horizontal de 1 m de radio con una cuerda que aguanta como máximo 40 N.', 'You whirl a 0.5 kg stone in a horizontal circle of radius 1 m on a string that can hold at most 40 N.'],
+    q: ['¿Qué tensión hay a 8 m/s? ¿Cuál es la rapidez máxima antes de que la cuerda se rompa? ¿Hacia dónde sale la piedra?', 'What is the tension at 8 m/s? What is the maximum speed before the string breaks? Which way does the stone fly?'],
+    steps: [['La tensión es la fuerza centrípeta: T = m v² / r = 0.5 × 64 / 1 = 32 N.', 'The tension is the centripetal force: T = m v² / r = 0.5 × 64 / 1 = 32 N.'],
+      ['Límite: 40 = 0.5 v² / 1 ⇒ v_máx = √80.', 'Limit: 40 = 0.5 v² / 1 ⇒ v_max = √80.'],
+      ['Al romperse, ΣF = 0: la piedra sale en línea recta, tangente al círculo (prueba «Cortar la cuerda»).', 'Once it breaks, ΣF = 0: the stone leaves in a straight line, tangent to the circle (try «Cut the string»).']],
+    ans: ['T = 32 N; v_máx ≈ 8.9 m/s; sale tangente, no hacia afuera.', 'T = 32 N; v_max ≈ 8.9 m/s; it leaves tangentially, not outward.'],
+    load() { setR('r6r', 1); setR('r6v', 8); setR('r6m', 0.5); s6.reset(); }},
+  s7: {title: ['Balón que cae desde un edificio', 'Ball dropped from a building'],
+    text: ['Se deja caer un balón de basquetbol (0.6 kg) desde la azotea de un edificio alto. Para el aire, F = c v² con c ≈ 0.015 kg/m.', 'A basketball (0.6 kg) is dropped from the roof of a tall building. For air, F = c v² with c ≈ 0.015 kg/m.'],
+    q: ['¿Cuál es su velocidad terminal? ¿Cuánto tarda en llegar al 90 % de ella?', 'What is its terminal velocity? How long until it reaches 90 % of it?'],
+    steps: [['En velocidad terminal el arrastre iguala al peso: c vₜ² = m g.', 'At terminal velocity drag equals weight: c vₜ² = m g.'],
+      ['vₜ = √(m g / c) = √(0.6 × 9.8 / 0.015) ≈ 19.8 m/s (≈ 71 km/h).', 'vₜ = √(m g / c) = √(0.6 × 9.8 / 0.015) ≈ 19.8 m/s (≈ 71 km/h).'],
+      ['La solución exacta es v(t) = vₜ tanh(g t / vₜ); 90 % cuando g t / vₜ = arctanh 0.9 ≈ 1.47 ⇒ t ≈ 1.47 × 19.8 / 9.8.', 'The exact solution is v(t) = vₜ tanh(g t / vₜ); 90 % when g t / vₜ = arctanh 0.9 ≈ 1.47 ⇒ t ≈ 1.47 × 19.8 / 9.8.'],
+      ['Compara con la columna «vacío»: ahí v sigue creciendo 9.8 m/s cada segundo.', 'Compare with the «vacuum» column: there v keeps growing 9.8 m/s every second.']],
+    ans: ['vₜ ≈ 19.8 m/s; llega al 90 % en ≈ 3.0 s.', 'vₜ ≈ 19.8 m/s; reaches 90 % in ≈ 3.0 s.'],
+    load() { setR('r7m', 0.6); setR('r7c', 0.015); setR('r7v0', 0); s7.reset(); s7.run = true; s7.btn(); }}
+};
+addProblems(PROB, {s1, s2, s3, s4, s5, s8, s6, s7});
+
+addRetos([
+  {tab: 's5', title: ['La caja que se escapa por la rampa', 'The box that runs away down the ramp'],
+   text: ['Una caja de 4 kg se suelta desde el reposo a 6 m de la base (medidos sobre la rampa) en una rampa de 30°. Entre caja y rampa μₛ = 0.30 y μₖ = 0.25.', 'A 4 kg box is released from rest 6 m from the bottom (measured along the ramp) on a 30° ramp. Between box and ramp μₛ = 0.30 and μₖ = 0.25.'],
+   q: ['¿Con qué rapidez llega a la base?', 'How fast is it going at the bottom?'], unit: 'm/s', answer: 5.774, tol: 0.03,
+   hint: ['primero verifica que sí desliza (tan θ vs μₛ); luego a = g(sin θ − μₖ cos θ) y v² = 2 a d.', 'first check it does slide (tan θ vs μₛ); then a = g(sin θ − μₖ cos θ) and v² = 2 a d.'],
+   steps: [['tan 30° = 0.577 > μₛ = 0.30 ⇒ la caja desliza.', 'tan 30° = 0.577 > μₛ = 0.30 ⇒ the box slides.'], ['a = g (sin 30° − μₖ cos 30°) = 9.8 (0.5 − 0.2165) ≈ 2.78 m/s². La masa se cancela.', 'a = g (sin 30° − μₖ cos 30°) = 9.8 (0.5 − 0.2165) ≈ 2.78 m/s². Mass cancels.'], ['v = √(2 a d) = √(2 × 2.78 × 6).', 'v = √(2 a d) = √(2 × 2.78 × 6).']],
+   ans: ['v ≈ 5.77 m/s', 'v ≈ 5.77 m/s'],
+   setup() { setR('r5th', 30); setR('r5m', 4); setR('r5mk', 0.25); setR('r5ms', 0.3); setR('r5F', 0); s5.s = 6; s5.v = 0; s5.edge = null; s5.vEnd = null; s5.run = true; s5.btn(); },
+   preview: 900, pause() { s5.run = false; s5.btn(); }, reveal() { s5.run = true; s5.btn(); },
+   done: () => s5.edge === 'bottom', measured: () => `v = ${fx(Math.abs(s5.vEnd || 0), 2)} m/s`},
+  {tab: 's7', title: ['Los primeros 50 m de caída', 'The first 50 m of the fall'],
+   text: ['El balón de 0.6 kg se suelta desde el reposo; el aire ejerce F = c v² con c = 0.015 kg/m (columna «cuadrático»).', 'The 0.6 kg ball is dropped from rest; air exerts F = c v² with c = 0.015 kg/m («quadratic» column).'],
+   q: ['¿Cuánto tarda en caer los primeros 50 m? (en el vacío tardaría 3.19 s)', 'How long does it take to fall the first 50 m? (in vacuum it would take 3.19 s)'], unit: 's', answer: 3.883, tol: 0.03,
+   hint: ['integra dos veces: v = vₜ tanh(g t / vₜ) ⇒ y = (vₜ²/g) ln cosh(g t / vₜ).', 'integrate twice: v = vₜ tanh(g t / vₜ) ⇒ y = (vₜ²/g) ln cosh(g t / vₜ).'],
+   steps: [['vₜ = √(m g / c) = √392 ≈ 19.8 m/s y vₜ²/g = 40 m.', 'vₜ = √(m g / c) = √392 ≈ 19.8 m/s and vₜ²/g = 40 m.'], ['50 = 40 ln cosh(x), con x = g t / vₜ ⇒ cosh x = e^1.25 ≈ 3.49 ⇒ x ≈ 1.92.', '50 = 40 ln cosh(x), with x = g t / vₜ ⇒ cosh x = e^1.25 ≈ 3.49 ⇒ x ≈ 1.92.'], ['t = x vₜ / g = 1.92 × 19.8 / 9.8.', 't = x vₜ / g = 1.92 × 19.8 / 9.8.']],
+   ans: ['t ≈ 3.88 s', 't ≈ 3.88 s'],
+   setup() { setR('r7m', 0.6); setR('r7c', 0.015); setR('r7v0', 0); s7.reset(); s7.run = true; s7.btn(); },
+   preview: 700, pause() { s7.run = false; s7.btn(); }, reveal() { s7.run = true; s7.btn(); },
+   done: () => s7.y[2] >= 50, measured: () => `t = ${fx(s7.t, 2)} s (y = ${fx(s7.y[2], 1)} m)`}
+]);
+
+startApp({s1, s2, s3, s4, s5, s8, s6, s7});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mecánica para Ingeniería · Simulaciones interactivas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;750&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,sans-serif;background:radial-gradient(1200px 600px at 70% -10%,#26324a 0%,#11141b 55%,#0b0d12 100%);color:#e9ecef;min-height:100vh}
+  main{max-width:1040px;margin:0 auto;padding:56px 24px 64px}
+  .kicker{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:#74c0fc;font-weight:600}
+  h1{font-size:clamp(30px,4.5vw,46px);line-height:1.1;margin:10px 0 12px;font-weight:750;letter-spacing:-.02em}
+  .lead{font-size:17px;line-height:1.6;color:#adb5bd;max-width:720px;margin:0 0 36px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  a.card{display:block;text-decoration:none;color:inherit;padding:22px 22px 20px;border-radius:16px;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);transition:transform .15s,border-color .15s,background .15s}
+  a.card:hover{transform:translateY(-3px);border-color:#4dabf7;background:linear-gradient(160deg,rgba(77,171,247,.14),rgba(255,255,255,.03))}
+  .num{font-size:13px;font-weight:700;color:#4dabf7}
+  .card h2{font-size:20px;margin:6px 0 8px;font-weight:700}
+  .card p{margin:0;font-size:14px;line-height:1.55;color:#adb5bd}
+  .reto{display:inline-block;margin-top:12px;font-size:12px;font-weight:600;color:#b197fc;background:rgba(151,117,250,.12);border:1px solid rgba(151,117,250,.35);padding:3px 9px;border-radius:999px}
+  .how{margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .how div{padding:16px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);font-size:14px;line-height:1.55;color:#ced4da}
+  .how b{color:#fff}
+  footer{margin-top:44px;font-size:13px;color:#6c757d}
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">Mecánica para Ingeniería · UTM</div>
+  <h1>Simulaciones interactivas de mecánica</h1>
+  <p class="lead">Escenas 3D con física exacta para explorar cada tema del curso: mueve los controles, carga los problemas de la vida real y pon a prueba tu intuición con los retos.</p>
+  <div class="grid">
+    <a class="card" href="t1.html"><div class="num">Tema 1</div><h2>Dinámica</h2><p>Leyes de Newton como vectores, aplicaciones de la 2ª ley y fricción.</p><span class="reto">★ 2 retos</span></a>
+    <a class="card" href="t2.html"><div class="num">Tema 2</div><h2>Trabajo y energía</h2><p>Trabajo, potencia, energía cinética y potencial, curvas de U y conservación.</p><span class="reto">★ 2 retos</span></a>
+    <a class="card" href="t3.html"><div class="num">Tema 3</div><h2>Colisiones</h2><p>Impulso, conservación del ímpetu y choques en una y dos dimensiones.</p><span class="reto">★ 2 retos</span></a>
+    <a class="card" href="t4.html"><div class="num">Tema 4</div><h2>Cinemática de la rotación</h2><p>Variables angulares, aceleración angular constante y relaciones lineal–angular.</p><span class="reto">★ 2 retos</span></a>
+    <a class="card" href="t5.html"><div class="num">Tema 5</div><h2>Dinámica de la rotación</h2><p>Inercia rotacional, torca, ímpetu angular y su conservación.</p><span class="reto">★ 2 retos</span></a>
+    <a class="card" href="t6.html"><div class="num">Tema 6</div><h2>Oscilaciones</h2><p>Movimiento armónico simple, energía, péndulos y oscilaciones amortiguadas.</p><span class="reto">★ 2 retos</span></a>
+  </div>
+  <div class="how">
+    <div><b>Explora.</b> Arrastra los objetos y mueve los deslizadores; las flechas muestran fuerzas, velocidades e ímpetu en tiempo real.</div>
+    <div><b>Problemas reales.</b> «Cargar en la simulación» pone la escena en la situación del problema; la solución paso a paso está oculta hasta que la pidas.</div>
+    <div><b>Retos ★.</b> Mira la situación, resuélvela en tu cuaderno, escribe tu respuesta y deja que la simulación la compruebe.</div>
+  </div>
+  <footer>Funciona en cualquier navegador moderno. Sin WebGL, las escenas se muestran como diagramas 2D. Interfaz en español con opción en inglés.</footer>
+</main>
+</body>
+</html>
