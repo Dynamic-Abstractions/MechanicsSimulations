@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misión Física · Proyector</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0b0b0e;--ink:#f1f3f5;--mut:#9aa1a9;--line:rgba(255,255,255,.12);--glass:rgba(18,19,24,.72);--acc:#4dabf7;--ok:#69db7c;--bad:#ff8787;--gold:#ffd43b}
+  *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;overflow:hidden}
+  #stage{position:fixed;inset:0}#stage canvas{width:100%;height:100%;display:block}
+  .labels{position:absolute;inset:0;pointer-events:none}
+  .lbl{position:absolute;left:0;top:0;white-space:nowrap;font-size:15px;font-weight:600;text-align:center;text-shadow:0 1px 3px #000,0 0 8px rgba(0,0,0,.8)}
+  .lbl.tick{font-size:13px;color:#ced4da;font-weight:500}
+  .lbl.tag{background:rgba(10,10,14,.75);border:1px solid var(--c,#666);border-left:4px solid var(--c,#888);padding:4px 9px;border-radius:8px;font-size:14px;line-height:1.25;text-shadow:none}
+  .lbl.flag{background:var(--c);color:#fff;padding:3px 8px;border-radius:7px;font-size:13.5px;line-height:1.2;text-shadow:0 1px 2px rgba(0,0,0,.6);box-shadow:0 2px 10px rgba(0,0,0,.5)}
+  .lbl.big{font-size:30px;font-weight:800;color:#fff}
+  .lbl.arrowlbl{font-size:24px;font-weight:800;color:var(--gold)}.lbl.arrowlbl.bad{color:#ff8787}.lbl.arrowlbl.good{color:var(--ok)}
+  .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}.flash.on{animation:fl .7s ease-out}@keyframes fl{0%{opacity:.9}100%{opacity:0}}
+  /* HUD */
+  .hud{position:fixed;left:0;right:0;top:0;display:flex;align-items:flex-start;justify-content:space-between;padding:18px 24px;pointer-events:none;z-index:5}
+  .brand{display:flex;flex-direction:column;gap:6px}.brand b{font-size:20px;letter-spacing:-.01em}.brand span{font-size:13px;color:var(--mut)}
+  .room{pointer-events:auto;background:var(--glass);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:12px;padding:8px 14px;font-size:14px;color:var(--mut)}.room b{font-size:22px;color:#fff;letter-spacing:.12em;margin-left:6px}
+  .ctitle{text-align:center;max-width:52vw}.ctitle .th{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);font-weight:700}.ctitle h1{margin:4px 0 0;font-size:34px;font-weight:800;letter-spacing:-.02em;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+  .timer{width:96px;height:96px;position:relative}.timer svg{transform:rotate(-90deg)}.timer .n{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;font-weight:800}
+  .live{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--glass);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:999px;padding:10px 22px;font-size:20px;font-weight:600;z-index:5;font-variant-numeric:tabular-nums}
+  .live:empty{display:none}
+  .panel{position:fixed;z-index:6;background:var(--glass);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+  .situ{left:24px;bottom:24px;max-width:470px;padding:18px 20px;font-size:19px;line-height:1.45}
+  .situ .k{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
+  .situ .ph{margin-top:10px;font-size:15px;color:var(--mut)}
+  .teams{right:24px;top:130px;width:300px;padding:14px}
+  .teams h3{margin:0 0 10px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+  .trow{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;margin-bottom:6px;background:rgba(255,255,255,.04);font-weight:600}
+  .trow .dot{width:14px;height:14px;border-radius:50%;background:var(--c)}.trow .nm{flex:1}.trow .st{font-size:13px;color:var(--mut)}.trow.sent{background:color-mix(in srgb,var(--c) 22%,transparent)}.trow.sent .st{color:#fff}
+  .ctrl{position:fixed;right:24px;bottom:22px;display:flex;gap:10px;z-index:7}
+  button{font:inherit;cursor:pointer}
+  .btn{border:1px solid var(--line);background:rgba(255,255,255,.08);color:#fff;font-weight:700;font-size:16px;padding:12px 18px;border-radius:12px}.btn:hover{background:rgba(255,255,255,.16)}
+  .btn.pri{background:var(--acc);border-color:var(--acc);color:#06121f}.btn.pri:hover{filter:brightness(1.1)}
+  .hidden{display:none!important}
+  /* lobby */
+  .inlobby .hud,.inlobby .demo{visibility:hidden}
+  .lobby{inset:0;position:fixed;z-index:8;display:grid;grid-template-columns:420px 1fr;gap:28px;padding:48px 56px;background:radial-gradient(900px 500px at 75% 0%,rgba(77,171,247,.18),transparent 70%),rgba(11,11,14,.9)}
+  .lobby h1{font-size:46px;margin:0;letter-spacing:-.03em;font-weight:800}.lobby .sub{color:var(--mut);font-size:17px;margin:8px 0 22px;line-height:1.5}
+  .qr{background:#fff;border-radius:18px;padding:16px;width:300px;height:300px}.qr svg{width:100%;height:100%;display:block}
+  .code{font-size:58px;font-weight:800;letter-spacing:.18em;margin:14px 0 4px}.url{font-size:13px;color:var(--mut);word-break:break-all;max-width:330px}
+  .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;align-content:start;overflow:auto;max-height:52vh}
+  .tcard{border-radius:14px;padding:14px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-top:5px solid var(--c);min-height:120px}
+  .tcard h4{margin:0 0 8px;font-size:19px}.tcard .m{display:inline-block;background:rgba(255,255,255,.1);padding:4px 9px;border-radius:999px;margin:0 6px 6px 0;font-size:14px}.tcard .m.off{opacity:.45}
+  .settings{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin:20px 0 14px;font-size:15px;color:#dee2e6}
+  .settings label{display:flex;gap:6px;align-items:center}.settings select{font:inherit;background:#1b1c22;color:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:999px;padding:7px 12px;font-size:14px;font-weight:600;color:#ced4da}.chip.on{background:rgba(77,171,247,.2);border-color:var(--acc);color:#fff}
+  .warn{color:var(--bad);font-size:14px;margin-top:8px}
+  /* reveal */
+  .rev{right:24px;top:120px;bottom:90px;width:min(600px,44vw);padding:22px 24px;overflow:auto}
+  .rev .ans{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}.rev .ans .k{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ok);font-weight:700}.rev .ans .v{font-size:40px;font-weight:800}
+  .rev .meas{color:var(--mut);font-size:16px;margin-top:2px}
+  .nl{margin:58px 0 8px;position:relative;height:96px}
+  .nl .axis{position:absolute;left:0;right:0;top:56px;height:3px;background:rgba(255,255,255,.25);border-radius:2px}
+  .nl .band{position:absolute;top:50px;height:15px;background:rgba(105,219,124,.3);border:1px solid var(--ok);border-radius:4px}
+  .nl .cor{position:absolute;top:36px;width:3px;height:44px;background:var(--ok);transform:translateX(-50%)}
+  .nl .td{position:absolute;top:48px;width:20px;height:20px;border-radius:50%;background:var(--c);border:2px solid #fff;transform:translateX(-50%);box-shadow:0 0 12px var(--c)}
+  .nl .tl{position:absolute;font-size:13px;font-weight:700;color:#fff;background:var(--c);padding:2px 7px;border-radius:6px;transform:translateX(-50%);white-space:nowrap}
+  .nl .ax{position:absolute;top:72px;font-size:12px;color:var(--mut);transform:translateX(-50%)}
+  table.res{width:100%;border-collapse:collapse;font-size:17px;margin-top:6px}table.res td{padding:7px 8px;border-top:1px solid var(--line)}table.res td.p{text-align:right;font-weight:800;font-variant-numeric:tabular-nums}
+  .res .dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--c);margin-right:8px}
+  .expl{margin:14px 0 0;padding-left:22px;font-size:16px;line-height:1.55;color:#dee2e6}.expl li{margin-bottom:3px}
+  /* board */
+  .board{left:50%;top:50%;transform:translate(-50%,-50%);width:min(760px,92vw);padding:28px 30px}
+  .board h2{margin:0 0 18px;font-size:30px}
+  .brow{display:grid;grid-template-columns:44px 1fr 120px;align-items:center;gap:10px;margin-bottom:10px}
+  .brow .pos{font-size:24px;font-weight:800;color:var(--mut)}
+  .brow .bar{height:46px;border-radius:12px;background:linear-gradient(90deg,var(--c),color-mix(in srgb,var(--c) 50%,transparent));display:flex;align-items:center;padding:0 14px;font-weight:800;font-size:19px;min-width:160px;transition:width 1s ease}
+  .brow .sc{text-align:right;font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
+  .brow .dl{font-size:14px;color:var(--ok);margin-left:8px}
+  .podium{left:50%;top:50%;transform:translate(-50%,-50%);padding:36px 40px;text-align:center;width:min(820px,92vw)}
+  .podium h2{font-size:44px;margin:0 0 6px}.pods{display:flex;align-items:flex-end;justify-content:center;gap:18px;margin-top:26px}
+  .pod{width:180px;border-radius:14px 14px 0 0;background:var(--c);display:flex;flex-direction:column;justify-content:flex-start;padding:14px;font-weight:800}
+  .pod .n{font-size:20px}.pod .s{font-size:16px;opacity:.9;margin-top:4px}.pod .r{font-size:44px;margin-top:auto}
+  .demo{position:fixed;left:24px;top:84px;z-index:7;font-size:13px;color:#06121f;background:var(--gold);padding:4px 10px;border-radius:999px;font-weight:700}
+</style>
+</head>
+<body class="inlobby">
+<div id="stage"></div>
+
+<div class="hud">
+  <div class="brand"><b>Misión Física</b><span>Mecánica para Ingeniería</span><div class="room hidden" id="roomChip">Sala <b id="roomCode2"></b></div></div>
+  <div class="ctitle hidden" id="ctitle"><div class="th" id="cTheme"></div><h1 id="cTitle"></h1></div>
+  <div class="timer hidden" id="timer"><svg width="96" height="96"><circle cx="48" cy="48" r="42" stroke="rgba(255,255,255,.15)" stroke-width="8" fill="none"/><circle id="tArc" cx="48" cy="48" r="42" stroke="#4dabf7" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="0"/></svg><div class="n" id="tNum"></div></div>
+</div>
+<div class="demo hidden" id="demoTag">MODO DEMO · equipos simulados</div>
+<div class="live" id="live"></div>
+
+<div class="panel situ hidden" id="situ"><div class="k" id="situK">Situación</div><div id="situT"></div><div class="ph" id="situP"></div></div>
+<div class="panel teams hidden" id="teamsP"><h3>Respuestas</h3><div id="teamRows"></div></div>
+<div class="panel rev hidden" id="rev"></div>
+<div class="panel board hidden" id="board"></div>
+<div class="panel podium hidden" id="podium"></div>
+
+<div class="ctrl">
+  <button class="btn hidden" id="bReveal">Revelar ahora ⏎</button>
+  <button class="btn pri hidden" id="bNext">Siguiente →</button>
+</div>
+
+<div class="lobby" id="lobby">
+  <div>
+    <h1>Misión Física</h1>
+    <div class="sub">Escanea el código con tu teléfono, escribe tu nombre y elige equipo. Cada integrante recibe datos distintos: ¡solo resolviendo juntos se gana!</div>
+    <div class="qr" id="qr"></div>
+    <div class="code" id="roomCode">····</div>
+    <div class="url" id="joinUrl"></div>
+    <div class="warn hidden" id="netWarn"></div>
+  </div>
+  <div style="display:flex;flex-direction:column;min-height:0">
+    <div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0;font-size:24px">Equipos <span id="pc" style="color:var(--mut);font-weight:600;font-size:18px"></span></h2></div>
+    <div class="settings">
+      <label>Equipos <select id="sTeams"><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></label>
+      <label>Tiempo por reto <select id="sTime"><option value="60">60 s</option><option value="90">90 s</option><option value="120" selected>2 min</option><option value="180">3 min</option><option value="300">5 min</option></select></label>
+      <label><input type="checkbox" id="sBet" checked> Último reto «Todo o nada»</label>
+    </div>
+    <div class="chips" id="sThemes"></div>
+    <div class="tgrid" id="tgrid" style="margin-top:18px"></div>
+    <div style="margin-top:auto;padding-top:18px;display:flex;gap:12px;align-items:center">
+      <button class="btn pri" id="bStart" style="font-size:20px;padding:14px 28px">Comenzar misión</button>
+      <span id="startHint" style="color:var(--mut);font-size:15px"></span>
+    </div>
+  </div>
+</div>
+
+<script src="lib/three.min.js"></script>
+<script src="lib/three-extras.js"></script>
+<script src="lib/peerjs.min.js"></script>
+<script src="lib/qrcode.js"></script>
+<script src="net.js"></script>
+<script src="challenges.js"></script>
+<script src="stage.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const DEMO = /[?&]demo=1/.test(location.search);
+const TEAM_DEF = [['Newton', 0xe03131], ['Galileo', 0x1c7ed6], ['Curie', 0x2f9e44], ['Noether', 0xf59f00], ['Kepler', 0x7048e8], ['Hooke', 0xd6336c], ['Euler', 0x0ca678], ['Bernoulli', 0xf76707]];
+const hex = c => '#' + c.toString(16).padStart(6, '0');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+const st = {phase: 'lobby', teams: [], players: {}, list: [], idx: -1, answers: {}, endsAt: 0, total: 120, themes: new Set([1, 2, 3, 4, 5, 6]), bet: true, lastDelta: {}};
+function makeTeams(n) {
+  const old = st.teams; st.teams = TEAM_DEF.slice(0, n).map(([name, color], i) => ({id: i, name, color, score: 0, members: old[i] ? old[i].members : []}));
+  Object.values(st.players).forEach(p => { if (p.team !== null && p.team >= n) p.team = null; });
+  rebuildMembers();
+}
+function rebuildMembers() { st.teams.forEach(t => t.members = []); Object.entries(st.players).forEach(([pid, p]) => { if (p.team !== null && st.teams[p.team]) st.teams[p.team].members.push(pid); }); }
+const teamInfo = () => st.teams.map(t => ({id: t.id, name: t.name, color: hex(t.color), n: t.members.length, names: t.members.map(id => st.players[id].name)}));
+
+/* ---------- networking ---------- */
+const net = Net.host({
+  onReady(room) {
+    $('roomCode').textContent = room; $('roomCode2').textContent = room;
+    const base = location.href.replace(/host\.html.*$/, '').replace(/[?#].*$/, '');
+    const url = base.replace(/\/?$/, '/') + 'play.html?room=' + room + (Net.LOCAL ? '&local=1' : '');
+    $('joinUrl').textContent = url;
+    const q = qrcode(0, 'M'); q.addData(url); q.make(); $('qr').innerHTML = q.createSvgTag({cellSize: 6, margin: 2, scalable: true});
+  },
+  onError(t) { $('netWarn').textContent = t; $('netWarn').classList.remove('hidden'); },
+  onMsg(pid, m) { handle(pid, m); },
+  onLeave(pid) { const p = st.players[pid]; if (p) { p.online = false; renderLobby(); renderTeamsP(); } }
+});
+function sendTo(pid, m) { if (st.players[pid] && st.players[pid].bot) return botReceive(pid, m); net.send(pid, m); }
+function handle(pid, m) {
+  if (m.t === 'hello') {
+    let p = st.players[pid];
+    if (!p) p = st.players[pid] = {name: String(m.name || 'Jugador').slice(0, 18), team: null, online: true, joined: Date.now()};
+    p.online = true; if (m.name) p.name = String(m.name).slice(0, 18);
+    if (m.team !== undefined && m.team !== null && st.teams[m.team] && st.phase === 'lobby' && p.team === null) p.team = m.team;
+    rebuildMembers();
+    sendTo(pid, {t: 'welcome', teams: teamInfo(), team: p.team, name: p.name, phase: st.phase});
+    if (st.phase === 'challenge' && p.team !== null) sendChallenge(pid);
+    if (st.phase === 'reveal' && p.team !== null) sendResult(pid);
+    broadcastTeams(); renderLobby(); renderTeamsP();
+  }
+  if (m.t === 'team') {
+    const p = st.players[pid]; if (!p) return;
+    const tm = Number(m.team); if (!st.teams[tm]) return;
+    if (st.phase !== 'lobby' && p.team !== null) return;    // no switching mid-game
+    p.team = tm; rebuildMembers(); sendTo(pid, {t: 'welcome', teams: teamInfo(), team: p.team, name: p.name, phase: st.phase});
+    if (st.phase === 'challenge') sendChallenge(pid);
+    broadcastTeams(); renderLobby();
+  }
+  if (m.t === 'answer' && st.phase === 'challenge') {
+    const p = st.players[pid]; if (!p || p.team === null) return;
+    const team = st.teams[p.team], ch = cur();
+    if (st.answers[team.id]) return;
+    const cap = captainOf(team);
+    if (cap !== pid && st.players[cap] && st.players[cap].online) return;   // only the captain (unless offline)
+    let v = m.value; if (ch.kind !== 'choose') { v = Number(v); if (!isFinite(v)) return; }
+    else if (!ch.choose.options.some(o => o.id === v)) return;
+    let bet = 0; if (isBet()) bet = Math.max(0, Math.min(maxBet(team), Math.round(Number(m.bet) || 0)));
+    st.answers[team.id] = {value: v, at: Date.now(), by: p.name, bet};
+    team.members.forEach(id => sendTo(id, {t: 'submitted', value: v, by: p.name, unit: ch.unit || '', bet}));
+    renderTeamsP();
+    if (st.teams.filter(t => t.members.length).every(t => st.answers[t.id])) setTimeout(doReveal, 900);
+  }
+}
+function broadcastTeams() { Object.keys(st.players).forEach(id => sendTo(id, {t: 'teams', teams: teamInfo()})); }
+
+/* ---------- lobby ---------- */
+function renderLobby() {
+  const n = Object.values(st.players).filter(p => p.online).length;
+  $('pc').textContent = n ? `· ${n} conectado${n > 1 ? 's' : ''}` : '';
+  $('tgrid').innerHTML = st.teams.map(t => `<div class="tcard" style="--c:${hex(t.color)}"><h4>${t.name}</h4>${t.members.map(id => `<span class="m ${st.players[id].online ? '' : 'off'}">${esc(st.players[id].name)}</span>`).join('') || '<span style="color:var(--mut);font-size:14px">Esperando integrantes…</span>'}</div>`).join('');
+  const waiting = Object.values(st.players).filter(p => p.team === null).length;
+  $('startHint').textContent = waiting ? `${waiting} jugador(es) aún sin equipo` : '';
+}
+function renderThemes() {
+  $('sThemes').innerHTML = THEMES.map((t, i) => `<button class="chip ${st.themes.has(i + 1) ? 'on' : ''}" data-t="${i + 1}">${i + 1} · ${t}</button>`).join('');
+  $('sThemes').querySelectorAll('.chip').forEach(b => b.onclick = () => { const t = +b.dataset.t; st.themes.has(t) ? st.themes.delete(t) : st.themes.add(t); if (!st.themes.size) st.themes.add(t); renderThemes(); });
+}
+$('sTeams').onchange = () => { makeTeams(+$('sTeams').value); broadcastTeams(); renderLobby(); };
+$('bStart').onclick = () => {
+  st.total = +$('sTime').value; st.bet = $('sBet').checked;
+  st.list = CHALLENGES.filter(c => st.themes.has(c.theme));
+  if (!st.teams.some(t => t.members.length)) { $('startHint').textContent = 'Necesitas al menos un equipo con integrantes.'; return; }
+  $('lobby').classList.add('hidden'); document.body.classList.remove('inlobby'); $('roomChip').classList.remove('hidden');
+  st.idx = -1; nextChallenge();
+};
+
+/* ---------- challenge flow ---------- */
+const cur = () => st.list[st.idx];
+const isBet = () => st.bet && st.idx === st.list.length - 1 && st.list.length > 1;
+const maxBet = t => Math.max(t.score, 300);
+function captainOf(team) { const ms = team.members; if (!ms.length) return null; const online = ms.filter(id => st.players[id].online); const pool = online.length ? online : ms; return pool[st.idx % pool.length]; }
+function payloadFor(pid) {
+  const p = st.players[pid], team = st.teams[p.team], ch = cur(), cap = captainOf(team), ms = team.members.filter(id => st.players[id].online || id === pid);
+  const order = [cap, ...ms.filter(id => id !== cap)], n = order.length, mine = [];
+  ch.clues.forEach((c, i) => { const who = n === 1 ? 0 : (i + 1) % n; if (order[who] === pid) mine.push(c); });
+  if (n > ch.clues.length + 1 && !mine.length) mine.push(ch.clues[order.indexOf(pid) % ch.clues.length]);
+  const isCap = pid === cap, left = Math.max(0, Math.round((st.endsAt - Date.now()) / 1000));
+  const base = {t: 'challenge', idx: st.idx, n: st.list.length, theme: THEMES[ch.theme - 1], title: ch.title, situation: ch.situation, role: isCap ? 'captain' : 'member', captain: st.players[cap].name, clues: mine, left, total: st.total, kind: ch.kind, team: {name: team.name, color: hex(team.color)}};
+  if (isCap) Object.assign(base, {question: ch.question, unit: ch.unit || '', mark: ch.mark || null, tune: ch.tune || null, choose: ch.choose ? {draw: ch.choose.draw, options: ch.choose.options} : null, bet: isBet() ? {max: maxBet(team), score: team.score} : null});
+  if (st.answers[team.id]) base.submitted = Object.assign({unit: ch.unit || ''}, st.answers[team.id]);
+  return base;
+}
+function sendChallenge(pid) { sendTo(pid, payloadFor(pid)); }
+let tick = null;
+async function nextChallenge() {
+  st.idx++; hideAll();
+  if (st.idx >= st.list.length) return showPodium();
+  st.phase = 'challenge'; st.answers = {};
+  const ch = cur();
+  $('ctitle').classList.remove('hidden'); $('cTheme').textContent = `Reto ${st.idx + 1} de ${st.list.length} · Tema ${ch.theme} · ${THEMES[ch.theme - 1]}` + (isBet() ? ' · TODO O NADA' : '');
+  $('cTitle').textContent = ch.title;
+  $('situ').classList.remove('hidden'); $('situK').textContent = isBet() ? '★ Todo o nada: cada equipo apuesta sus puntos' : 'Situación';
+  $('situT').textContent = ch.situation; $('situP').textContent = 'Los datos están repartidos en sus teléfonos. La pregunta la tiene el capitán.';
+  $('teamsP').classList.remove('hidden'); $('bReveal').classList.remove('hidden');
+  st.endsAt = Date.now() + st.total * 1000; st.teams.forEach(t => t.members.forEach(id => sendChallenge(id)));
+  renderTeamsP(); $('timer').classList.remove('hidden');
+  clearInterval(tick); tick = setInterval(updTimer, 250); updTimer();
+  if (DEMO) botsPlay();
+  await Stage.show(ch);
+}
+function updTimer() {
+  const left = Math.max(0, (st.endsAt - Date.now()) / 1000), fr = left / st.total;
+  $('tNum').textContent = Math.ceil(left); $('tArc').style.strokeDashoffset = 264 * (1 - fr); $('tArc').style.stroke = left < 10 ? '#ff6b6b' : left < 30 ? '#ffd43b' : '#4dabf7';
+  if (left <= 0 && st.phase === 'challenge') doReveal();
+}
+function renderTeamsP() {
+  if (st.phase !== 'challenge') return;
+  $('teamRows').innerHTML = st.teams.filter(t => t.members.length).map(t => { const a = st.answers[t.id]; return `<div class="trow ${a ? 'sent' : ''}" style="--c:${hex(t.color)}"><span class="dot"></span><span class="nm">${t.name}</span><span class="st">${a ? '✓ enviada' : `${t.members.filter(id => st.players[id].online).length} 📱 pensando…`}</span></div>`; }).join('');
+}
+function scoreAll() {
+  const ch = cur(), res = [];
+  st.teams.filter(t => t.members.length).forEach(t => {
+    const a = st.answers[t.id]; let acc = 0, speed = 0, delta = 0;
+    if (a) { acc = accuracyPts(ch, a.value); if (isBet()) { const ok = ch.kind === 'choose' ? acc > 0 : errorOf(ch, a.value) <= Math.max(3 * ch.tol, ch.tol + 0.02); delta = ok ? a.bet : -a.bet; acc = ok ? 1 : 0; }
+      else { if (acc > 0) speed = Math.round(300 * Math.max(0, st.endsAt - a.at) / (st.total * 1000)); delta = acc + speed; } }
+    t.score += delta; st.lastDelta[t.id] = delta;
+    res.push({team: t, a, acc, speed, delta});
+  });
+  return res;
+}
+let lastRes = [];
+async function doReveal() {
+  if (st.phase !== 'challenge') return;
+  st.phase = 'reveal'; clearInterval(tick); $('timer').classList.add('hidden'); $('bReveal').classList.add('hidden'); $('teamsP').classList.add('hidden'); $('situ').classList.add('hidden');
+  const ch = cur(); lastRes = scoreAll();
+  const items = lastRes.filter(r => r.a).map(r => ({name: r.team.name, color: r.team.color, value: r.a.value, unit: ch.unit}));
+  const opts = {};
+  if (ch.kind === 'mark') opts.marks = items;
+  if (ch.kind === 'tune') opts.lanes = [...items.map(i => Object.assign({}, i)), {name: 'Correcto', color: 0xffffff, value: ch.answer, ref: true}];
+  st.teams.forEach(t => t.members.forEach(id => sendTo(id, {t: 'revealing'})));
+  Stage.shift(Math.min(0.46, (Math.min(600, innerWidth * 0.44) + 48) / innerWidth));
+  if (Stage.phase() === 'intro') await new Promise(r => { const iv = setInterval(() => { if (Stage.phase() !== 'intro') { clearInterval(iv); r(); } }, 50); });
+  const readout = await Stage.reveal(opts);
+  showResults(ch, readout);
+  st.teams.forEach(t => t.members.forEach(id => sendResult(id)));
+}
+function sendResult(pid) {
+  const p = st.players[pid]; if (!p || p.team === null) return;
+  const ch = cur(), r = lastRes.find(x => x.team.id === p.team), ranks = [...st.teams].filter(t => t.members.length).sort((a, b) => b.score - a.score);
+  sendTo(pid, {t: 'result', title: ch.title, answer: answerText(ch), yours: r && r.a ? valText(ch, r.a.value) : null, delta: r ? r.delta : 0, acc: r ? r.acc : 0, speed: r ? r.speed : 0, score: st.teams[p.team].score, rank: ranks.findIndex(t => t.id === p.team) + 1, of: ranks.length, explain: ch.explain, bet: isBet()});
+}
+const answerText = ch => ch.kind === 'choose' ? `Opción ${ch.choose.correct}` : fmt(ch.answer, ch.unit);
+const valText = (ch, v) => ch.kind === 'choose' ? `Opción ${v}` : fmt(v, ch.unit);
+function showResults(ch, readout) {
+  const rows = lastRes.slice().sort((a, b) => b.delta - a.delta).map(r => `<tr style="--c:${hex(r.team.color)}"><td><span class="dot"></span>${r.team.name}</td><td>${r.a ? esc(valText(ch, r.a.value)) + (isBet() ? ` · apostó ${r.a.bet}` : '') : '<span style="color:var(--mut)">sin respuesta</span>'}</td><td style="color:var(--mut);font-size:14px">${r.a && !isBet() ? (r.acc === 700 ? '¡Exacto!' : r.acc > 0 ? 'Cerca' : 'Lejos') + (r.speed ? ` · rapidez +${r.speed}` : '') : ''}</td><td class="p" style="color:${r.delta > 0 ? 'var(--ok)' : r.delta < 0 ? 'var(--bad)' : 'var(--mut)'}">${r.delta > 0 ? '+' : ''}${r.delta}</td></tr>`).join('');
+  $('rev').innerHTML = `<div class="ans"><span class="k">Respuesta</span><span class="v">${esc(answerText(ch))}</span></div><div class="meas">${esc(readout || '')}</div>${ch.kind !== 'choose' ? numberLine(ch) : ''}<table class="res">${rows}</table><ol class="expl">${ch.explain.map(e => `<li>${esc(e)}</li>`).join('')}</ol>`;
+  $('rev').classList.remove('hidden'); $('bNext').classList.remove('hidden');
+}
+function numberLine(ch) {
+  const vals = lastRes.filter(r => r.a).map(r => r.a.value);
+  let lo, hi; const lim = ch.mark || ch.tune;
+  if (lim) { lo = lim.min; hi = lim.max; } else { lo = Math.min(ch.answer, ...vals); hi = Math.max(ch.answer, ...vals); const pad = Math.max((hi - lo) * 0.15, Math.abs(ch.answer) * 0.15); lo -= pad; hi += pad; if (ch.answer >= 0 && lo < 0 && vals.every(v => v >= 0)) lo = 0; }
+  const X = v => (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo) * 100;
+  const tolAbs = ch.scale ? ch.tol * ch.scale : ch.tol * Math.abs(ch.answer);
+  let h = `<div class="nl"><div class="axis"></div><div class="band" style="left:${X(ch.answer - tolAbs)}%;width:${X(ch.answer + tolAbs) - X(ch.answer - tolAbs)}%"></div><div class="cor" style="left:${X(ch.answer)}%"></div>`;
+  for (let i = 0; i <= 4; i++) { const v = lo + (hi - lo) * i / 4; h += `<div class="ax" style="left:${i * 25}%">${fmt(v)}</div>`; }
+  const sorted = lastRes.filter(r => r.a).sort((a, b) => a.a.value - b.a.value), lastAt = [-99, -99, -99, -99], tops = [22, 0, -22, -44];
+  sorted.forEach(r => { const x = X(r.a.value); let lvl = lastAt.findIndex(l => x - l >= 11); if (lvl < 0) lvl = lastAt.indexOf(Math.min(...lastAt)); lastAt[lvl] = x;
+    h += `<div class="td" style="left:${x}%;--c:${hex(r.team.color)}"></div><div class="tl" style="left:${x}%;top:${tops[lvl]}px;--c:${hex(r.team.color)}">${r.team.name}</div>`; });
+  return h + '</div>';
+}
+function showBoard() {
+  hideAll(); st.phase = 'board';
+  const ts = st.teams.filter(t => t.members.length).sort((a, b) => b.score - a.score), mx = Math.max(1, ...ts.map(t => t.score));
+  $('board').innerHTML = `<h2>Tabla de posiciones</h2>` + ts.map((t, i) => `<div class="brow" style="--c:${hex(t.color)}"><div class="pos">${i + 1}</div><div><div class="bar" style="width:${Math.max(28, 100 * Math.max(0, t.score) / mx)}%">${t.name}${st.lastDelta[t.id] ? `<span class="dl">${st.lastDelta[t.id] > 0 ? '+' : ''}${st.lastDelta[t.id]}</span>` : ''}</div></div><div class="sc">${t.score}</div></div>`).join('');
+  $('board').classList.remove('hidden'); $('bNext').classList.remove('hidden');
+  Object.keys(st.players).forEach(id => { const p = st.players[id]; if (p.team === null) return; sendTo(id, {t: 'board', rank: ts.findIndex(t => t.id === p.team) + 1, of: ts.length, score: st.teams[p.team].score, next: st.idx + 1 < st.list.length}); });
+}
+function showPodium() {
+  hideAll(); st.phase = 'end'; Stage.idle();
+  const ts = st.teams.filter(t => t.members.length).sort((a, b) => b.score - a.score), order = [1, 0, 2].filter(i => ts[i]), hs = [190, 250, 150];
+  $('podium').innerHTML = `<h2>🏆 ${ts[0] ? ts[0].name : ''}</h2><div style="color:var(--mut);font-size:18px">¡Misión cumplida!</div><div class="pods">${order.map(i => `<div class="pod" style="--c:${hex(ts[i].color)};height:${hs[order.indexOf(i)] + 60}px;background:${hex(ts[i].color)}"><div class="n">${ts[i].name}</div><div class="s">${ts[i].score} pts</div><div class="r">${i + 1}</div></div>`).join('')}</div>`;
+  $('podium').classList.remove('hidden');
+  Object.keys(st.players).forEach(id => { const p = st.players[id]; if (p.team === null) return; sendTo(id, {t: 'end', rank: ts.findIndex(t => t.id === p.team) + 1, of: ts.length, score: st.teams[p.team].score, team: st.teams[p.team].name}); });
+}
+function hideAll() { Stage.shift(0); ['situ', 'teamsP', 'rev', 'board', 'podium', 'ctitle', 'timer'].forEach(id => $(id).classList.add('hidden')); $('bNext').classList.add('hidden'); $('bReveal').classList.add('hidden'); }
+$('bReveal').onclick = doReveal;
+$('bNext').onclick = () => { if (st.phase === 'reveal') showBoard(); else if (st.phase === 'board') nextChallenge(); };
+addEventListener('keydown', e => { if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return; if (e.key === 'Enter' && st.phase === 'challenge') doReveal(); if ((e.key === 'ArrowRight' || e.key === ' ') && !$('bNext').classList.contains('hidden')) { e.preventDefault(); $('bNext').click(); } });
+setInterval(() => { $('live').textContent = Stage.phase() === 'reveal' || Stage.phase() === 'after' ? Stage.live() : ''; }, 100);
+
+/* ---------- demo bots (?demo=1): try the game without phones ---------- */
+const BOTN = ['Ana', 'Luis', 'Sofía', 'Diego', 'Valeria', 'Mateo', 'Camila', 'Emilio', 'Renata', 'Iker', 'Ximena', 'Santi'];
+function botReceive() {}
+function addBots() { $('demoTag').classList.remove('hidden'); st.teams.forEach((t, ti) => { for (let k = 0; k < 3; k++) { const pid = 'bot' + ti + k; st.players[pid] = {name: BOTN[(ti * 3 + k) % BOTN.length], team: ti, online: true, bot: true}; } }); rebuildMembers(); renderLobby(); }
+function botsPlay() {
+  const ch = cur();
+  st.teams.forEach((t, i) => { const cap = captainOf(t); if (!st.players[cap] || !st.players[cap].bot) return;
+    setTimeout(() => { if (st.phase !== 'challenge' || st.idx !== st.list.indexOf(ch)) return;
+      let v; if (ch.kind === 'choose') v = Math.random() < 0.6 ? ch.choose.correct : ch.choose.options[Math.floor(Math.random() * ch.choose.options.length)].id;
+      else { const sp = ch.scale ? ch.scale * 0.12 : Math.abs(ch.answer) * 0.25; v = ch.answer + (Math.random() - 0.5) * 2 * sp * (i === 0 ? 0.1 : 1); const lim = ch.mark || ch.tune; if (lim) v = Math.max(lim.min, Math.min(lim.max, v)); v = Math.round(v * 100) / 100; }
+      handle(cap, {t: 'answer', value: v, bet: Math.round(maxBet(t) * (0.3 + Math.random() * 0.5))}); }, 2500 + Math.random() * 5000 + i * 600); });
+}
+
+makeTeams(4); renderThemes(); renderLobby();
+if (DEMO) addBots();
+</script>
+</body>
+</html>

@@ -23,6 +23,9 @@
   .how{margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
   .how div{padding:16px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);font-size:14px;line-height:1.55;color:#ced4da}
   .how b{color:#fff}
+  .game{display:flex;align-items:center;gap:22px;margin:0 0 26px;padding:22px 24px;border-radius:18px;text-decoration:none;color:inherit;background:linear-gradient(120deg,rgba(255,212,59,.16),rgba(151,117,250,.14));border:1px solid rgba(255,212,59,.45);transition:transform .15s}
+  .game:hover{transform:translateY(-3px)}
+  .game .ic{font-size:44px}.game h2{margin:0 0 4px;font-size:22px}.game p{margin:0;color:#ced4da;font-size:15px;line-height:1.5}.game .go{margin-left:auto;font-weight:700;color:#ffd43b;white-space:nowrap}
   footer{margin-top:44px;font-size:13px;color:#6c757d}
 </style>
 </head>
@@ -31,6 +34,7 @@
   <div class="kicker">Mecánica para Ingeniería · UTM</div>
   <h1>Simulaciones interactivas de mecánica</h1>
   <p class="lead">Escenas 3D con física exacta para explorar cada tema del curso: mueve los controles, carga los problemas de la vida real y pon a prueba tu intuición con los retos.</p>
+  <a class="game" href="juego/host.html"><div class="ic">🎮</div><div><h2>Misión Física · juego en equipo</h2><p>Para el salón: el proyector muestra la escena 3D, cada alumno juega desde su teléfono con datos distintos y solo resolviendo juntos se gana. 18 retos, 3 por tema.</p></div><span class="go">Abrir en el proyector →</span></a>
   <div class="grid">
     <a class="card" href="t1.html"><div class="num">Tema 1</div><h2>Dinámica</h2><p>Leyes de Newton como vectores, aplicaciones de la 2ª ley y fricción.</p><span class="reto">★ 2 retos</span></a>
     <a class="card" href="t2.html"><div class="num">Tema 2</div><h2>Trabajo y energía</h2><p>Trabajo, potencia, energía cinética y potencial, curvas de U y conservación.</p><span class="reto">★ 2 retos</span></a>

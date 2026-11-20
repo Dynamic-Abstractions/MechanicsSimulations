@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0e">
+<title>Misión Física</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0b0b0e;--card:#16171d;--ink:#f1f3f5;--mut:#9aa1a9;--line:rgba(255,255,255,.1);--acc:#4dabf7;--ok:#69db7c;--bad:#ff8787;--gold:#ffd43b;--tc:#4dabf7}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;min-height:100%}
+  body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+  .top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(11,11,14,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .top b{font-size:16px}.top .tm{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700}
+  .tdot{width:12px;height:12px;border-radius:50%;background:var(--tc)}
+  .net{width:9px;height:9px;border-radius:50%;background:var(--ok)}.net.bad{background:var(--bad);animation:bl 1s infinite}@keyframes bl{50%{opacity:.3}}
+  .bar{height:5px;background:rgba(255,255,255,.08)}.bar i{display:block;height:100%;background:var(--tc);width:100%;transition:width .25s linear}
+  main{padding:18px 16px 40px;max-width:560px;margin:0 auto}
+  h1{font-size:30px;margin:6px 0 4px;letter-spacing:-.02em}h2{font-size:22px;margin:4px 0 10px}
+  .mut{color:var(--mut)}.small{font-size:13.5px}
+  input[type=text],input.num{width:100%;font:inherit;font-size:20px;padding:14px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:#fff;outline:none}
+  input:focus{border-color:var(--acc)}
+  button{font:inherit;cursor:pointer}
+  .btn{width:100%;border:0;border-radius:14px;padding:16px;font-size:18px;font-weight:800;background:var(--acc);color:#06121f;margin-top:12px}
+  .btn:disabled{opacity:.4}.btn.sec{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--line)}
+  .teams{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .team{border:2px solid var(--line);background:var(--card);border-radius:16px;padding:14px;text-align:left;color:#fff;border-top:6px solid var(--c)}
+  .team.sel{border-color:var(--c);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 40%,transparent)}
+  .team b{font-size:18px;display:block}.team span{font-size:13px;color:var(--mut)}
+  .role{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+  .role.cap{background:var(--gold);color:#1a1300}.role.mem{background:rgba(77,171,247,.18);color:#a5d8ff}
+  .kick{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);font-weight:700;margin-top:14px}
+  .clue{background:linear-gradient(160deg,#1e2433,#161a24);border:1px solid #2f3a52;border-left:5px solid var(--tc);border-radius:16px;padding:16px;font-size:20px;line-height:1.4;font-weight:600;margin-top:10px}
+  .clue .k{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-weight:700;margin-bottom:6px}
+  .q{background:#221c06;border:1px solid #5c4a0e;border-left:5px solid var(--gold);border-radius:16px;padding:16px;font-size:19px;line-height:1.4;font-weight:700;margin-top:14px}
+  .hint{margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.05);font-size:15px;color:#dee2e6;line-height:1.45}
+  .ansbox{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .big{font-size:34px;font-weight:800;text-align:center;font-variant-numeric:tabular-nums}
+  .row{display:flex;gap:10px;align-items:center}.row .unit{font-size:18px;font-weight:700;color:var(--mut);min-width:60px}
+  canvas.w{width:100%;display:block;touch-action:none;border-radius:12px;background:#0f1015}
+  input[type=range]{width:100%;height:44px;accent-color:var(--tc)}
+  .steps{display:flex;gap:8px;margin-top:8px}.steps button{flex:1;padding:12px 0;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;font-size:17px;font-weight:700}
+  .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:10px}
+  .opt{padding:16px 8px;border-radius:14px;border:2px solid var(--line);background:rgba(255,255,255,.05);color:#fff;font-size:18px;font-weight:800}.opt.sel{border-color:var(--gold);background:rgba(255,212,59,.15)}
+  .bet{margin-top:14px;padding:14px;border-radius:14px;background:rgba(255,212,59,.08);border:1px solid #5c4a0e}
+  .res{text-align:center;margin-top:20px}.res .pts{font-size:64px;font-weight:800;margin:6px 0}.res .pts.pos{color:var(--ok)}.res .pts.neg{color:var(--bad)}
+  .kv{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);font-size:16px}.kv b{font-variant-numeric:tabular-nums}
+  ol.ex{padding-left:20px;line-height:1.5;color:#dee2e6;font-size:15px}
+  .center{text-align:center;margin-top:30vh}.pulse{animation:pu 1.6s infinite}@keyframes pu{50%{opacity:.45}}
+  .sent{margin-top:16px;padding:16px;border-radius:16px;background:color-mix(in srgb,var(--tc) 18%,#111);border:1px solid var(--tc);text-align:center;font-size:17px;font-weight:700}
+  .err{color:var(--bad);margin-top:10px;font-size:15px}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="top"><b>Misión Física</b><span class="net" id="net"></span><div class="tm" id="tm"></div></div>
+<div class="bar hidden" id="barW"><i id="bar"></i></div>
+<main id="app"></main>
+
+<script src="lib/peerjs.min.js"></script>
+<script src="net.js"></script>
+<script>
+const $ = id => document.getElementById(id), app = $('app');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const fmt = (v, u) => { if (typeof v !== 'number') return String(v); const a = Math.abs(v), d = a >= 100 ? 0 : a >= 10 ? 1 : 2; return v.toFixed(d) + (u ? ' ' + u : ''); };
+const qs = new URLSearchParams(location.search);
+let room = (qs.get('room') || '').toUpperCase(), name = qs.get('pid') ? '' : (Net.store.get('mf-name') || ''), me = {team: null}, teams = [], ch = null, timer = null, ends = 0, conn = null;
+const view = {};
+
+function setTeamColor() { const t = teams[me.team]; document.documentElement.style.setProperty('--tc', t ? t.color : '#4dabf7'); $('tm').innerHTML = t ? `<span class="tdot"></span>${esc(t.name)}` : ''; }
+function stopTimer() { clearInterval(timer); $('barW').classList.add('hidden'); }
+function startTimer(left, total) { ends = Date.now() + left * 1000; $('barW').classList.remove('hidden'); clearInterval(timer); const up = () => { const l = Math.max(0, ends - Date.now()); $('bar').style.width = (100 * l / (total * 1000)) + '%'; const n = $('secs'); if (n) n.textContent = Math.ceil(l / 1000) + ' s'; }; up(); timer = setInterval(up, 250); }
+
+/* ---------- screens ---------- */
+function screenJoin(err) {
+  stopTimer();
+  app.innerHTML = `<h1>¡Únete a la misión!</h1><p class="mut">Escribe tu nombre como lo verá tu equipo.</p>
+    ${room ? '' : '<input type="text" id="room" placeholder="Código de sala (ej. K7PQ)" maxlength="6" style="text-transform:uppercase;margin-bottom:10px">'}
+    <input type="text" id="name" placeholder="Tu nombre" maxlength="18" value="${esc(name)}" autocomplete="given-name">
+    <button class="btn" id="go">Entrar</button>${err ? `<div class="err">${esc(err)}</div>` : ''}
+    ${room ? `<p class="mut small" style="margin-top:16px">Sala <b>${esc(room)}</b></p>` : ''}`;
+  $('go').onclick = () => {
+    const n = $('name').value.trim(); if (!n) return $('name').focus();
+    if (!room) { room = ($('room').value || '').trim().toUpperCase(); if (!room) return $('room').focus(); }
+    name = n; Net.store.set('mf-name', n); connect();
+    app.innerHTML = `<div class="center pulse">Conectando con la sala ${esc(room)}…</div>`;
+  };
+}
+function screenTeams() {
+  stopTimer();
+  app.innerHTML = `<h2>Hola, ${esc(name)} 👋</h2><p class="mut">Elige tu equipo:</p><div class="teams">${teams.map(t => `<button class="team ${me.team === t.id ? 'sel' : ''}" style="--c:${t.color}" data-t="${t.id}"><b>${esc(t.name)}</b><span>${t.n} integrante${t.n === 1 ? '' : 's'}${t.names && t.names.length ? ': ' + t.names.map(esc).join(', ') : ''}</span></button>`).join('')}</div>
+    ${me.team !== null ? `<div class="sent" style="margin-top:18px">Estás en <b>${esc(teams[me.team].name)}</b>. Espera a que el profesor inicie…</div>` : ''}`;
+  app.querySelectorAll('.team').forEach(b => b.onclick = () => { conn.send({t: 'team', team: +b.dataset.t}); });
+}
+function screenWait(msg) { stopTimer(); app.innerHTML = `<div class="center"><div class="pulse" style="font-size:20px;font-weight:700">${msg}</div></div>`; }
+
+function screenChallenge() {
+  const c = ch, cap = c.role === 'captain';
+  startTimer(c.left, c.total);
+  let h = `<div style="display:flex;justify-content:space-between;align-items:center"><span class="role ${cap ? 'cap' : 'mem'}">${cap ? '★ Capitán' : 'Explorador'}</span><span class="mut small">Reto ${c.idx + 1}/${c.n} · <span id="secs"></span></span></div>
+    <div class="kick">${esc(c.theme)}</div><h2>${esc(c.title)}</h2><div class="mut" style="font-size:15px;line-height:1.45">${esc(c.situation)}</div>`;
+  if (c.clues.length) h += c.clues.map(x => `<div class="clue"><div class="k">${cap ? 'Tu dato' : 'Tu dato secreto · compártelo'}</div>${esc(x)}</div>`).join('');
+  else h += `<div class="hint">No tienes datos en este reto: ayuda a tu equipo a decidir qué ley usar.</div>`;
+  if (!cap) h += `<div class="hint">La pregunta la tiene <b>${esc(c.captain)}</b> (capitán). Léele tu dato en voz alta y resuélvanlo juntos.</div>`;
+  if (cap) {
+    h += `<div class="q">${esc(c.question)}</div><div class="hint">Tus compañeros tienen los otros datos. Pídeselos.</div>`;
+    h += `<div class="ansbox" id="ansbox"></div>`;
+    if (c.bet) h += `<div class="bet"><b>★ Todo o nada.</b> Apuesta tus puntos: si aciertas los ganas, si fallas los pierdes.<div class="big" id="betV" style="font-size:26px;margin-top:6px"></div><input type="range" id="betR" min="0" max="${c.bet.max}" step="10" value="${Math.round(c.bet.max / 2 / 10) * 10}"></div>`;
+    h += `<button class="btn" id="send" disabled>Enviar respuesta del equipo</button>`;
+  }
+  h += `<div id="sentBox"></div>`;
+  app.innerHTML = h;
+  if (cap) buildAnswer(c);
+  if (c.submitted) showSubmitted(c.submitted);
+}
+function showSubmitted(s) {
+  const b = $('sentBox'); if (!b) return;
+  const v = ch.kind === 'choose' ? 'Opción ' + s.value : fmt(Number(s.value), s.unit);
+  b.innerHTML = `<div class="sent">✓ Respuesta enviada por ${esc(s.by)}: <span style="font-size:22px">${esc(v)}</span>${s.bet ? `<br><span class="small">Apuesta: ${s.bet} pts</span>` : ''}<div class="small mut" style="margin-top:6px">Miren el proyector…</div></div>`;
+  const send = $('send'); if (send) { send.disabled = true; send.textContent = 'Enviada'; }
+  app.querySelectorAll('#ansbox input,#ansbox button,.opt,#betR').forEach(e => e.disabled = true);
+  view.locked = true;
+}
+function buildAnswer(c) {
+  const box = $('ansbox'), send = $('send'); let val = null; view.locked = false;
+  const ready = v => { val = v; send.disabled = v === null || v === '' || (typeof v === 'number' && !isFinite(v)); };
+  if (c.kind === 'predict') {
+    box.innerHTML = `<div class="row"><input class="num" id="num" inputmode="decimal" placeholder="Tu respuesta" autocomplete="off"><span class="unit">${esc(c.unit)}</span></div>`;
+    $('num').oninput = () => { const v = parseFloat($('num').value.replace(',', '.')); ready(isFinite(v) ? v : null); };
+  }
+  if (c.kind === 'tune') {
+    const t = c.tune; const dec = t.step < 0.1 ? 2 : 1;
+    box.innerHTML = `<div class="mut small">${esc(t.label)}</div><div class="big" id="tv"></div><input type="range" id="tr" min="${t.min}" max="${t.max}" step="${t.step}" value="${t.start}"><div class="steps"><button data-d="-10">−−</button><button data-d="-1">−</button><button data-d="1">+</button><button data-d="10">++</button></div>`;
+    const r = $('tr'), up = () => { const v = +(+r.value).toFixed(dec); $('tv').textContent = v.toFixed(dec) + ' ' + c.unit; ready(v); };
+    r.oninput = up; box.querySelectorAll('.steps button').forEach(b => b.onclick = () => { r.value = Math.min(t.max, Math.max(t.min, +r.value + t.step * +b.dataset.d)); up(); }); up();
+  }
+  if (c.kind === 'mark') {
+    const m = c.mark, dial = m.type === 'dial';
+    box.innerHTML = `<div class="mut small">${esc(m.label)}</div><div class="big" id="mv">—</div><canvas class="w" id="mc"></canvas><div class="steps"><button data-d="-10">−−</button><button data-d="-1">−</button><button data-d="1">+</button><button data-d="10">++</button></div><div class="mut small" style="margin-top:6px">Arrastra el marcador; afina con los botones.</div>`;
+    const cv = $('mc'), dpr = Math.min(3, devicePixelRatio || 1), W = cv.clientWidth, H = dial ? W : 150; cv.width = W * dpr; cv.height = H * dpr; cv.style.height = H + 'px';
+    const g = cv.getContext('2d'); g.scale(dpr, dpr);
+    let v = dial ? null : null; const dec = m.step < 0.01 ? 3 : m.step < 0.1 ? 2 : m.step < 1 ? 1 : 0;
+    const set = nv => { v = Math.round(Math.min(m.max, Math.max(m.min, nv)) / m.step) * m.step; if (dial) v = ((v % 360) + 360) % 360; $('mv').textContent = v.toFixed(dec) + ' ' + c.unit; draw(); ready(+v.toFixed(dec)); };
+    const pad = 22, X = val => pad + (val - m.min) / (m.max - m.min) * (W - 2 * pad), V = x => m.min + (x - pad) / (W - 2 * pad) * (m.max - m.min);
+    const cx = W / 2, cy = H / 2, R = W * 0.36;
+    function draw() {
+      g.clearRect(0, 0, W, H); g.font = '600 12px Inter,system-ui'; g.textAlign = 'center'; g.fillStyle = '#9aa1a9'; g.strokeStyle = '#495057'; g.lineWidth = 2;
+      if (!dial) {
+        const y = 92; g.beginPath(); g.moveTo(pad, y); g.lineTo(W - pad, y); g.stroke();
+        const span = m.max - m.min, stp = span <= 1 ? 0.1 : span <= 6 ? 1 : span <= 20 ? 2 : 5;
+        for (let t = m.min; t <= m.max + 1e-9; t += stp) { const x = X(t); g.beginPath(); g.moveTo(x, y - 7); g.lineTo(x, y + 7); g.stroke(); g.fillText(+t.toFixed(2) + '', x, y + 24); }
+        if (v !== null) { const x = X(v); g.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--tc'); g.beginPath(); g.moveTo(x, y - 6); g.lineTo(x - 12, y - 30); g.lineTo(x + 12, y - 30); g.closePath(); g.fill(); g.fillRect(x - 2, y - 52, 4, 46); g.beginPath(); g.moveTo(x + 2, y - 52); g.lineTo(x + 26, y - 44); g.lineTo(x + 2, y - 36); g.fill(); }
+        else { g.fillStyle = '#9aa1a9'; g.fillText('Toca o arrastra sobre la línea', W / 2, 40); }
+      } else {
+        g.beginPath(); g.arc(cx, cy, R, 0, 7); g.stroke();
+        for (let a = 0; a < 360; a += 10) { const ar = a * Math.PI / 180, r0 = a % 30 ? R - 6 : R - 12; g.beginPath(); g.moveTo(cx + Math.cos(ar) * r0, cy - Math.sin(ar) * r0); g.lineTo(cx + Math.cos(ar) * R, cy - Math.sin(ar) * R); g.stroke(); if (a % 30 === 0) g.fillText(a + '°', cx + Math.cos(ar) * (R + 18), cy - Math.sin(ar) * (R + 18) + 4); }
+        g.fillStyle = '#ff3b3b'; g.fillText('inicio 0° →', cx + R * 0.55, cy + 18);
+        if (v !== null) { const ar = v * Math.PI / 180, col = getComputedStyle(document.documentElement).getPropertyValue('--tc'); g.strokeStyle = col; g.lineWidth = 5; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + Math.cos(ar) * (R - 4), cy - Math.sin(ar) * (R - 4)); g.stroke(); g.fillStyle = col; g.beginPath(); g.arc(cx + Math.cos(ar) * (R - 4), cy - Math.sin(ar) * (R - 4), 11, 0, 7); g.fill(); }
+        g.fillStyle = '#ced4da'; g.beginPath(); g.arc(cx, cy, 6, 0, 7); g.fill();
+      }
+    }
+    const fromEv = e => { const r = cv.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; if (!dial) return V(x); let a = Math.atan2(cy - y, x - cx) * 180 / Math.PI; return (a + 360) % 360; };
+    let drag = false;
+    cv.addEventListener('pointerdown', e => { if (view.locked) return; drag = true; cv.setPointerCapture(e.pointerId); set(fromEv(e)); });
+    cv.addEventListener('pointermove', e => { if (drag && !view.locked) set(fromEv(e)); });
+    cv.addEventListener('pointerup', () => drag = false);
+    box.querySelectorAll('.steps button').forEach(b => b.onclick = () => set((v === null ? (m.min + m.max) / 2 : v) + m.step * +b.dataset.d * (dial ? 1 : 1)));
+    draw();
+  }
+  if (c.kind === 'choose') {
+    box.innerHTML = `<canvas class="w" id="cc"></canvas><div class="opts">${c.choose.options.map(o => `<button class="opt" data-o="${o.id}">${esc(o.id)}${o.label !== o.id ? '<br><span class="small mut">' + esc(o.label) + '</span>' : ''}</button>`).join('')}</div>`;
+    drawChoose($('cc'), c.choose.draw);
+    box.querySelectorAll('.opt').forEach(b => b.onclick = () => { if (view.locked) return; box.querySelectorAll('.opt').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); ready(b.dataset.o); });
+  }
+  if (c.bet) { const r = $('betR'), up = () => $('betV').textContent = r.value + ' pts'; r.oninput = up; up(); }
+  send.onclick = () => { if (val === null) return; send.disabled = true; send.textContent = 'Enviando…'; conn.send({t: 'answer', value: val, bet: c.bet ? +$('betR').value : 0}); setTimeout(() => { if (!view.locked) { send.disabled = false; send.textContent = 'Enviar respuesta del equipo'; } }, 4000); };
+}
+function drawChoose(cv, kind) {
+  const dpr = Math.min(3, devicePixelRatio || 1), W = cv.clientWidth, H = 230; cv.width = W * dpr; cv.height = H * dpr; cv.style.height = H + 'px';
+  const g = cv.getContext('2d'); g.scale(dpr, dpr);
+  const arr = (x, y, dx, dy, col, lbl) => { const L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L; g.strokeStyle = col; g.fillStyle = col; g.lineWidth = 4; g.beginPath(); g.moveTo(x, y); g.lineTo(x + dx - ux * 12, y + dy - uy * 12); g.stroke(); g.beginPath(); g.moveTo(x + dx, y + dy); g.lineTo(x + dx - ux * 16 - uy * 8, y + dy - uy * 16 + ux * 8); g.lineTo(x + dx - ux * 16 + uy * 8, y + dy - uy * 16 - ux * 8); g.closePath(); g.fill(); g.font = '800 20px Inter,system-ui'; g.fillText(lbl, x + dx + ux * 14 - 6, y + dy + uy * 14 + 7); };
+  if (kind === 'fbd') {
+    const th = 25 * Math.PI / 180, x0 = W - 20, y0 = H - 20, L = W - 40; g.fillStyle = '#5c3d2e'; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 - L, y0); g.lineTo(x0 - L, y0 - L * Math.tan(th)); g.closePath(); g.fill();
+    const s = L * 0.5, bx = x0 - s, by = y0 - s * Math.tan(th); g.save(); g.translate(bx, by); g.rotate(-th); g.fillStyle = '#c8a165'; g.fillRect(-26, -46, 52, 46); g.restore();
+    const cx = bx + Math.sin(th) * 23, cy = by - Math.cos(th) * 23;
+    arr(cx, cy, 0, 80, '#ffffff', 'A'); arr(cx, cy, Math.sin(th) * 72, -Math.cos(th) * 72, '#4dabf7', 'B'); arr(cx, cy, Math.cos(th) * 62, Math.sin(th) * 62, '#ff6b6b', 'C');
+  } else {
+    const ox = 40, oy = H / 2 + 20, sc = (W - 80) / 0.5;
+    g.fillStyle = '#8d6e63'; g.beginPath(); for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3; g.lineTo(ox + Math.cos(a) * 16, oy + Math.sin(a) * 16); } g.fill();
+    g.fillStyle = '#ced4da'; g.fillRect(ox, oy - 8, 0.5 * sc, 16); g.strokeStyle = '#ced4da'; g.lineWidth = 9; g.beginPath(); g.arc(ox, oy, 20, 0.6, 5.7); g.stroke();
+    [['A', 0.30, 90, 40], ['B', 0.20, 150, 60], ['C', 0.45, 90, 30], ['D', 0.30, 0, 80]].forEach(([id, r, a, F]) => { const ar = a * Math.PI / 180, len = 20 + F * 0.9; arr(ox + r * sc, oy - (id === 'D' ? 0 : 0), Math.cos(ar) * len, -Math.sin(ar) * len, '#ffd43b', id); g.fillStyle = '#ffd43b'; g.beginPath(); g.arc(ox + r * sc, oy, 4, 0, 7); g.fill(); });
+    g.fillStyle = '#9aa1a9'; g.font = '600 12px Inter,system-ui'; for (let i = 1; i <= 5; i++) g.fillText((i / 10).toFixed(1) + ' m', ox + i / 10 * sc - 14, oy + 34);
+  }
+}
+function screenResult(r) {
+  stopTimer();
+  const cls = r.delta > 0 ? 'pos' : r.delta < 0 ? 'neg' : '';
+  const verdict = r.bet ? (r.delta > 0 ? '¡Apuesta ganada!' : r.delta < 0 ? 'Apuesta perdida' : 'Sin apuesta') : r.acc === 700 ? '¡Exacto!' : r.acc > 0 ? '¡Cerca!' : r.yours ? 'Lejos esta vez' : 'Sin respuesta';
+  app.innerHTML = `<div class="res"><div class="kick">${esc(r.title)}</div><h2>${verdict}</h2><div class="pts ${cls}">${r.delta > 0 ? '+' : ''}${r.delta}</div></div>
+    <div class="kv"><span>Respuesta correcta</span><b>${esc(r.answer)}</b></div><div class="kv"><span>Su respuesta</span><b>${esc(r.yours || '—')}</b></div>
+    ${r.speed ? `<div class="kv"><span>Bono de rapidez</span><b>+${r.speed}</b></div>` : ''}<div class="kv"><span>Puntos del equipo</span><b>${r.score}</b></div><div class="kv"><span>Lugar</span><b>${r.rank}° de ${r.of}</b></div>
+    <h2 style="margin-top:20px;font-size:18px">Solución</h2><ol class="ex">${r.explain.map(e => `<li>${esc(e)}</li>`).join('')}</ol>`;
+}
+function screenBoard(b) { stopTimer(); app.innerHTML = `<div class="center" style="margin-top:22vh"><div class="kick">Tabla de posiciones</div><div style="font-size:72px;font-weight:800">${b.rank}°</div><div class="mut">de ${b.of} equipos · ${b.score} pts</div><div class="pulse" style="margin-top:30px">${b.next ? 'Prepárense para el siguiente reto…' : 'Último resultado…'}</div></div>`; }
+function screenEnd(e) { stopTimer(); app.innerHTML = `<div class="center" style="margin-top:20vh"><div style="font-size:64px">${e.rank === 1 ? '🏆' : e.rank === 2 ? '🥈' : e.rank === 3 ? '🥉' : '🚀'}</div><h1>${e.rank}° lugar</h1><div class="mut">${esc(e.team)} · ${e.score} pts</div><p style="margin-top:24px">¡Misión cumplida! Gracias por jugar.</p></div>`; }
+
+/* ---------- connection ---------- */
+function connect() {
+  conn = Net.join(room, {
+    onStatus(s, t) { $('net').classList.toggle('bad', s !== 'open'); if (s === 'error') screenJoin(t); },
+    onMsg(m) {
+      if (m.t === 'welcome') { teams = m.teams; me.team = m.team; setTeamColor(); if (m.team === null || m.phase === 'lobby') screenTeams(); else if (m.phase !== 'challenge' && m.phase !== 'reveal') screenWait('Esperando el siguiente reto…'); }
+      if (m.t === 'teams') { teams = m.teams; setTeamColor(); if (!ch && (me.team === null || app.querySelector('.teams'))) screenTeams(); }
+      if (m.t === 'challenge') { ch = m; setTeamColor(); screenChallenge(); if (navigator.vibrate) navigator.vibrate(120); }
+      if (m.t === 'submitted') { if (ch) { ch.submitted = m; showSubmitted(m); } }
+      if (m.t === 'revealing') { stopTimer(); const b = $('sentBox'); if (b && !view.locked) b.innerHTML = '<div class="sent">⏱ Se acabó el tiempo. ¡Miren el proyector!</div>'; app.querySelectorAll('button,input').forEach(e => e.disabled = true); }
+      if (m.t === 'result') { ch = null; screenResult(m); if (navigator.vibrate) navigator.vibrate(m.delta > 0 ? [60, 40, 60] : 200); }
+      if (m.t === 'board') screenBoard(m);
+      if (m.t === 'end') screenEnd(m);
+    }
+  });
+  conn.hello({name, team: null});
+}
+if (room && name) { connect(); screenWait('Conectando con la sala ' + esc(room) + '…'); } else screenJoin();
+</script>
+</body>
+</html>

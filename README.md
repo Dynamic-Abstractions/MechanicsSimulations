@@ -18,6 +18,10 @@ Each tab includes:
 - a real-life problem that loads into the simulation, with a hidden step-by-step solution;
 - in tabs marked ★, a **Reto** (challenge problem): students watch the setup, enter a prediction, and then the simulation reveals the result.
 
+## Misión Física (team game)
+
+`juego/host.html` is a live classroom game. The projector shows 3D scenes with exact physics, and students join from their phones by scanning a QR code. Each teammate receives different data, and the rotating captain sends the team's answer. There are 18 challenges, 3 per theme, of four kinds: predict, mark, tune and choose. See [juego/README.md](juego/README.md). To try it without phones, open `juego/host.html?demo=1`.
+
 ## Technical notes
 
 - Static site with no build step: each page is self-contained HTML and JavaScript.
