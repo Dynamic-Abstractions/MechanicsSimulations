@@ -22,6 +22,10 @@ Each tab includes:
 
 `juego/host.html` is a live classroom game. The projector shows 3D scenes with exact physics, and students join from their phones by scanning a QR code. Each teammate receives different data, and the rotating captain sends the team's answer. There are 18 challenges, 3 per theme, of four kinds: predict, mark, tune and choose. See [juego/README.md](juego/README.md). To try it without phones, open `juego/host.html?demo=1`.
 
+## Teardown machines
+
+`maquinas/reloj/` is a pendulum clock with a Graham deadbeat escapement that you can take apart. It follows the teardown method: one physics model drives the motion and every panel, each subsystem opens with a button, it uses a light studio with a single accent color, and it runs an auto-tour until a student touches it.
+
 ## Technical notes
 
 - Static site with no build step: each page is self-contained HTML and JavaScript.
