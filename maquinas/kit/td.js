@@ -104,7 +104,7 @@ function placeCamera(follow) { const t = cam.t.clone(); if (follow) t.add(follow
 /* ---------------- state ---------------- */
 let CFG = null, M = null, cur = 0, running = true, timeScale = 1, overlays = {}, viewName = null, tick = 0;
 let touring = true, idle = 0, synthetic = false;
-const K = {COL, D, fx, MAT, TEX, tex, mesh, box, cyl, sph, tubeBetween, person, vector, el, scene, camera, project,
+const K = {clearChart: () => { hist = []; }, COL, D, fx, MAT, TEX, tex, mesh, box, cyl, sph, tubeBetween, person, vector, el, scene, camera, project,
   ov: k => !!overlays[k], get running() { return running; }, set running(v) { running = v; syncTime(); }, refresh: () => buildRight(true)};
 
 /* ---------------- building the console for a machine ---------------- */
@@ -192,13 +192,16 @@ let chartCv = null, hist = [];
 function buildRead() {
   const R = M.readouts || [], ch = M.chart;
   $('#pRead').innerHTML = `<div class="hd"><span class="cp">${M.readTitle || 'Lecturas'}</span><span class="cp mu">${M.readTag || ''}</span></div><div class="rows">${R.map((r, i) => `<div class="r ${r.big ? 'big' : ''} ${r.acc ? 'acc' : ''}"><span>${r.label}</span><b id="ro${i}"></b></div>`).join('')}</div>` +
+    (M.bars ? `<div class="cp mu" style="padding:10px 12px 2px;font-size:8.4px">${M.bars.title}</div>${M.bars.items.map((b, i) => `<div style="display:grid;grid-template-columns:78px 1fr 58px;gap:6px;align-items:center;padding:2px 12px;font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase"><span class="mu">${b.label}</span><div style="height:10px;background:#eef0f2;position:relative"><i id="bar${i}" style="position:absolute;top:0;bottom:0;left:50%;background:${b.color}"></i><i style="position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:#c9ccd0"></i></div><b id="barv${i}" style="text-align:right;font-size:10.5px;letter-spacing:0"></b></div>`).join('')}` : '') +
     (ch ? `<div class="cp mu" style="padding:10px 12px 0;font-size:8.4px">${ch.title}</div><div class="legend">${ch.series.map(s => `<span><i style="background:${s.color}"></i>${s.label}</span>`).join('')}</div><canvas class="ch" id="chart"></canvas>` : '');
   hist = [];
-  if (ch) { chartCv = $('#chart'); const used = 46 + R.length * 27 + 40, h = max(60, 392 - used - 12); chartCv.style.height = h + 'px'; const r = 2; chartCv.width = 276 * r; chartCv.height = h * r; chartCv.getContext('2d').setTransform(r, 0, 0, r, 0, 0); } else chartCv = null;
+  if (ch) { chartCv = $('#chart'); const used = 46 + R.length * 27 + 40 + (M.bars ? 22 + M.bars.items.length * 14 : 0), h = max(60, 392 - used - 12); chartCv.style.height = h + 'px'; const r = 2; chartCv.width = 276 * r; chartCv.height = h * r; chartCv.getContext('2d').setTransform(r, 0, 0, r, 0, 0); } else chartCv = null;
 }
-function updateRead() { (M.readouts || []).forEach((r, i) => { const e = document.getElementById('ro' + i); if (e) { const v = r.get(); e.innerHTML = v; } }); }
+function updateRead() { (M.readouts || []).forEach((r, i) => { const e = document.getElementById('ro' + i); if (e) { const v = r.get(); e.innerHTML = v; } });
+  if (M.bars) { const mx = max(1e-9, M.bars.max ? M.bars.max() : max(...M.bars.items.map(b => abs(b.get())))); M.bars.items.forEach((b, i) => { const v = b.get(), e = document.getElementById('bar' + i), t = document.getElementById('barv' + i); if (!e) return; const f = max(-1, min(1, v / mx)) * 50; e.style.left = (f < 0 ? 50 + f : 50) + '%'; e.style.width = abs(f) + '%'; t.textContent = fx(v, b.dec !== undefined ? b.dec : 1) + (b.unit || ''); }); } }
 function drawChart() {
   if (!chartCv || !M.chart) return; const ch = M.chart, g = chartCv.getContext('2d'), W = 276, H = chartCv.clientHeight; g.clearRect(0, 0, W, H);
+  if (ch.xy) return drawXY(ch, g, W, H);
   if (!hist.length) return;
   const span = ch.span || 8, t1 = hist[hist.length - 1][0], t0 = ch.xFrom0 ? 0 : max(0, t1 - span), tx = ch.xFrom0 ? max(span, t1) : t0 + span;
   let lo = ch.min !== undefined ? ch.min : Infinity, hi = ch.max !== undefined ? ch.max : -Infinity;
@@ -211,6 +214,18 @@ function drawChart() {
   g.fillStyle = COL.mute; g.font = '600 8.4px Inter'; g.fillText(`${fx(hi, ch.dec !== undefined ? ch.dec : 1)} ${ch.unit || ''}`, W - 60, 9); g.fillText(ch.xLabel || 't (s)', W - 30, H - 2);
 }
 
+function drawXY(ch, g, W, H) {
+  const xr = typeof ch.xr === 'function' ? ch.xr() : ch.xr, yr = typeof ch.yr === 'function' ? ch.yr() : ch.yr;
+  const X = x => (x - xr[0]) / (xr[1] - xr[0]) * W, Y = v => H - 12 - (v - yr[0]) / (yr[1] - yr[0]) * (H - 20);
+  g.save(); g.beginPath(); g.rect(0, 0, W, H); g.clip();
+  g.strokeStyle = COL.line; g.lineWidth = 1; g.beginPath(); g.moveTo(0, Y(0)); g.lineTo(W, Y(0)); g.moveTo(X(0), 0); g.lineTo(X(0), H); g.stroke();
+  if (ch.curve) { const cs = ch.curveColors || [COL.mute]; const N = 160; cs.forEach((c, k) => { g.strokeStyle = c; g.lineWidth = 1.4; g.setLineDash(ch.curveDash ? [4, 3] : []); g.beginPath(); for (let i = 0; i <= N; i++) { const x = xr[0] + (xr[1] - xr[0]) * i / N, y = ch.curve(x)[k]; i ? g.lineTo(X(x), Y(y)) : g.moveTo(X(x), Y(y)); } g.stroke(); g.setLineDash([]); }); }
+  if (ch.fill) { const f = ch.fill(); if (f) { g.fillStyle = f.color || 'rgba(240,90,35,.22)'; g.beginPath(); const N = 80; g.moveTo(X(f.a), Y(0)); for (let i = 0; i <= N; i++) { const x = f.a + (f.b - f.a) * i / N; g.lineTo(X(x), Y(f.y(x))); } g.lineTo(X(f.b), Y(0)); g.closePath(); g.fill(); } }
+  (ch.hlines || []).forEach(hl => { const v = hl.v(); if (!isFinite(v)) return; g.strokeStyle = hl.color; g.setLineDash([4, 3]); g.beginPath(); g.moveTo(0, Y(v)); g.lineTo(W, Y(v)); g.stroke(); g.setLineDash([]); g.fillStyle = hl.color; g.font = '600 8.4px Inter'; g.fillText(hl.label, 4, Y(v) - 3); });
+  ch.series.forEach((s, k) => { if (s.noTrace) return; g.strokeStyle = s.color; g.lineWidth = s.w || 1.8; g.beginPath(); let st = false; hist.forEach(p => { const v = p[1][k]; if (!isFinite(v)) return; st ? g.lineTo(X(p[0]), Y(v)) : g.moveTo(X(p[0]), Y(v)); st = true; }); g.stroke(); });
+  if (ch.marker) { const m = ch.marker(); if (m) { g.fillStyle = COL.acc; g.beginPath(); g.arc(X(m[0]), Y(m[1]), 4.5, 0, TAU); g.fill(); } }
+  g.restore(); g.fillStyle = COL.mute; g.font = '600 8.4px Inter'; g.fillText(`${fx(yr[1], ch.dec !== undefined ? ch.dec : 1)} ${ch.unit || ''}`, W - 64, 9); g.fillText(ch.xLabel || 'x', W - 40, H - 2);
+}
 /* callouts */
 let callEls = [];
 function buildCalls() { const c = $('#calls'); if (!c) return; c.innerHTML = ''; callEls = ((M.calls && M.calls[viewName]) || []).map(([fn, b, s, side]) => { const d = el(`<div class="call"><b>${b}</b><span>${s}</span></div>`); c.appendChild(d); return {fn, d, side}; }); }
@@ -282,7 +297,7 @@ function frame(now) {
   requestAnimationFrame(frame);
   const dt = min(0.05, (now - last) / 1000); last = now;
   if (!M) return;
-  if (running) { const h = dt * timeScale; M.update(h); if (M.sample) { const s = M.sample(); if (s) { hist.push([s[0], s[1]]); const span = (M.chart && M.chart.span) || 8; if (!(M.chart && M.chart.xFrom0)) while (hist.length && hist[hist.length - 1][0] - hist[0][0] > span + 0.5) hist.shift(); if (hist.length > 1200) hist = hist.filter((_, i) => i % 2 === 0); } } }
+  if (running) { const h = dt * timeScale; M.update(h); if (M.sample) { const s = M.sample(); if (s) { hist.push([s[0], s[1]]); const span = (M.chart && M.chart.span) || 8; if (!(M.chart && (M.chart.xFrom0 || M.chart.xy))) while (hist.length && hist[hist.length - 1][0] - hist[0][0] > span + 0.5) hist.shift(); if (hist.length > 1200) hist = hist.filter((_, i) => i % 2 === 0); } } }
   M.pose && M.pose();
   if (camK < 1 && camTo) { camK = min(1, camK + dt / camDur); const k = ease(camK); cam.t.lerpVectors(camFrom.t, camTo.t, k); cam.yaw = camFrom.yaw + (camTo.yaw - camFrom.yaw) * k; cam.pitch = camFrom.pitch + (camTo.pitch - camFrom.pitch) * k; cam.d = camFrom.d + (camTo.d - camFrom.d) * k; }
   else if (touring) cam.yaw += dt * 0.02 * sin(now / 9000);

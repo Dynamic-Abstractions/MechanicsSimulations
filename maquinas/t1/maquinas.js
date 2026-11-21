@@ -302,9 +302,9 @@ const rampa = {id: 'aplicaciones', tab: '1.4 Plano inclinado', kicker: 'Teardown
         for (let i = 0; i < n; i++) {
           const drive = P.F - P.m * g0 * sin(th()), Nv = Nn();
           if (abs(S.v) < 1e-3 && abs(drive) <= P.mus * Nv) { S.v = 0; S.f = -drive; S.kin = false; S.Fn = 0; }
-          else { const dir = abs(S.v) > 1e-3 ? Math.sign(S.v) : Math.sign(drive); S.f = -dir * P.muk * Nv; S.kin = true; S.Fn = drive + S.f; const v0 = S.v; S.v += S.Fn / P.m * h; if (v0 !== 0 && Math.sign(S.v) !== Math.sign(v0)) S.v = 0; S.s += S.v * h; }
+          else { const dir = abs(S.v) > 1e-3 ? Math.sign(S.v) : Math.sign(drive); S.f = -dir * P.muk * Nv; S.kin = true; S.Fn = drive + S.f; const v0 = S.v, s0 = S.s; S.v += S.Fn / P.m * h; if (v0 !== 0 && Math.sign(S.v) !== Math.sign(v0)) S.v = 0; S.s += S.v * h; if (S.s < 0.25 && s0 >= 0.25) { S.vmax = max(S.vmax || 0, sqrt(v0 * v0 + 2 * abs(S.Fn / P.m) * (s0 - 0.25))); S.s = 0.25; S.v = 0; break; } }
         }
-        S.vmax = max(S.vmax || 0, abs(S.v));
+        if (S.s > 0.25) S.vmax = max(S.vmax || 0, abs(S.v));
         if (S.s < 0.25) { S.s = 0.25; S.v = 0; } if (S.s > L - 0.25) { S.s = L - 0.25; S.v = 0; }
       },
       pose() {

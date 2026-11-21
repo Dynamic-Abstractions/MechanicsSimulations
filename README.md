@@ -26,6 +26,8 @@ Each tab includes:
 
 `maquinas/t1/` holds Theme 1 (Dynamics) as eight teardown machines, each with its forces drawn as live 3D vectors: hanging picture, curling stone, drone, skaters, loading ramp, furniture, sling and falling ball. Each includes notes, a real-life problem and a reto. The shared kit is in `maquinas/kit/`.
 
+`maquinas/t2/` to `maquinas/t6/` cover the remaining themes in the same format: Work and energy (7 machines), Collisions (7), Rotational kinematics (3), Rotational dynamics (7) and Oscillations (4). Every reto is checked against its theoretical answer.
+
 `maquinas/reloj/` is a pendulum clock with a Graham deadbeat escapement that you can take apart. It follows the teardown method: one physics model drives the motion and every panel, each subsystem opens with a button, it uses a light studio with a single accent color, and it runs an auto-tour until a student touches it.
 
 ## Technical notes
