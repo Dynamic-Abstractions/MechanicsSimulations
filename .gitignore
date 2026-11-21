@@ -1,0 +1,13 @@
+# macOS / editors
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Local outputs
+Claude outputs/
+_site/
+__pycache__/
+*.zip
+*.bundle
+node_modules/
